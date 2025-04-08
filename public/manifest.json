@@ -5,7 +5,14 @@
   "description": "Extension hỗ trợ sinh viên trường Đại học Mở TP. HCM trong việc lên kế hoạch học tập.",
   "permissions": [
     "scripting",
-    "activeTab"
+    "activeTab",
+    "tabs"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["https://sis.ou.edu.vn/tienich/dggv/*"],
+      "js": ["content-script.js"]
+    }
   ],
   "action": {
     "default_popup": "index.html",

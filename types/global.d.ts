@@ -16,7 +16,7 @@ type RankMappingType = {
 };
 
 type ParentItemCategory = "#dialog" | "#nav" | "#error" | "#container" | "#footer";
-type ContainerItemCategory = "app" | "info" | "statistics";
+type ContainerItemCategory = "app" | "info" | "statistics" | "quick-review";
 type ChromeMessageTypeCategory = "CHECK_URL" | "GET_DATA_POINT" | "GET_DATA_USER_COURSE";
 type ActionCategory = "create" | "update";
 type UserLabelMappingType = {

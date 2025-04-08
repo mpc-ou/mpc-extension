@@ -1,6 +1,7 @@
 import { App } from "./app";
 import { Info } from "./info";
 import { Statistics } from "./statistics";
+import { QuickReview } from "./quickReview";
 import { _ACTIVE_CLASS, _CURR_TAB_KEY, _ERROR_MESSAGE_TIMEOUT, _IGNORE_LIST_KEY } from "./constants";
 import { _DEFAULT_COMPONENT, _DEFAULT_IGNORE_SUBJECT_DATA } from "./constants/default";
 import { ContainerQS, ContainerQSA, DialogQS, NavQS, NavQSA } from "./utils/query";
@@ -15,11 +16,13 @@ type ComponentMappingType = Record<ContainerItemCategory, { onUnmount: () => voi
   const app = App();
   const info = Info();
   const statistics = Statistics();
+  const quickReview = QuickReview();
 
   const componentMapping: ComponentMappingType = {
-    app,
-    info,
-    statistics
+    "app": app,
+    "info": info,
+    "statistics": statistics,
+    "quick-review": quickReview
   };
 
   const navItems = NavQSA(".nav-item");
@@ -62,16 +65,15 @@ type ComponentMappingType = Record<ContainerItemCategory, { onUnmount: () => voi
     });
 
     const removeOldComponent = (componentId: ContainerItemCategory) => {
-      const oldComponent = componentMapping[componentId];
-      oldComponent.onUnmount();
-      removeError();
+      if (componentMapping[componentId]) {
+        componentMapping[componentId].onUnmount();
+      }
     };
 
     const initNewComponent = (componentId: ContainerItemCategory) => {
-      ContainerQS("section#" + componentId)?.classList.add(_ACTIVE_CLASS);
-      setLocalData(_CURR_TAB_KEY, componentId);
-      const newComponent = componentMapping[componentId];
-      newComponent.onMount();
+      if (componentMapping[componentId]) {
+        componentMapping[componentId].onMount();
+      }
     };
   };
 
@@ -88,7 +90,12 @@ type ComponentMappingType = Record<ContainerItemCategory, { onUnmount: () => voi
   const defaultRender = () => {
     NavQS(".nav-item[data-id=" + currTab + "]")?.classList.add(_ACTIVE_CLASS);
     ContainerQS("section#" + currTab)?.classList.add(_ACTIVE_CLASS);
-    componentMapping[currTab].onMount();
+    
+    if (componentMapping[currTab]) {
+      componentMapping[currTab].onMount();
+    } else {
+      console.error(`Component for tab "${currTab}" not found in componentMapping`);
+    }
   };
 
   return {
