@@ -39,7 +39,7 @@ const getData = async () => {
   try {
     const type: ChromeMessageTypeCategory = "GET_DATA_POINT";
     const tableRows = document.querySelectorAll(
-      "table#excel-table > tbody > tr.table-primary.ng-star-inserted, table#excel-table > tbody > tr.text-center.ng-star-inserted"
+      "table#excel-table > tbody > tr.ng-star-inserted:not(.table-primary), table#excel-table > tbody > tr.text-center.ng-star-inserted"
     );
 
     const data: ScoreGroupType[] = [];
@@ -47,7 +47,7 @@ const getData = async () => {
     Array.from(tableRows).forEach((row, index) => {
       const columns = row.querySelectorAll("td");
 
-      const isHead = row.classList.contains("table-primary");
+      const isHead = !row.classList.contains("bg-white");
 
       if (isHead) {
         data.push({
