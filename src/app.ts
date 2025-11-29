@@ -47,7 +47,7 @@ const getData = async () => {
     Array.from(tableRows).forEach((row, index) => {
       const columns = row.querySelectorAll("td");
 
-      const isHead = !row.classList.contains("bg-white");      
+      const isHead = !row.classList.contains("bg-white");
 
       if (isHead) {
         data.push({
