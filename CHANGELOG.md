@@ -1,3 +1,13 @@
+## [0.3.5](https://github.com/mpc-ou/mpc-extension/compare/v0.3.4...v0.3.5) (2025-11-29)
+
+
+### Bug Fixes
+
+* **ci:** update version node to 22 ([092ed56](https://github.com/mpc-ou/mpc-extension/commit/092ed56f29faba46fa9c3317ce72f574453ddb6f))
+* fix dom get point element ([03d6b2e](https://github.com/mpc-ou/mpc-extension/commit/03d6b2e15f7813bcb1ccfebbe14a3bfc0388c4ca))
+* fix dom get point element ([ba1d40e](https://github.com/mpc-ou/mpc-extension/commit/ba1d40ea2c6ad1ef9db1ff875b7240e7e8659052))
+* get DOM user info ([1ed34aa](https://github.com/mpc-ou/mpc-extension/commit/1ed34aa2fe25de02ef1ce316108aa6a0d0f0c39a))
+
 ## [0.3.4](https://github.com/mpc-ou/mpc-extension/compare/v0.3.3...v0.3.4) (2025-02-13)
 
 
