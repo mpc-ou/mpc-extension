@@ -55,6 +55,7 @@ export const _DEFAULT_USER_DATA: UserType = {
   religion: "",
   presenceStatus: "",
   residentialAddress: "",
+  nationality: "",
   updatedAt: new Date()
 };
 

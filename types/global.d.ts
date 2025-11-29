@@ -31,13 +31,14 @@ type UserType = {
   fullName: string;
   dateOfBirth: string;
   gender: string;
+  presenceStatus: string;
   phone: string;
   identityNumber: string;
   email: string;
   placeOfBirth: string;
   ethnicity: string;
+  nationality: string;
   religion: string;
-  presenceStatus: string;
   residentialAddress: string;
   updatedAt: Date;
 };

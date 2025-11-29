@@ -24,7 +24,7 @@ type GetDataPointMessageType = {
 const getData = async () => {
   try {
     const type: ChromeMessageTypeCategory = "GET_DATA_USER_COURSE";
-    const appUserElement = document.querySelector("app-userinfo > div > div > div") as HTMLElement;
+    const appUserElement = document.querySelector("app-thongtin-user") as HTMLElement;
 
     if (!appUserElement) {
       const message: GetDataPointMessageType = {
@@ -40,14 +40,19 @@ const getData = async () => {
       return;
     }
 
-    const userInfoElement = appUserElement.querySelectorAll("div.card")[0] as HTMLElement;
-    const courseInfoElement = appUserElement.querySelectorAll("div.card")[1] as HTMLElement;
+    const userInfoElement = appUserElement.querySelector(
+      "app-thongtin-user > div:first-child > div.card-body"
+    ) as HTMLElement;
+    const courseInfoElement = appUserElement.querySelector(
+      "app-thongtin-user > div:nth-child(2) > div > div > div.card-body"
+    ) as HTMLElement;
 
     const userInfoValues: NodeListOf<HTMLElement> = userInfoElement.querySelectorAll(
-      ".container-fluid > .row > div:first-child > .row > div:last-child"
+      "div > .col > div .info-item > span:last-child"
     );
+
     const courseInfoValues: NodeListOf<HTMLElement> = courseInfoElement.querySelectorAll(
-      ".container-fluid > .row > div:first-child > .row > div:last-child"
+      ".row > div > div > div:last-child"
     );
 
     const userData: UserType = {
@@ -55,14 +60,15 @@ const getData = async () => {
       fullName: userInfoValues[1]?.innerText || "",
       dateOfBirth: userInfoValues[2]?.innerText || "",
       gender: userInfoValues[3]?.innerText || "",
-      phone: userInfoValues[4]?.innerText || "",
-      identityNumber: userInfoValues[5]?.innerText || "",
-      email: userInfoValues[6]?.innerText || "",
-      placeOfBirth: userInfoValues[7]?.innerText || "",
-      ethnicity: userInfoValues[8]?.innerText || "",
-      religion: userInfoValues[9]?.innerText || "",
-      presenceStatus: userInfoValues[10]?.innerText || "",
-      residentialAddress: userInfoValues[11]?.innerText || "",
+      presenceStatus: userInfoValues[4]?.innerText || "",
+      phone: userInfoValues[5]?.innerText || "",
+      identityNumber: userInfoValues[6]?.innerText || "",
+      ethnicity: userInfoValues[7]?.innerText || "",
+      religion: userInfoValues[8]?.innerText || "",
+      placeOfBirth: userInfoValues[9]?.innerText || "",
+      nationality: userInfoValues[10]?.innerText || "",
+      email: userInfoValues[11]?.innerText || "",
+      residentialAddress: userInfoValues[13]?.innerText || "",
       updatedAt: new Date()
     };
 
@@ -118,7 +124,7 @@ const Info = () => {
         case "CHECK_URL": {
           const { URL }: GetURLMessageType["payload"] = payload;
 
-          const _URL_TIENICHSV_INFO = _TIENICHSV_URL + "/#/userinfo";
+          const _URL_TIENICHSV_INFO = _TIENICHSV_URL + "/#/home?mode=userinfo";
           const _URL_TIENICHSDH_INFO = _TIENICHSDH_URL + "/#/userinfo";
           const availableURL = [_URL_TIENICHSV_INFO, _URL_TIENICHSDH_INFO];
 

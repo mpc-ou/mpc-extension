@@ -23,14 +23,15 @@ export const _USER_LABEL_MAPPING: UserLabelMappingType = {
   fullName: "Họ và tên",
   dateOfBirth: "Ngày sinh",
   gender: "Giới tính",
+  presenceStatus: "Trạng thái",
   phone: "Điện thoại",
   identityNumber: "Số CMND/CCCD",
-  email: "Email",
-  placeOfBirth: "Nơi sinh",
   ethnicity: "Dân tộc",
   religion: "Tôn giáo",
-  presenceStatus: "Hiện diện",
-  residentialAddress: "Hộ khẩu",
+  placeOfBirth: "Nơi sinh",
+  nationality: "Quốc tịch",
+  email: "Email",
+  residentialAddress: "Địa chỉ",
   updatedAt: "Cập nhật"
 };
 
