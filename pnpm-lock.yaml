@@ -59,6 +59,9 @@ importers:
       semantic-release:
         specifier: ^24.0.0
         version: 24.0.0(typescript@5.7.2)
+      semantic-release-contributors:
+        specifier: ^3.1.1
+        version: 3.1.1(semantic-release@24.0.0(typescript@5.7.2))
       ts-node:
         specifier: ^10.9.2
         version: 10.9.2(@types/node@22.10.5)(typescript@5.7.2)
@@ -706,6 +709,10 @@ packages:
 
   array-ify@1.0.0:
     resolution: {integrity: sha512-c5AMf34bKdvPhQ7tBGhqkgKNUzMr4WUs+WDtC2ZUGOUncbxKMTvqxYctiseW3+L4bA8ec+GcZ6/A/FW4m8ukng==}
+
+  author-regex@1.0.0:
+    resolution: {integrity: sha512-KbWgR8wOYRAPekEmMXrYYdc7BRyhn2Ftk7KWfMUnQ43hFdojWEFRxhhRUm3/OFEdPa1r0KAvTTg9YQK57xTe0g==}
+    engines: {node: '>=0.8'}
 
   balanced-match@1.0.2:
     resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
@@ -1709,6 +1716,10 @@ packages:
     resolution: {integrity: sha512-GQ2EWRpQV8/o+Aw8YqtfZZPfNRWZYkbidE9k5rpl/hC3vtHHBfGm2Ifi6qWV+coDGkrUKZAxE3Lot5kcsRlh+g==}
     engines: {node: '>=6'}
 
+  parse-author@2.0.0:
+    resolution: {integrity: sha512-yx5DfvkN8JsHL2xk2Os9oTia467qnvRgey4ahSm2X8epehBLx/gWLcy5KI+Y36ful5DzGbCS6RazqZGgy1gHNw==}
+    engines: {node: '>=0.10.0'}
+
   parse-json@4.0.0:
     resolution: {integrity: sha512-aOIos8bujGN93/8Ox/jPLh7RwVnPEysynVFE+fQZyg6jKELEHwzgKdLRFHUgXJL6kylijVSBC4BvN9OmsB48Rw==}
     engines: {node: '>=4'}
@@ -1876,6 +1887,12 @@ packages:
   safe-buffer@5.1.2:
     resolution: {integrity: sha512-Gd2UZBJDkXlY7GbJxfsE8/nvKkUEU1G38c1siN6QP6a9PT9MmHB8GnpscSmMJSoF8LOIrt8ud/wPtojys4G6+g==}
 
+  semantic-release-contributors@3.1.1:
+    resolution: {integrity: sha512-wVC3YSmHZPycPAeP/mgeaj+Dis4NZVYMCBOXE6UzUxe+zhiD3/7X0CzPG93BUzv7TfVtuKK7+ckZFUbJ/MFXUw==}
+    engines: {node: '>=10.18'}
+    peerDependencies:
+      semantic-release: '>=15.8.0 <18.0.0'
+
   semantic-release@24.0.0:
     resolution: {integrity: sha512-v46CRPw+9eI3ZuYGF2oAjqPqsfbnfFTwLBgQsv/lch4goD09ytwOTESMN4QIrx/wPLxUGey60/NMx+ANQtWRsA==}
     engines: {node: '>=20.8.1'}
@@ -1976,6 +1993,10 @@ packages:
 
   string_decoder@1.1.1:
     resolution: {integrity: sha512-n/ShnvDi6FHbbVfviro+WojiFzv+s8MPMHBczVePfUpDJLwoLT0ht1l4YwBCbi8pJAveEEdnkHyPyTP/mzRfwg==}
+
+  stringify-author@0.1.3:
+    resolution: {integrity: sha512-OxmcAnr4DESGl/ics9lAv30DdOBC2bdqswEAzTiOZSQRqVpWfnmlr3cpfxTmExf7phS5WxBJ1flD1e3ResNTBA==}
+    engines: {node: '>=0.10.0'}
 
   strip-ansi@6.0.1:
     resolution: {integrity: sha512-Y38VPSHcqkFrCpFnQ9vuSXmquuv5oXOKpGeT6aGrr3o3Gc9AlVa6JBfUSOCnbxGGZF+/0ooI7KrPuUSztUdU5A==}
@@ -2875,6 +2896,8 @@ snapshots:
   argv-formatter@1.0.0: {}
 
   array-ify@1.0.0: {}
+
+  author-regex@1.0.0: {}
 
   balanced-match@1.0.2: {}
 
@@ -3797,6 +3820,10 @@ snapshots:
     dependencies:
       callsites: 3.1.0
 
+  parse-author@2.0.0:
+    dependencies:
+      author-regex: 1.0.0
+
   parse-json@4.0.0:
     dependencies:
       error-ex: 1.3.2
@@ -3963,6 +3990,14 @@ snapshots:
 
   safe-buffer@5.1.2: {}
 
+  semantic-release-contributors@3.1.1(semantic-release@24.0.0(typescript@5.7.2)):
+    dependencies:
+      aggregate-error: 3.1.0
+      jsonfile: 6.1.0
+      parse-author: 2.0.0
+      semantic-release: 24.0.0(typescript@5.7.2)
+      stringify-author: 0.1.3
+
   semantic-release@24.0.0(typescript@5.7.2):
     dependencies:
       '@semantic-release/commit-analyzer': 13.0.0(semantic-release@24.0.0(typescript@5.7.2))
@@ -4086,6 +4121,8 @@ snapshots:
   string_decoder@1.1.1:
     dependencies:
       safe-buffer: 5.1.2
+
+  stringify-author@0.1.3: {}
 
   strip-ansi@6.0.1:
     dependencies:

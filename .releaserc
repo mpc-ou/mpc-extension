@@ -5,13 +5,27 @@
   "plugins": [
     "@semantic-release/commit-analyzer",
     "@semantic-release/release-notes-generator",
-    "@semantic-release/npm",
-    "@semantic-release/changelog",
-    "@semantic-release/github",
+    "semantic-release-contributors",
+    [
+      "@semantic-release/npm",
+      { "npmPublish": false}
+    ],
     [
       "@semantic-release/exec",
       {
-        "prepareCmd": "pnpm dlx tsx scripts/updateManifest.ts ${nextRelease.version}"
+        "prepareCmd": "pnpm dlx tsx scripts/updateManifest.ts ${nextRelease.version} && pnpm build && cd dist && zip -r ../mpc-extension-${nextRelease.version}.zip ."
+      }
+    ],
+    "@semantic-release/changelog",
+    [
+      "@semantic-release/github",
+      {
+        "assets": [
+          {
+            "path": "mpc-extension-*.zip",
+            "label": "Chrome Extension Build"
+          }
+        ]
       }
     ],
     [
@@ -20,6 +34,7 @@
         "assets": [
           "package.json",
           "public/manifest.json",
+          "package-lock.json",
           "CHANGELOG.md"
         ],
         "message": "chore(release): update version to ${nextRelease.version} [skip ci]"
