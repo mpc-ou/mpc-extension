@@ -1,15 +1,6 @@
 declare const XLSX: any;
 declare const Chart: any;
 
-type PointCharacterType = "A+" | "A" | "B+" | "B" | "C+" | "C" | "D+" | "D" | "F" | "M";
-type PointScale4Type = 4 | 3.5 | 3 | 2.5 | 2 | 1.5 | 1 | 0;
-
-type PointMappingType = {
-  minScale10: number;
-  scale4: PointScale4Type;
-  character: PointCharacterType;
-};
-
 type RankTextType = "Xuất sắc" | "Giỏi" | "Khá" | "Trung Bình" | "Yếu" | "Kém";
 type RankMappingType = {
   [K in RankTextType]: number;
@@ -51,52 +42,3 @@ type CourseType = {
   academicYear: string;
   updatedAt: Date;
 };
-
-type IgnoreListType = {
-  data: string[];
-  updatedAt: Date;
-};
-
-type ScoreRecordType = {
-  code: string;
-  name: string;
-  credit: number;
-  point: {
-    scale10: number;
-    scale4: number;
-    character: PointCharacterType;
-  };
-  isIgnore?: boolean;
-  // chỉ dùng isHead khi crawl
-  isHead?: boolean;
-};
-
-type ScoreGroupType = {
-  id: number;
-  title: string;
-  data: ScoreRecordType[];
-  totalCredit: number;
-  avgPoint: {
-    scale10: number;
-    scale4: number;
-  };
-};
-
-type PointDataType = {
-  data: ScoreGroupType[];
-  isOnlyCalcGPA: boolean;
-  queyText: string;
-  updatedAt: Date;
-};
-
-// type Subject = {
-//   code: string;
-//   name: string;
-//   credit: number;
-//   finalPointRate: number;
-// };
-
-// type MajorType = {
-//   name: string;
-//   subjects: Subject[];
-// };
