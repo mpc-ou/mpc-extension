@@ -1,4 +1,4 @@
-import { PointDataType, PointMappingType } from "@/entrypoints/popup/PointTab/type";
+import { PointMappingType } from "@/entrypoints/popup/PointTab/type";
 
 export const _DEFAULT_IGNORE_SEMESTER_TITLE: string = "Bảo lưu";
 export const _DEFAULT_FIXED_POINT: number = 3;
@@ -35,13 +35,6 @@ export const _DEFAULT_IGNORE_SUBJECT_DATA: string[] = [
   "GENG0", // Tiếng Anh căn bản
   "GENG4" // Tiếng Anh đầu ra
 ];
-
-export const _DEFAULT_POINT_DATA: PointDataType = {
-  data: [],
-  isOnlyCalcGPA: false,
-  queyText: "",
-  updatedAt: new Date()
-};
 
 export const _DEFAULT_USER_DATA: UserType = {
   userId: "",

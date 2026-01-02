@@ -3,7 +3,8 @@ import { defineConfig } from "wxt";
 
 // See https://wxt.dev/api/config.html
 export default defineConfig({
-  modules: ["@wxt-dev/module-react", "@wxt-dev/webextension-polyfill"],
+  webExt: {},
+  modules: ["@wxt-dev/webextension-polyfill"],
   vite: () => ({
     plugins: [tailwindcss()]
   }),
@@ -11,7 +12,7 @@ export default defineConfig({
     name: "MPC Extension",
     version: "0.3.6", // TODO: Update version before build
     description: "Extension hỗ trợ sinh viên trường Đại học Mở TP. HCM trong việc lên kế hoạch học tập.",
-    permissions: ["scripting", "activeTab"]
+    permissions: ["scripting", "activeTab", "storage"]
   },
   manifestVersion: 3
 });

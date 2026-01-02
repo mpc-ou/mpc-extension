@@ -1,6 +1,3 @@
-declare const XLSX: any;
-declare const Chart: any;
-
 type RankTextType = "Xuất sắc" | "Giỏi" | "Khá" | "Trung Bình" | "Yếu" | "Kém";
 type RankMappingType = {
   [K in RankTextType]: number;

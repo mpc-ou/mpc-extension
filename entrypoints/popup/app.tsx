@@ -1,16 +1,11 @@
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { InfoTab } from "./InfoTab";
 import { PointTab } from "./PointTab";
 import { StatisticTab } from "./StatisticTab";
-import { _TAB_CATE } from "./type";
 
 function App() {
-  const [tab, setTab] = useState<_TAB_CATE>("point");
-
   return (
-    <div className='min-w-160 pb-4'>
+    <div className='min-w-180 pb-4'>
       <Tabs defaultValue='point'>
         <TabsList className='w-full'>
           <TabsTrigger value='point'>Tính điểm</TabsTrigger>

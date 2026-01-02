@@ -43,3 +43,9 @@ export type ScoreSumaryType = {
   gpa10: number;
   gpa4: number;
 };
+
+export type PointStorageType = {
+  filter: ScoreFilterType;
+  data: ScoreGroupType[];
+  updatedAt: string;
+};

@@ -12,7 +12,6 @@ export const _GITHUB_URL: string = "https://github.com/mpc-ou/mpc-extension" as 
 export const _POINT_KEY = "point" as const;
 export const _USER_KEY = "user" as const;
 export const _COURSE_KEY = "course" as const;
-export const _IGNORE_LIST_KEY = "ignoreList" as const;
 
 export const _USER_LABEL_MAPPING: UserLabelMappingType = {
   userId: "Mã SV",
