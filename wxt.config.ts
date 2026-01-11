@@ -20,7 +20,7 @@ export default defineConfig({
   }),
   manifest: {
     name: "MPC Extension",
-    version: "0.3.6",
+    version: "0.3.7",
     description: "Extension hỗ trợ sinh viên trường Đại học Mở TP. HCM trong việc lên kế hoạch học tập.",
     permissions: ["scripting", "activeTab", "storage"]
   },

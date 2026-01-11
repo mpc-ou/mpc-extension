@@ -1,6 +1,6 @@
 {
   "name": "mpc-extension",
-  "version": "0.3.6",
+  "version": "0.3.7",
   "type": "module",
   "private": true,
   "description": "Extension hỗ trợ sinh viên trường Đại học Mở TP. HCM trong việc lên kế hoạch học tập.",

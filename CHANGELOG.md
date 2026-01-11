@@ -1,3 +1,10 @@
+## [0.3.7](https://github.com/mpc-ou/mpc-extension/compare/v0.3.6...v0.3.7) (2026-01-11)
+
+
+### Bug Fixes
+
+* default url change from aqtechvn ([8b3b659](https://github.com/mpc-ou/mpc-extension/commit/8b3b659d1f16db48596065e6d6f3e32de86dfaae))
+
 ## [0.3.6](https://github.com/mpc-ou/mpc-extension/compare/v0.3.5...v0.3.6) (2025-12-25)
 
 
