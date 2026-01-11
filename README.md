@@ -1,35 +1,52 @@
 # MPC EXTENSION
 
-Extension hỗ trợ sinh viên trường Đại học Mở TP. HCM trong việc lên kế hoạch học tập. Công cụ này giúp tối ưu hóa quá trình học tập và lập kế hoạch học tập cá nhân, giúp sinh viên theo dõi kết quả học tập, tính toán điểm trung bình, và lên lộ trình học hiệu quả hơn.
+Language:
+- [English](README.md)
+- [Vietnamese](README.vi.md)
 
-## Cách sử dụng
+An extension designed to assist Ho Chi Minh City Open University students with study planning. This tool optimizes the learning process and personal study scheduling, enabling students to track academic performance, calculate GPAs, and create more effective study roadmaps.
 
-Thêm trực tiếp [extension tại Chrome Web Store](https://chromewebstore.google.com/detail/mpc-extension/lidfnknnjlblinmhnbbkbodjkjoheanj).
+## Download and Usage
 
-## Build từ mã nguồn (pnpm)
+### Chrome Web Store (Recommended)
 
+Visit [MPC Extension on Chrome Web Store](https://chromewebstore.google.com/detail/mpc-extension/lidfnknnjlblinmhnbbkbodjkjoheanj) and click "Add to Chrome".
+
+### Release on GitHub
+
+Visit [MPC Extension Releases](https://github.com/mpc-ou/mpc-extension/releases) and download the latest version, which includes:
+
+- Chrome Web Store (for Chromium-based browsers like Chrome, Edge, Brave, etc.)
+- Mozilla Add-ons (for Firefox)
+
+After downloading, follow these instructions to install manually:
+
+1. Extract the downloaded file.
+2. In your Chromium-based browser (Chrome, Edge, Brave, etc.), go to Settings -> Extensions -> Manage Extensions.
+3. Enable Developer Mode -> Click Load unpacked -> Select the extracted folder.
+4. Open the extension and enjoy the features.
+
+### Build from source (pnpm)
 ```bash
 git clone https://github.com/mpc-ou/mpc-extension.git
 cd mpc-extension
 
 pnpm install
+
 pnpm build
+pnpm build:firefox # For Firefox
 ```
 
-Sau khi build, folder **dist** sẽ được tạo ra.
+After building, the **.output** folder will be created. Inside, there are folders corresponding to each browser. Use these folders to install manually as described above.
 
-1. Vào trình duyệt lõi Chromium (Chrome, Edge, Brave,...) -> Setting -> Extensions -> Manage Extension.
-2. Bật Developer Mode -> Chọn Load unpacked -> Chọn folder **dist**.
-3. Vào website tienichsv.ou.edu.vn, chuyển sang tab điểm và sử dụng extension.
+## Contributing to the source code
 
-## Cách đóng góp mã nguồn
+See [CONTRIBUTING.md](https://github.com/mpc-ou/mpc-extension/blob/dev/CONTRIBUTING.md)
 
-Xem tại [CONTRIBUTING.md](https://github.com/mpc-ou/mpc-extension/blob/dev/CONTRIBUTING.md)
-
-## Giấy phép
+## License
 
 [GNU](https://choosealicense.com/licenses/gpl-3.0/)
 
-## Tác giả
+## Author
 
 [@mpc](https://www.facebook.com/CLBLapTrinhTrenThietBiDiDong)
