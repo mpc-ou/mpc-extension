@@ -1,3 +1,15 @@
+# [1.0.0](https://github.com/mpc-ou/mpc-extension/compare/v0.3.7...v1.0.0) (2026-01-11)
+
+
+### Features
+
+* migrate to WXT ([64e9886](https://github.com/mpc-ou/mpc-extension/commit/64e9886ef01be8e69b895c984ac6fc8417ec2e3d))
+
+
+### BREAKING CHANGES
+
+* Project migrated to WXT. Old HTML build is no longer supported.
+
 ## [0.3.7](https://github.com/mpc-ou/mpc-extension/compare/v0.3.6...v0.3.7) (2026-01-11)
 
 
