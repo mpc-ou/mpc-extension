@@ -1,57 +1,55 @@
-# MPC EXTENSION - ĐÓNG GÓP MÃ NGUỒN
+# MPC EXTENSION - CONTRIBUTING
 
-Dưới đây là một số hướng dẫn cho bạn:
+Below are some guidelines for contributing:
 
-- [Phát hiện lỗi](#issue)
-- [Thêm tính năng](#feature)
-- [Hướng dẫn đóng góp mã nguồn](#submit)
+- [Report an issue](#issue)
+- [Request or add a feature](#feature)
+- [Contribution guide](#submit)
 
-## <a name="issue"></a> Phát hiện lỗi?
+## <a name="issue"></a> Found a bug?
 
-Nếu gặp lỗi hãy [tạo mới một issue](#submit-issue) để thông báo cho chúng tôi.
-Hoặc nếu bạn có thể fix chúng, đừng ngần ngại [tạo pull request](#submit-pr).
+If you encounter a bug, please [open a new issue](#submit-issue) to let us know.  
+Or, if you can fix it yourself, feel free to [create a pull request](#submit-pr).
 
-## <a name="feature"></a> Thêm tính năng
+## <a name="feature"></a> Adding a feature
 
-Bạn có thể yêu cầu, gợi ý một tính năng mới thông qua [tạo issue](#submit-issue).
-Nếu muốn thực hiện một tính năng mới, hãy xem xét độ thay đổi của chúng để xác định cách bước tiếp theo phù hợp:
+You can request or suggest a new feature by [creating an issue](#submit-issue).  
+If you would like to implement a new feature, please consider its scope to determine the appropriate next steps:
 
-- Đối với **tính năng chính (Major Features)**, trước hết hãy tạo một issue, đề cập về đề xuất của bạn để chúng được thảo luận.
+- For **major features**, please create an issue first to describe your proposal so it can be discussed.
 
-- Với các **tính năng nhỏ (Small Features)** có thể được tạo và gửi thông qua [tạo pull request](#submit-pr).
+- For **small features**, you may directly implement them and submit a [pull request](#submit-pr).
 
-## <a name="submit"></a> Đóng góp mã nguồn
+## <a name="submit"></a> Contributing
 
-### <a name="submit-issue"></a> Tạo mới một issue
+### <a name="submit-issue"></a> Creating a new issue
 
-Trước khi tạo một issue mới, hãy chắc chắn chúng chưa được đề cập trước đó trong các issue đã tồn tại.
+Before creating a new issue, please make sure it has not already been reported in existing issues.
 
-Nếu đó là một lỗi, hãy mô tả chi tiết về quá trình bạn gặp lỗi, nếu được hãy đính kèm hình ảnh. Chúng sẽ giúp chúng tôi tiết kiệm thời gian hơn trong việc sửa lỗi.
+If it is a bug, describe in detail how to reproduce the problem, and include screenshots if possible. This will help us save time when fixing it.
 
-Rất tiếc, chúng tôi không thể sửa các lỗi mà không có phần mô tả. Vì vậy nếu chúng tôi không nhận được phản hồi từ bạn, chúng tôi sẽ đóng issue đó.
+Unfortunately, we cannot fix issues without sufficient information. If we do not receive a response from you, the issue may be closed.
 
-Trong trường hợp bạn muốn đề xuất một tính năng mới, hãy tạo issue và mô tả về đề xuất của bạn.
+If you would like to propose a new feature, please create an issue and clearly describe your suggestion.
 
-### <a name="submit-pr"></a> Tạo pull request (PR)
+### <a name="submit-pr"></a> Creating a pull request (PR)
 
-Trước khi gửi PR, hãy đọc qua các bước dưới đây:
+Before submitting a PR, please go through the following steps:
 
-1. Tìm kiếm trên [GitHub](https://github.com/mpc-ou/mpc-extension/pulls) xem đã có PR nào trước đó tương tự hay chưa.
+1. Search on [GitHub](https://github.com/mpc-ou/mpc-extension/pulls) to see if a similar PR already exists.
 
-2. [Fork](https://docs.github.com/en/github/getting-started-with-github/fork-a-repo) repo này về máy.
+2. [Fork](https://docs.github.com/en/github/getting-started-with-github/fork-a-repo) this repository.
 
-3. Tạo một nhánh mới để fix lỗi:
+3. Create a new branch to fix the issue:
 
    ```shell
    git checkout -b my-fix-branch main
    ```
+4. Commit your changes following the [commit message conventions](https://www.conventionalcommits.org/en/v1.0.0/). You can see examples [here](https://www.conventionalcommits.org/en/v1.0.0/#examples).
 
-4. Commit các thay đổi theo quy tắc [commit message conventions](https://www.conventionalcommits.org/en/v1.0.0/), bạn có thể xem các ví dụ tại [đây](https://github.com/mpc-ou/mpc-extension/commits/main/).
-
-5. Đưa code lên github:
+5. Push the code to GitHub:
 
    ```shell
    git push origin my-fix-branch
    ```
-
-6. Trên GitHub, tạo một PR đến nhánh `main` của `mpc-extension`.
+6. On GitHub, create a PR to the `main` branch of `mpc-extension`.
