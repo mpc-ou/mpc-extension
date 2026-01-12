@@ -44,7 +44,19 @@ const ConfigTab = () => {
           className='w-30'
           max='10'
           min='1'
-          onChange={(e) => setFixedPoint(Number(e.target.value))}
+          onChange={(e) => {
+            const value = e.target.value;
+            if (value === "") {
+              // Allow the user to clear the field without immediately changing the fixedPoint value
+              return;
+            }
+            const num = Number(value);
+            if (Number.isNaN(num)) {
+              return;
+            }
+            const clamped = Math.min(10, Math.max(1, num));
+            setFixedPoint(clamped);
+          }}
           type='number'
           value={fixedPoint}
         />
