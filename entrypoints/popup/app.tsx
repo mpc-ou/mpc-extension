@@ -3,12 +3,13 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { _FACEBOOK_URL, _GITHUB_URL } from "@/constants";
 import { _DEFAULT_SITE_URL_MAPPING } from "@/constants/default";
-import { _TAB_CATE } from "@/entrypoints/popup/type";
+import { _TAB_CATE, _SITE_CATE } from "@/entrypoints/popup/type"; // Ensure _SITE_CATE is imported if used
 import { useGlobalStore } from "@/store/use-global-store";
 import { getCurrTabURL, openNewTab } from "@/utils";
 import { InfoTab } from "./InfoTab";
 import { PointTab } from "./PointTab";
 import { StatisticTab } from "./StatisticTab";
+import ConfigTab from '@/components/ConfigTab';
 
 function App() {
   const { tab, setTab, getData, setSiteCurr, setSiteCurrURL } = useGlobalStore();
@@ -43,7 +44,7 @@ function App() {
   useEffect(() => {
     const loadSiteCurr = async () => {
       const currURL = await getCurrTabURL();
-      let siteCurr: _SITE_CATE = "sv";
+      let siteCurr: _SITE_CATE = "sv"; // Ensure _SITE_CATE type is valid here
 
       for (const [key, site] of Object.entries(_DEFAULT_SITE_URL_MAPPING)) {
         if (currURL.startsWith(site.homepage)) {
@@ -64,6 +65,8 @@ function App() {
           <TabsTrigger value='point'>Tính điểm</TabsTrigger>
           <TabsTrigger value='info'>Thông tin</TabsTrigger>
           <TabsTrigger value='statistic'>Thống kê</TabsTrigger>
+          {/* NEW BUTTON HERE */}
+          <TabsTrigger value='config'>Cấu hình</TabsTrigger>
         </TabsList>
 
         <Activity mode={tab ? "visible" : "hidden"}>
@@ -75,6 +78,10 @@ function App() {
           </TabsContent>
           <TabsContent value='statistic'>
             <StatisticTab />
+          </TabsContent>
+          {/* NEW TAB CONTENT HERE */}
+          <TabsContent value='config'>
+            <ConfigTab />
           </TabsContent>
         </Activity>
       </Tabs>

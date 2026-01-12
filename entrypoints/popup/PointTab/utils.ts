@@ -2,10 +2,15 @@ import { utils as XLSXUtils, writeFile as XLSXWriteFile } from "xlsx";
 import { _DEFAULT_FIXED_POINT, _DEFAULT_IGNORE_SUBJECT_DATA } from "@/constants/default";
 import { ScoreGroupType } from "./type";
 
-const updateIgnoreSubject = (data: ScoreGroupType[]) => {
+// 1. ADDED: ignoreList argument (defaults to old constant)
+const updateIgnoreSubject = (
+  data: ScoreGroupType[], 
+  ignoreList: string[] = _DEFAULT_IGNORE_SUBJECT_DATA
+) => {
   const newData = data.map((d) => {
     d.data = d.data.map((item) => {
-      const isIgnore = _DEFAULT_IGNORE_SUBJECT_DATA.find((i) => item.code.includes(i));
+      // 2. CHANGED: Use the passed ignoreList
+      const isIgnore = ignoreList.find((i) => item.code.includes(i));
       if (isIgnore) {
         item.isIgnore = true;
       }
@@ -29,7 +34,11 @@ const updateIgnoreSubject = (data: ScoreGroupType[]) => {
   return newData;
 };
 
-const updateScoreAvg = (data: ScoreGroupType[]) => {
+// 3. ADDED: fixedPoint argument (defaults to old constant)
+const updateScoreAvg = (
+  data: ScoreGroupType[], 
+  fixedPoint: number = _DEFAULT_FIXED_POINT
+) => {
   const newData = data.map((d) => {
     const totalCredit = d.data.reduce((acc, curr) => {
       const isIgnoreCredit = curr.isIgnore || !curr.point.character || curr.point.character === "F";
@@ -74,8 +83,9 @@ const updateScoreAvg = (data: ScoreGroupType[]) => {
 
     d.totalCredit = totalCredit;
     d.avgPoint = {
-      scale10: Number.parseFloat((avg.point.scale10 / avg.credit).toFixed(_DEFAULT_FIXED_POINT)) || null,
-      scale4: Number.parseFloat((avg.point.scale4 / avg.credit).toFixed(_DEFAULT_FIXED_POINT)) || null
+      // 4. CHANGED: Use fixedPoint variable
+      scale10: Number.parseFloat((avg.point.scale10 / avg.credit).toFixed(fixedPoint)) || null,
+      scale4: Number.parseFloat((avg.point.scale4 / avg.credit).toFixed(fixedPoint)) || null
     };
 
     return d;
@@ -84,7 +94,11 @@ const updateScoreAvg = (data: ScoreGroupType[]) => {
   return newData;
 };
 
-const getScoreSummary = (data: ScoreGroupType[]) => {
+// 5. ADDED: fixedPoint argument
+const getScoreSummary = (
+  data: ScoreGroupType[], 
+  fixedPoint: number = _DEFAULT_FIXED_POINT
+) => {
   const totalCredit = data.reduce((acc, curr) => acc + curr.totalCredit, 0);
 
   let sumScale10 = 0;
@@ -116,8 +130,9 @@ const getScoreSummary = (data: ScoreGroupType[]) => {
   return {
     semesterCount: data.length,
     totalCredit,
-    gpa10: sumCredit > 0 ? +(sumScale10 / sumCredit).toFixed(_DEFAULT_FIXED_POINT) : 0,
-    gpa4: sumCredit > 0 ? +(sumScale4 / sumCredit).toFixed(_DEFAULT_FIXED_POINT) : 0
+    // 6. CHANGED: Use fixedPoint variable
+    gpa10: sumCredit > 0 ? +(sumScale10 / sumCredit).toFixed(fixedPoint) : 0,
+    gpa4: sumCredit > 0 ? +(sumScale4 / sumCredit).toFixed(fixedPoint) : 0
   };
 };
 

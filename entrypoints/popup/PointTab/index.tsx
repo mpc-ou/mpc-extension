@@ -19,6 +19,8 @@ import { navigateToURL } from "@/utils";
 import { DataTable } from "./data-table";
 import { ScoreGroupType, ScoreRecordType, ScoreSummaryType } from "./type";
 import { getScoreSummary, handleExportData, updateIgnoreSubject, updateScoreAvg } from "./utils";
+// 1. IMPORT YOUR NEW HOOK
+import { useConfig } from "@/hooks/useConfig";
 
 const PointTab = () => {
   const siteCurr = useGlobalStore((s) => s.siteCurr);
@@ -26,20 +28,25 @@ const PointTab = () => {
   const { setScores, scores, filter, setFilter, lastUpdate, setLastUpdate, saveData, getData } = useScoreStore();
   const [summary, setSummary] = useState<ScoreSummaryType>(_DEFAULT_SCORE_SUMMARY);
 
+  // 2. GET CONFIG VALUES
+  const { fixedPoint, ignoreList } = useConfig();
+
+  // 3. PASS CONFIG TO SUMMARY CALCULATION
   const handleUpdateSummary = useCallback((data: ScoreGroupType[]) => {
-    const updatedSummary = getScoreSummary(data);
+    const updatedSummary = getScoreSummary(data, fixedPoint);
     setSummary(updatedSummary);
-  }, []);
+  }, [fixedPoint]); // Re-run if user changes setting
 
   const handleNavigate = async (url: string) => {
     await navigateToURL(url);
   };
 
   const saveCurrentData = async (data: ScoreGroupType[]) => {
-    const updatedIgnoreData = updateIgnoreSubject(data);
-    const updatedData = updateScoreAvg(updatedIgnoreData);
+    // 4. PASS CONFIG TO DATA PROCESSING FUNCTIONS
+    const updatedIgnoreData = updateIgnoreSubject(data, ignoreList);
+    const updatedData = updateScoreAvg(updatedIgnoreData, fixedPoint);
 
-    const updatedSummary = getScoreSummary(updatedData);
+    const updatedSummary = getScoreSummary(updatedData, fixedPoint);
     setSummary(updatedSummary);
 
     setScores(updatedData);
@@ -104,6 +111,18 @@ const PointTab = () => {
   useEffect(() => {
     handleUpdateSummary(scores);
   }, [scores, handleUpdateSummary]);
+
+  // OPTIONAL: Re-calculate scores if ignoreList changes (Optional refinement)
+  useEffect(() => {
+     if(scores.length > 0) {
+        // This ensures that if you add a subject to the ignore list in the config,
+        // it updates the GPA immediately without needing to re-import data.
+        const updatedIgnoreData = updateIgnoreSubject(scores, ignoreList);
+        const updatedData = updateScoreAvg(updatedIgnoreData, fixedPoint);
+        setScores(updatedData);
+     }
+  }, [ignoreList, fixedPoint, setScores]);
+
 
   useLayoutEffect(() => {
     const getOldData = async () => {
