@@ -15,17 +15,11 @@ type Props = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSubmit: (semesterName: string) => void;
-  initialValue?: string;
+  initialValue: string;
   mode?: "add" | "edit";
 };
 
-export const FormSemesterDialog = ({
-  open,
-  onOpenChange,
-  onSubmit,
-  initialValue = "Học kỳ mới",
-  mode = "add"
-}: Props) => {
+export const FormSemesterDialog = ({ open, onOpenChange, onSubmit, initialValue, mode = "add" }: Props) => {
   const [semesterName, setSemesterName] = useState(initialValue);
 
   useEffect(() => {
@@ -35,7 +29,11 @@ export const FormSemesterDialog = ({
   }, [open, initialValue]);
 
   const handleSubmit = () => {
-    onSubmit(semesterName);
+    const trimmedName = semesterName.trim();
+    if (!trimmedName) {
+      return;
+    }
+    onSubmit(trimmedName);
     setSemesterName("Học kỳ mới");
   };
 

@@ -1,5 +1,5 @@
 import { CircleAlertIcon, CircleCheckIcon, FileOutputIcon, ImportIcon } from "lucide-react";
-import { Activity, useEffect, useLayoutEffect } from "react";
+import { Activity, useLayoutEffect } from "react";
 import { toast } from "sonner";
 import { ButtonNavSite } from "@/components/custom/button-nav-site";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -57,10 +57,6 @@ const InfoTab = () => {
     };
     loadData();
   }, [getData]);
-
-  useEffect(() => {
-    console.info("[index.tsx:56] ", siteCurrURL);
-  }, [siteCurrURL]);
 
   return (
     <section>

@@ -23,6 +23,7 @@ import {
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
 import { _GET_POINT_DATA } from "@/constants/chrome";
 import { _DEFAULT_SITE_URL_MAPPING } from "@/constants/default";
 import { _DEFAULT_SCORE_SUMMARY } from "@/entrypoints/popup/PointTab/default";
@@ -307,7 +308,9 @@ const PointTab = () => {
           </div>
         </div>
 
-        <div className='space-y-3 px-4 pb-4'>
+        <Separator className='mx-auto mb-4 max-w-[95%]' />
+
+        <div className='space-y-4 px-4 pb-4'>
           <div className='flex items-center gap-2'>
             <Input
               className='flex-1'
@@ -327,7 +330,8 @@ const PointTab = () => {
                 Chỉ GPA
               </Label>
             </div>
-
+          </div>
+          <div className='flex justify-end'>
             <Button onClick={() => setSemesterDialog({ open: true, mode: "add" })} size='sm' variant='outline'>
               <PlusIcon className='mr-2 h-4 w-4' />
               Thêm học kỳ
@@ -350,8 +354,8 @@ const PointTab = () => {
       <FormSemesterDialog
         initialValue={
           semesterDialog.mode === "edit" && semesterDialog.semesterIdx !== undefined
-            ? scores[semesterDialog.semesterIdx]?.title
-            : undefined
+            ? scores[semesterDialog.semesterIdx]?.title || ""
+            : "Học kỳ mới"
         }
         mode={semesterDialog.mode}
         onOpenChange={(open) => setSemesterDialog({ ...semesterDialog, open })}

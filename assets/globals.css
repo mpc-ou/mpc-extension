@@ -120,4 +120,10 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  /* Prevent Radix from locking scroll and shifting layout */
+  body[data-scroll-locked] {
+    overflow: visible !important;
+    margin-right: 0 !important;
+  }
 }
