@@ -1,3 +1,15 @@
+# [1.1.0](https://github.com/mpc-ou/mpc-extension/compare/v1.0.0...v1.1.0) (2026-01-12)
+
+
+### Bug Fixes
+
+* **copilot:** prevent invalid values input ([aa1c7f7](https://github.com/mpc-ou/mpc-extension/commit/aa1c7f76c0a88af52b282a27c647d65852ba15b9))
+
+
+### Features
+
+* init config tab ([a555b82](https://github.com/mpc-ou/mpc-extension/commit/a555b82447816b5fa39e0631b1567c01582e3a73))
+
 # [1.0.0](https://github.com/mpc-ou/mpc-extension/compare/v0.3.7...v1.0.0) (2026-01-11)
 
 

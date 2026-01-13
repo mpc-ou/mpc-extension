@@ -1,9 +1,15 @@
-import { CircleAlertIcon, CircleCheckIcon, ImportIcon } from "lucide-react";
+import { CircleAlertIcon, CircleCheckIcon, FileOutputIcon, ImportIcon } from "lucide-react";
 import { Activity, useEffect, useLayoutEffect } from "react";
 import { toast } from "sonner";
 import { ButtonNavSite } from "@/components/custom/button-nav-site";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu";
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
 import { _GET_USER_DATA } from "@/constants/chrome";
 import { _DEFAULT_SITE_URL_MAPPING } from "@/constants/default";
@@ -97,17 +103,27 @@ const InfoTab = () => {
         </Empty>
       </Activity>
       <Activity mode={userData.userId ? "visible" : "hidden"}>
-        <div className='py-2'>
-          <div className='flex justify-center gap-1'>
+        <div className='px-4 py-2'>
+          <div className='flex justify-end gap-1'>
             <Button onClick={handleImportData} size='sm'>
               Nhập dữ liệu mới
             </Button>
-            <Button
-              onClick={() => handleExportData(userData, courseData, _USER_LABEL_MAPPING, _COURSE_LABEL_MAPPING)}
-              size='sm'
-            >
-              Xuất dữ liệu
-            </Button>
+
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button size='sm' variant='outline'>
+                  Thao tác
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align='end'>
+                <DropdownMenuItem
+                  onClick={() => handleExportData(userData, courseData, _USER_LABEL_MAPPING, _COURSE_LABEL_MAPPING)}
+                >
+                  <FileOutputIcon className='mr-2 h-4 w-4 text-green-500' />
+                  Xuất thông tin
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
 

@@ -113,6 +113,7 @@ const getScoreSummary = (data: ScoreGroupType[]) => {
   return {
     semesterCount: data.length,
     totalCredit,
+    totalSubject: data.reduce((acc, curr) => acc + curr.data.length, 0),
     gpa10: sumCredit > 0 ? +(sumScale10 / sumCredit) : 0,
     gpa4: sumCredit > 0 ? +(sumScale4 / sumCredit) : 0
   };
