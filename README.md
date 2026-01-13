@@ -1,5 +1,8 @@
 # MPC EXTENSION
 
+[![🛡️ GPLv3 License](https://img.shields.io/badge/License-GPLv3-red?style=for-the-badge&logo=gnu)](/LICENSE)
+[![semantic-release: angular](https://img.shields.io/badge/semantic--release-angular-e10079?logo=semantic-release)](https://github.com/semantic-release/semantic-release)
+
 Language:
 - [English](README.md)
 - [Vietnamese](README.vi.md)
@@ -39,13 +42,18 @@ pnpm build:firefox # For Firefox
 
 After building, the **.output** folder will be created. Inside, there are folders corresponding to each browser. Use these folders to install manually as described above.
 
+## Core Technologies
+
+- [WXT (React + TypeScript)](https://wxt.dev/)
+- [Shadcn UI](https://ui.shadcn.com/)
+
 ## Contributing to the source code
 
 See [CONTRIBUTING.md](https://github.com/mpc-ou/mpc-extension/blob/dev/CONTRIBUTING.md)
 
 ## License
 
-[GNU](https://choosealicense.com/licenses/gpl-3.0/)
+[GNU GPLv3](/LICENSE)
 
 ## Author
 

@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/mpc-ou/mpc-extension/compare/v1.1.0...v1.2.0) (2026-01-13)
+
+
+### Features
+
+* enhance UI/UX and add semester management features ([d7fe838](https://github.com/mpc-ou/mpc-extension/commit/d7fe8385472b3d1bf5fa974be3c25c90161e53a5))
+
 # [1.1.0](https://github.com/mpc-ou/mpc-extension/compare/v1.0.0...v1.1.0) (2026-01-12)
 
 
