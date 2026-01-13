@@ -38,6 +38,7 @@ export type ScoreFilterType = {
 };
 
 export type ScoreSummaryType = {
+  totalSubject?: number;
   semesterCount: number;
   totalCredit: number;
   gpa10: number;
