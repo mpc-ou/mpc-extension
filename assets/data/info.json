@@ -1,0 +1,52 @@
+{
+  "features": [
+    {
+      "title": "Tính điểm",
+      "description": "Tính điểm trung bình học kỳ và tích lũy, quản lý nhiều học kỳ"
+    },
+    {
+      "title": "Thông tin sinh viên",
+      "description": "Xem và xuất thông tin cá nhân sinh viên"
+    },
+    {
+      "title": "Lịch học",
+      "description": "Xem và xuất lịch học theo tuần, hỗ trợ Google Calendar và Excel"
+    },
+    {
+      "title": "Thống kê",
+      "description": "Biểu đồ phân tích điểm số và xu hướng học tập"
+    },
+    {
+      "title": "Cài đặt",
+      "description": "Tùy chỉnh giao diện và các tính năng của extension"
+    }
+  ],
+  "changelog": [
+    {
+      "version": "1.2.0",
+      "date": "2026-01-13",
+      "changes": [
+        "Cải thiện UI/UX",
+        "Thêm tính năng quản lý học kỳ",
+        "Xuất lịch học ra Excel với nhiều sheet"
+      ]
+    },
+    {
+      "version": "1.1.0",
+      "date": "2026-01-12",
+      "changes": ["Khởi tạo tab cài đặt", "Sửa lỗi nhập giá trị không hợp lệ"]
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-01-11",
+      "changes": [
+        "Chuyển sang WXT framework",
+        "Cải thiện hiệu suất và trải nghiệm"
+      ]
+    }
+  ],
+  "credits": {
+    "team": "MPC Team",
+    "contributors": ["holedev", "konnn04", "antiennn", "quythanh"]
+  }
+}
