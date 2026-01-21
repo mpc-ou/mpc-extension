@@ -72,7 +72,7 @@ export function CalendarDetail({ selectedDate, schedule }: CalendarDetailProps) 
     );
   }
 
-  const sortedSchedule = [...schedule].sort((a, b) => (a.start_period ?? 0) - (b.start_period ?? 0));
+  const sortedSchedule = [...schedule].sort((a, b) => (a.startPeriod ?? 0) - (b.startPeriod ?? 0));
 
   return (
     <Card className='flex h-full flex-col gap-2 overflow-y-auto py-4'>
@@ -87,7 +87,7 @@ export function CalendarDetail({ selectedDate, schedule }: CalendarDetailProps) 
         {sortedSchedule.map((entry) => (
           <Card
             className={`border ${getSubjectColor(entry.code ? entry.code : "default")} rounded-lg px-2 py-2`}
-            key={`${entry.code ?? "unknown"}-${entry.group}-${entry.start_period ?? "0"}`}
+            key={`${entry.code ?? "unknown"}-${entry.group}-${entry.startPeriod ?? "0"}`}
           >
             <CardContent className='space-y-2 px-2 py-2'>
               <div>
@@ -104,9 +104,9 @@ export function CalendarDetail({ selectedDate, schedule }: CalendarDetailProps) 
                 <ClockIcon className='mt-0.5 h-4 w-4 flex-shrink-0' />
                 <div className='flex-1'>
                   <p className='text-sm'>
-                    Tiết {entry.start_period ?? "?"} - {entry.end_period ?? "?"} |{" "}
+                    Tiết {entry.startPeriod ?? "?"} - {entry.endPeriod ?? "?"} |{" "}
                     <b>
-                      {formatTime(entry.start_time)} {entry.end_time ? `- ${formatTime(entry.end_time)}` : ""}
+                      {formatTime(entry.startTime)} {entry.endTime ? `- ${formatTime(entry.endTime)}` : ""}
                     </b>
                   </p>
                 </div>

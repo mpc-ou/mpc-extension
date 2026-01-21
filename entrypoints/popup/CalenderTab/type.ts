@@ -1,10 +1,10 @@
 export type CalendarEntry = {
   category: "COURSE" | "LAB" | "EXAM" | "HOLIDAY" | "LESSON" | "OTHER";
   day: string;
-  start_period?: number;
-  end_period?: number;
-  start_time: string;
-  end_time?: string;
+  startPeriod?: number;
+  endPeriod?: number;
+  startTime: string;
+  endTime?: string;
   title: string;
   description?: string;
   code?: string;

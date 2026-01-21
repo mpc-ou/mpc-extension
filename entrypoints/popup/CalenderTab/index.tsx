@@ -1,4 +1,5 @@
 import {
+  AlertTriangleIcon,
   Calendar1Icon,
   CalendarPlusIcon,
   CircleAlertIcon,
@@ -9,7 +10,7 @@ import {
   Trash2Icon
 } from "lucide-react";
 import { ButtonNavSite } from "@/components/custom/button-nav-site";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -65,6 +66,16 @@ const CalendarEmptyState = ({
       <EmptyTitle>Chưa có dữ liệu lịch nào!</EmptyTitle>
       <EmptyDescription>Vui lòng truy cập trang lịch trên Tiện ích để nhập dữ liệu lịch.</EmptyDescription>
     </EmptyHeader>
+    {!!isLoading && (
+      <Alert className='border-red-200 bg-red-50 text-left text-red-900 dark:border-red-900 dark:bg-red-950 dark:text-red-50'>
+        <AlertTriangleIcon />
+        <AlertTitle>Lưu ý</AlertTitle>
+        <AlertDescription>
+          Quá trình lấy dữ liệu có thể mất vài phút. Vui lòng không đóng popup, chuyển trang hay làm mới trang cho đến
+          khi hoàn tất.
+        </AlertDescription>
+      </Alert>
+    )}
     <EmptyContent>
       <div className='flex gap-2'>
         <ButtonNavSite
@@ -105,6 +116,16 @@ const CalendarDataView = ({
   onDeleteClick: () => void;
 }) => (
   <>
+    {!!isLoading && (
+      <Alert className='border-red-200 bg-red-50 text-left text-red-900 dark:border-red-900 dark:bg-red-950 dark:text-red-50'>
+        <AlertTriangleIcon />
+        <AlertTitle>Lưu ý</AlertTitle>
+        <AlertDescription>
+          Quá trình lấy dữ liệu có thể mất vài phút. Vui lòng không đóng popup, chuyển trang hay làm mới trang cho đến
+          khi hoàn tất.
+        </AlertDescription>
+      </Alert>
+    )}
     <div className='flex justify-between gap-2'>
       <div className='flex items-center space-x-2'>
         <h2 className='font-semibold text-lg'>Thời Khóa Biểu</h2>

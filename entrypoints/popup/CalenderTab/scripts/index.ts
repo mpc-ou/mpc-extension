@@ -285,17 +285,17 @@ const getCalendars = async (onProgress?: ProgressCallback): Promise<SemesterData
       const room = getText("p:nth-of-type(3)").replace("Phòng:", "").trim();
       const teacher = getText("p:nth-of-type(4)").replace("GV:", "").trim();
       const time = getText("p:nth-of-type(5)").replace(/\s+/g, " ");
-      const [start_time, end_time] = time.match(TIME_REGEX) || [];
+      const [startTime, endTime] = time.match(TIME_REGEX) || [];
 
       const type = getCellType(cell);
 
       rowEntries.push({
         category: type,
         day,
-        start_period: currentPeriod,
-        end_period: currentPeriod + rowspan - 1,
-        start_time: start_time || "",
-        end_time: end_time || "",
+        startPeriod: currentPeriod,
+        endPeriod: currentPeriod + rowspan - 1,
+        startTime: startTime || "",
+        endTime: endTime || "",
         title: subject,
         code,
         group,

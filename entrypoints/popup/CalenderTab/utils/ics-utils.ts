@@ -25,7 +25,7 @@ function formatICSDateTime(date: Date): string {
 }
 
 function generateUID(entry: CalendarEntry, dateKey: string): string {
-  return `${entry.code}-${dateKey}-${entry.start_period}@${ICS_UID_DOMAIN}`;
+  return `${entry.code}-${dateKey}-${entry.startPeriod}@${ICS_UID_DOMAIN}`;
 }
 
 function escapeICSText(text: string): string {
@@ -36,12 +36,12 @@ function createEventFromEntry(entry: CalendarEntry, year: string, scheduleDateMa
   const [_, day, month] = scheduleDateMatch;
   const dateKey = `${year}-${month}-${day}`;
 
-  if (!(entry.start_time && entry.end_time)) {
+  if (!(entry.startTime && entry.endTime)) {
     return null;
   }
 
-  const startDate = parseDateTime(dateKey, entry.start_time);
-  const endDate = parseDateTime(dateKey, entry.end_time);
+  const startDate = parseDateTime(dateKey, entry.startTime);
+  const endDate = parseDateTime(dateKey, entry.endTime);
 
   const uid = generateUID(entry, dateKey);
   const summary = escapeICSText(`${entry.title} (${entry.code})`);
@@ -51,7 +51,7 @@ function createEventFromEntry(entry: CalendarEntry, year: string, scheduleDateMa
     `Môn: ${entry.title}`,
     `Mã: ${entry.code}`,
     `Nhóm: ${entry.group}`,
-    `Tiết: ${entry.start_period} - ${entry.end_period}`
+    `Tiết: ${entry.startPeriod} - ${entry.endPeriod}`
   ];
   if (entry.teacher) {
     descriptionParts.push(`GV: ${entry.teacher}`);

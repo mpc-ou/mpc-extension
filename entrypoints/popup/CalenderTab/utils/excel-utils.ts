@@ -43,8 +43,8 @@ function buildWeekRows(week: WeekData): (string | number)[][] {
   return week.schedule.map((entry: CalendarEntry) => [
     week.week,
     entry.day,
-    formatPeriod(entry.start_period, entry.end_period),
-    formatTime(entry.start_time, entry.end_time),
+    formatPeriod(entry.startPeriod, entry.endPeriod),
+    formatTime(entry.startTime, entry.endTime),
     entry.title || "",
     entry.code || "",
     entry.group || "",

@@ -18,7 +18,7 @@ const info = JSON.parse(fs.readFileSync(infoPath, "utf8"));
 
 // 1. Update Contributors
 try {
-  const authorsLog = execSync('git log --format="%aN"').toString().trim();
+  const authorsLog = execSync('git log --format="%aN" --use-mailmap').toString().trim();
   const authors = [
     ...new Set(
       authorsLog
@@ -54,7 +54,7 @@ if (releaseNotes) {
 
   const changes = releaseNotes
     .split("\n")
-    .filter((line) => line.trim().startsWith("- ") || line.trim().startsWith("* "))
+    .filter((line) => line.trim().length > 0)
     .map((line) => {
       let content = line.replace(CLEAN_LINE_REGEX, "").trim();
 
