@@ -23,6 +23,20 @@
   ],
   "changelog": [
     {
+      "version": "1.3.0",
+      "date": "2026-01-26",
+      "changes": [
+        "# [1.3.0](https://github.com/mpc-ou/mpc-extension/compare/v1.2.0...v1.3.0) (2026-01-26)",
+        "### Bug Fixes",
+        "edit wrong case variable, fix update info ([0ec0beb](https://github.com/mpc-ou/mpc-extension/commit/0ec0bebab47a84daf31c707e5d90edb8a82752ce))",
+        "fix typo, optimized ([f3e781b](https://github.com/mpc-ou/mpc-extension/commit/f3e781b8697906da30a2caa8d7ef361e8bc8aced))",
+        "lint violations (type standardization), migrate useContext → Zustand, automate app info updates ([6faddb4](https://github.com/mpc-ou/mpc-extension/commit/6faddb4faf9580d8b59243cc24f9cff234418bda))",
+        "rewrite use-calendar-store using wxt's object ([77637c7](https://github.com/mpc-ou/mpc-extension/commit/77637c774b67337cf21bd083d40d942640780845))",
+        "### Features",
+        "calendar - auto crawl, export and can view ([8aef328](https://github.com/mpc-ou/mpc-extension/commit/8aef328df5c9e458f32b5debc00e7fb2c00730a9))"
+      ]
+    },
+    {
       "version": "1.2.0",
       "date": "2026-01-13",
       "changes": [
@@ -34,7 +48,10 @@
     {
       "version": "1.1.0",
       "date": "2026-01-12",
-      "changes": ["Khởi tạo tab cài đặt", "Sửa lỗi nhập giá trị không hợp lệ"]
+      "changes": [
+        "Khởi tạo tab cài đặt",
+        "Sửa lỗi nhập giá trị không hợp lệ"
+      ]
     },
     {
       "version": "1.0.0",
@@ -47,6 +64,11 @@
   ],
   "credits": {
     "team": "MPC Team",
-    "contributors": ["konnn04", "holedev", "antiennn", "quythanh"]
+    "contributors": [
+      "konnn04",
+      "holedev",
+      "antiennn",
+      "quythanh"
+    ]
   }
 }
