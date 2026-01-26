@@ -30,12 +30,16 @@ export const _DEFAULT_SITE_URL_MAPPING: _SITE_MAPPING = {
     label: "Tiện ích SV",
     homepage: "https://tienichsv.ou.edu.vn",
     point: "https://tienichsv.ou.edu.vn/public/#/diem",
+    classCalendar: "https://tienichsv.ou.edu.vn/public/#/tkb-tuan",
+    examCalendar: "https://tienichsv.ou.edu.vn/public/#/lichthi",
     info: "https://tienichsv.ou.edu.vn/public/#/home?mode=userinfo"
   },
   kcq: {
     label: "Tiện ích KCQ",
     homepage: "https://tienichkcq.oude.edu.vn/",
     point: "https://tienichkcq.oude.edu.vn/#/diem",
+    classCalendar: "https://tienichkcq.oude.edu.vn/#/tkb-tuan",
+    examCalendar: "https://tienichkcq.oude.edu.vn/#/lichthi",
     info: "https://tienichkcq.oude.edu.vn/#/home?mode=userinfo"
   }
 };

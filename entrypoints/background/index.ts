@@ -1,6 +1,14 @@
-import { _GET_CURRENT_URL, _GET_POINT_DATA, _GET_USER_DATA, _NAVIGATE_TO_URL, _OPEN_NEW_TAB } from "@/constants/chrome";
+import {
+  _GET_CLASS_CALENDAR_DATA,
+  _GET_CURRENT_URL,
+  _GET_POINT_DATA,
+  _GET_USER_DATA,
+  _NAVIGATE_TO_URL,
+  _OPEN_NEW_TAB
+} from "@/constants/chrome";
 import { getUserData } from "@/entrypoints/popup/InfoTab/scripts";
 import { getPointData } from "@/entrypoints/popup/PointTab/scripts";
+import { getCalendars } from "../popup/CalendarTab/scripts";
 
 export default defineBackground(() => {
   browser.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
@@ -69,5 +77,31 @@ export default defineBackground(() => {
       });
       return true;
     }
+
+    if (msg.type === _GET_CLASS_CALENDAR_DATA) {
+      browser.tabs.query({ active: true, currentWindow: true }).then(([tab]) => {
+        if (!tab.id) {
+          sendResponse({ error: "Không tìm thấy tab hiện tại" });
+          return;
+        }
+
+        browser.scripting
+          .executeScript({
+            target: { tabId: tab.id },
+            func: getCalendars
+          })
+          .then((results) => {
+            const data = results[0].result;
+            sendResponse(data);
+          })
+          .catch((error) => {
+            console.error("Error executing getCalendars:", error);
+            sendResponse({ error: error.message });
+          });
+      });
+      return true;
+    }
+
+    return false;
   });
 });

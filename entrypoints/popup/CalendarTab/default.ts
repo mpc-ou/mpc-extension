@@ -1,0 +1,3 @@
+const _CHROME_STORAGE_TYPE: _CHROME_STORAGE_CATE = "local";
+const _CHROME_STORAGE_NAME = "calendarData" as const;
+export const _CHROME_STORAGE_CALENDAR_KEY = `${_CHROME_STORAGE_TYPE}:${_CHROME_STORAGE_NAME}` as const;
