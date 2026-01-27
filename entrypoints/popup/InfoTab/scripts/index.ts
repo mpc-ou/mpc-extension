@@ -1,6 +1,5 @@
 import { CourseType, UserType } from "@/entrypoints/popup/InfoTab/type";
 
-// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: <seem it not to be fine>
 const getUserData = () => {
   const appUserElement = document.querySelector("app-thongtin-user") as HTMLElement;
 

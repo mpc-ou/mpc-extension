@@ -13,7 +13,7 @@ type CalendarDetailProps = {
 const categoryBadges = {
   COURSE: (
     <Badge className='bg-blue-500 text-white dark:bg-blue-600' variant='secondary'>
-      Khóa học
+      Lý thuyết
     </Badge>
   ),
   LAB: (
@@ -76,10 +76,10 @@ export function CalendarDetail({ selectedDate, schedule }: CalendarDetailProps) 
 
   return (
     <Card className='flex h-full flex-col gap-2 overflow-y-auto py-4'>
-      <CardHeader className='flex-shrink-0'>
+      <CardHeader className='shrink-0'>
         <CardTitle className='flex items-center justify-between gap-2'>
           <span className='text-sm'>{formatDate(selectedDate)}</span>
-          <span className='text-md text-muted-foreground'>{sortedSchedule.length} sự kiện.</span>
+          <span className='text-md text-muted-foreground'>{sortedSchedule.length} sự kiện</span>
         </CardTitle>
       </CardHeader>
       <Separator />
@@ -89,9 +89,9 @@ export function CalendarDetail({ selectedDate, schedule }: CalendarDetailProps) 
             className={`border ${getSubjectColor(entry.code ? entry.code : "default")} rounded-lg px-2 py-2`}
             key={`${entry.code ?? "unknown"}-${entry.group}-${entry.startPeriod ?? "0"}`}
           >
-            <CardContent className='space-y-2 px-2 py-2'>
-              <div>
-                <h3 className='font-semibold text-base leading-tight'>
+            <CardContent className='mt-2 space-y-2 px-2 py-2'>
+              <div className='space-y-2'>
+                <h3 className='flex items-center font-semibold text-base leading-tight'>
                   {entry.title}
                   <span className='ml-2'>{VerifiedBadge(entry.category)}</span>
                 </h3>
@@ -100,8 +100,8 @@ export function CalendarDetail({ selectedDate, schedule }: CalendarDetailProps) 
                 </p>
               </div>
 
-              <div className='flex items-start gap-2 text-sm'>
-                <ClockIcon className='mt-0.5 h-4 w-4 flex-shrink-0' />
+              <div className='mt-4 flex items-start gap-2 text-sm'>
+                <ClockIcon className='mt-0.5 h-4 w-4 shrink-0' />
                 <div className='flex-1'>
                   <p className='text-sm'>
                     Tiết {entry.startPeriod ?? "?"} - {entry.endPeriod ?? "?"} |{" "}
@@ -114,7 +114,7 @@ export function CalendarDetail({ selectedDate, schedule }: CalendarDetailProps) 
 
               {entry.room ? (
                 <div className='flex items-center gap-2 text-sm'>
-                  <MapPinIcon className='h-4 w-4 flex-shrink-0' />
+                  <MapPinIcon className='h-4 w-4 shrink-0' />
                   <p>Phòng: {entry.room}</p>
                 </div>
               ) : null}

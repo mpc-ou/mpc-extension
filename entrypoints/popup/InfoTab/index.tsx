@@ -63,7 +63,7 @@ const InfoTab = () => {
       <Alert className='m-0 border-none p-0'>
         <AlertDescription>
           <div className='mx-auto flex items-center justify-center text-center'>
-            Dữ liệu cần được lấy từ:{" "}
+            Dữ liệu nhập từ:{" "}
             <ButtonNavSite url={_DEFAULT_SITE_URL_MAPPING[siteCurr].info} variant='link'>
               {_DEFAULT_SITE_URL_MAPPING[siteCurr].info}
             </ButtonNavSite>

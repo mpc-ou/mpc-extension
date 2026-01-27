@@ -76,7 +76,7 @@
     "husky": "^9.1.7",
     "lint-staged": "^16.2.7",
     "typescript": "^5.9.3",
-    "ultracite": "6.3.9",
+    "ultracite": "7.0.12",
     "wxt": "^0.20.6"
   },
   "lint-staged": {

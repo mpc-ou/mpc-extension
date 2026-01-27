@@ -97,7 +97,7 @@ export function InfoDialog({ open, onOpenChange }: InfoDialogProps) {
                 <InfoIcon className='h-4 w-4' />
                 Lịch sử cập nhật
               </h3>
-              <div className='space-y-4'>
+              <div className='hidden space-y-4'>
                 {data.changelog.map((release) => (
                   <div className='space-y-2' key={release.version}>
                     <div className='flex items-center gap-2'>

@@ -48,10 +48,7 @@
     {
       "version": "1.1.0",
       "date": "2026-01-12",
-      "changes": [
-        "Khởi tạo tab cài đặt",
-        "Sửa lỗi nhập giá trị không hợp lệ"
-      ]
+      "changes": ["Khởi tạo tab cài đặt", "Sửa lỗi nhập giá trị không hợp lệ"]
     },
     {
       "version": "1.0.0",
@@ -64,11 +61,6 @@
   ],
   "credits": {
     "team": "MPC Team",
-    "contributors": [
-      "konnn04",
-      "holedev",
-      "antiennn",
-      "quythanh"
-    ]
+    "contributors": ["konnn04", "holedev", "antiennn", "quythanh"]
   }
 }
