@@ -223,13 +223,13 @@ const DataTable = ({
               <Table className='w-full table-fixed'>
                 <TableHeader>
                   <TableRow>
-                    <TableHead className='w-[15%]'>Mã môn</TableHead>
-                    <TableHead className='w-[35%]'>Tên môn</TableHead>
-                    <TableHead className='w-[6%] text-center'>TC</TableHead>
-                    <TableHead className='w-[8%] text-center'>Hệ 10</TableHead>
-                    <TableHead className='w-[8%] text-center'>Hệ 4</TableHead>
-                    <TableHead className='w-[10%] text-center'>Điểm</TableHead>
-                    <TableHead className='w-[9%] text-center'>Thao tác</TableHead>
+                    <TableHead>Mã môn</TableHead>
+                    <TableHead colSpan={3}>Tên môn</TableHead>
+                    <TableHead className='text-right'>TC</TableHead>
+                    <TableHead className='text-right'>Hệ 10</TableHead>
+                    <TableHead className='text-right'>Hệ 4</TableHead>
+                    <TableHead className='text-right'>Điểm</TableHead>
+                    <TableHead className='text-right' />
                   </TableRow>
                 </TableHeader>
 
@@ -241,18 +241,18 @@ const DataTable = ({
 
                     return (
                       <TableRow className={subject.isIgnore ? "bg-gray-300" : ""} key={subject.code}>
-                        <TableCell className='w-[15%]'>{subject.code}</TableCell>
-                        <TableCell className='w-[35%]'>
+                        <TableCell>{subject.code}</TableCell>
+                        <TableCell colSpan={3}>
                           <Tooltip>
                             <TooltipTrigger className='w-full truncate text-left'>{subject.name}</TooltipTrigger>
                             <TooltipContent>{subject.name}</TooltipContent>
                           </Tooltip>
                         </TableCell>
-                        <TableCell className='w-[6%] text-center'>{subject.credit}</TableCell>
-                        <TableCell className='w-[8%] text-center'>{subject.point.scale10 ?? "-"}</TableCell>
-                        <TableCell className='w-[8%] text-center'>{subject.point.scale4 ?? "-"}</TableCell>
-                        <TableCell className='w-[10%] text-center'>{subject.point.character}</TableCell>
-                        <TableCell className='w-[9%] text-center'>
+                        <TableCell className='text-right'>{subject.credit}</TableCell>
+                        <TableCell className='text-right'>{subject.point.scale10 ?? "-"}</TableCell>
+                        <TableCell className='text-right'>{subject.point.scale4 ?? "-"}</TableCell>
+                        <TableCell className='text-right'>{subject.point.character}</TableCell>
+                        <TableCell className='text-center'>
                           <div className='flex items-center justify-center gap-3'>
                             <EditIcon
                               className='h-4 w-4 cursor-pointer text-blue-500 hover:text-blue-700'

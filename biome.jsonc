@@ -7,7 +7,14 @@
   },
   "files": {
     "ignoreUnknown": false,
-    "includes": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx", "!**/components/ui", "!**/*.d.ts"]
+    "includes": [
+      "**/*.ts",
+      "**/*.tsx",
+      "**/*.js",
+      "**/*.jsx",
+      "!**/components/ui",
+      "!**/*.d.ts"
+    ]
   },
   "assist": {
     "enabled": true,
@@ -41,7 +48,13 @@
       "recommended": true,
       "style": {
         "useConst": "off",
-        "useImportType": "off"
+        "useImportType": "off",
+        "useConsistentTypeDefinitions": {
+          "level": "error",
+          "options": {
+            "style": "type"
+          }
+        }
       },
       "correctness": {
         "noUnusedVariables": "off",
@@ -60,6 +73,6 @@
         "rules": { "style": { "useFilenamingConvention": "off" } }
       }
     }
-  ]
-  // "extends": ["ultracite/core", "ultracite/react"]
+  ],
+  "extends": ["ultracite/core", "ultracite/react"]
 }

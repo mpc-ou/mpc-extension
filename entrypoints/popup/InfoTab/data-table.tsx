@@ -14,8 +14,8 @@ const DataTable = ({ userData, courseData }: Props) => (
     <Table className='w-full table-fixed'>
       <TableHeader>
         <TableRow>
-          <TableHead>Trường</TableHead>
-          <TableHead>Giá trị</TableHead>
+          <TableHead colSpan={4}>Trường</TableHead>
+          <TableHead colSpan={5}>Giá trị</TableHead>
         </TableRow>
       </TableHeader>
 
@@ -27,8 +27,10 @@ const DataTable = ({ userData, courseData }: Props) => (
 
           return (
             <TableRow key={key}>
-              <TableCell className='font-medium'>{_USER_LABEL_MAPPING[key]}</TableCell>
-              <TableCell>{displayValue}</TableCell>
+              <TableCell className='font-medium' colSpan={4}>
+                {_USER_LABEL_MAPPING[key]}
+              </TableCell>
+              <TableCell colSpan={5}>{displayValue}</TableCell>
             </TableRow>
           );
         })}
@@ -39,8 +41,8 @@ const DataTable = ({ userData, courseData }: Props) => (
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead>Trường</TableHead>
-          <TableHead>Giá trị</TableHead>
+          <TableHead colSpan={4}>Trường</TableHead>
+          <TableHead colSpan={5}>Giá trị</TableHead>
         </TableRow>
       </TableHeader>
 
@@ -52,8 +54,10 @@ const DataTable = ({ userData, courseData }: Props) => (
 
           return (
             <TableRow key={key}>
-              <TableCell className='font-medium'>{_COURSE_LABEL_MAPPING[key]}</TableCell>
-              <TableCell>{displayValue}</TableCell>
+              <TableCell className='font-medium' colSpan={4}>
+                {_COURSE_LABEL_MAPPING[key]}
+              </TableCell>
+              <TableCell colSpan={5}>{displayValue}</TableCell>
             </TableRow>
           );
         })}
