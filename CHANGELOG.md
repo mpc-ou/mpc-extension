@@ -1,3 +1,10 @@
+## [1.3.2](https://github.com/mpc-ou/mpc-extension/compare/v1.3.1...v1.3.2) (2026-01-27)
+
+
+### Bug Fixes
+
+* logic calc improve subject (fix [#41](https://github.com/mpc-ou/mpc-extension/issues/41)) ([e40994a](https://github.com/mpc-ou/mpc-extension/commit/e40994ae0fd1f2e39c0fee4bf8e327a2da3afc04))
+
 ## [1.3.1](https://github.com/mpc-ou/mpc-extension/compare/v1.3.0...v1.3.1) (2026-01-27)
 
 
