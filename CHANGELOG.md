@@ -1,3 +1,10 @@
+## [1.3.1](https://github.com/mpc-ou/mpc-extension/compare/v1.3.0...v1.3.1) (2026-01-27)
+
+
+### Bug Fixes
+
+* use Github Release for changelog details ([a9797fe](https://github.com/mpc-ou/mpc-extension/commit/a9797fe920a35c1dbe3d5ffb812ea0f974f7e733))
+
 # [1.3.0](https://github.com/mpc-ou/mpc-extension/compare/v1.2.0...v1.3.0) (2026-01-26)
 
 
