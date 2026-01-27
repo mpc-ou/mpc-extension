@@ -1,11 +1,6 @@
 {
   "credits": {
     "team": "MPC Team",
-    "contributors": [
-      "konnn04",
-      "holedev",
-      "antiennn",
-      "quythanh"
-    ]
+    "contributors": ["konnn04", "holedev", "antiennn", "quythanh"]
   }
 }

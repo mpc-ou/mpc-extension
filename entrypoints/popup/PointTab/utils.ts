@@ -1,13 +1,49 @@
 import { utils as XLSXUtils, writeFile as XLSXWriteFile } from "xlsx";
-import { ScoreGroupType } from "./type";
+import { ScoreGroupType, ScoreRecordType } from "./type";
+
+const checkImproveSubject = (d: ScoreGroupType, map: Record<string, ScoreRecordType[]>) => {
+  for (const item of d.data) {
+    if (!map[item.code]) {
+      map[item.code] = [];
+    }
+    map[item.code].push(item);
+  }
+
+  for (const items of Object.values(map)) {
+    if (items.length <= 1) {
+      continue;
+    }
+
+    let maxItem = items[0];
+
+    for (const item of items) {
+      const score = item.point?.scale10 ?? Number.NEGATIVE_INFINITY;
+      const maxScore = maxItem.point?.scale10 ?? Number.NEGATIVE_INFINITY;
+      if (score > maxScore) {
+        maxItem = item;
+      }
+    }
+
+    for (const item of items) {
+      if (item !== maxItem) {
+        item.isIgnore = true;
+      }
+    }
+  }
+};
 
 const updateIgnoreSubject = (data: ScoreGroupType[], ignoreList: string[]) => {
+  const codeMap: Record<string, ScoreRecordType[]> = {};
+
   const newData = data.map((d) => {
     d.data = d.data.map((item) => {
       const isIgnore = ignoreList.some((i) => item.code.includes(i));
       item.isIgnore = isIgnore;
       return item;
     });
+
+    // TODO: improve algorithm
+    checkImproveSubject(d, codeMap);
     return d;
   });
 
