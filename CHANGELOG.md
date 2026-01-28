@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/mpc-ou/mpc-extension/compare/v1.3.2...v1.4.0) (2026-01-28)
+
+
+### Features
+
+* convert from popup to sidepanel ([fe5eb13](https://github.com/mpc-ou/mpc-extension/commit/fe5eb13aba60d4e1297eb09fb21c6bce919ad163))
+
 ## [1.3.2](https://github.com/mpc-ou/mpc-extension/compare/v1.3.1...v1.3.2) (2026-01-27)
 
 
