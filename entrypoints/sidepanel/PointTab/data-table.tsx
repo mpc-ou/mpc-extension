@@ -34,7 +34,7 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { _DEFAULT_FORM_DATA } from "@/entrypoints/popup/PointTab/default";
+import { _DEFAULT_FORM_DATA } from "@/entrypoints/sidepanel/PointTab/default";
 import { parseScale10ToCharacterAndScale4, removeVietnameseTones } from "@/utils";
 import { ScoreFilterType, ScoreGroupType, ScoreRecordType } from "./type";
 

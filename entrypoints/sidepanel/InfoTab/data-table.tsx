@@ -1,7 +1,7 @@
 import { format } from "date-fns";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { _COURSE_LABEL_MAPPING, _USER_LABEL_MAPPING } from "@/entrypoints/popup/InfoTab/default";
-import { CourseType, UserType } from "@/entrypoints/popup/InfoTab/type";
+import { _COURSE_LABEL_MAPPING, _USER_LABEL_MAPPING } from "@/entrypoints/sidepanel/InfoTab/default";
+import { CourseType, UserType } from "@/entrypoints/sidepanel/InfoTab/type";
 
 type Props = {
   userData: UserType;

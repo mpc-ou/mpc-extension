@@ -1,7 +1,7 @@
 import { _DEFAULT_IGNORE_SEMESTER_TITLE } from "@/constants/default";
-import { ScoreGroupType } from "@/entrypoints/popup/PointTab/type";
-import { _DEFAULT_CHARACTER_COUNT } from "@/entrypoints/popup/StatisticTab/default";
-import { SemesterAvgType } from "@/entrypoints/popup/StatisticTab/type";
+import { ScoreGroupType } from "@/entrypoints/sidepanel/PointTab/type";
+import { _DEFAULT_CHARACTER_COUNT } from "@/entrypoints/sidepanel/StatisticTab/default";
+import { SemesterAvgType } from "@/entrypoints/sidepanel/StatisticTab/type";
 
 const calculateStatistics = (scores: ScoreGroupType[]) => {
   let countAllSemester = scores.length;

@@ -1,6 +1,6 @@
 import { create } from "zustand";
-import { _CHROME_STORAGE_POINT_KEY, _DEFAULT_SCORE_FILTER } from "@/entrypoints/popup/PointTab/default";
-import { PointStorageType, ScoreFilterType, ScoreGroupType } from "@/entrypoints/popup/PointTab/type";
+import { _CHROME_STORAGE_POINT_KEY, _DEFAULT_SCORE_FILTER } from "@/entrypoints/sidepanel/PointTab/default";
+import { PointStorageType, ScoreFilterType, ScoreGroupType } from "@/entrypoints/sidepanel/PointTab/type";
 
 type ScoreState = {
   scores: ScoreGroupType[];

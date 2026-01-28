@@ -1,4 +1,4 @@
-import { PointMappingType } from "@/entrypoints/popup/PointTab/type";
+import { PointMappingType } from "@/entrypoints/sidepanel/PointTab/type";
 
 export const _DEFAULT_IGNORE_SEMESTER_TITLE: string = "Bảo lưu";
 export const _DEFAULT_FIXED_POINT: number = 3;

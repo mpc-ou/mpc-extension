@@ -6,11 +6,12 @@ import {
   _NAVIGATE_TO_URL,
   _OPEN_NEW_TAB
 } from "@/constants/chrome";
-import { getUserData } from "@/entrypoints/popup/InfoTab/scripts";
-import { getPointData } from "@/entrypoints/popup/PointTab/scripts";
-import { getCalendars } from "../popup/CalendarTab/scripts";
+import { getUserData } from "@/entrypoints/sidepanel/InfoTab/scripts";
+import { getPointData } from "@/entrypoints/sidepanel/PointTab/scripts";
+import { getCalendars } from "../sidepanel/CalendarTab/scripts";
 
 export default defineBackground(() => {
+  browser.sidePanel.setPanelBehavior({ openPanelOnActionClick: true });
   browser.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
     if (msg.type === _GET_CURRENT_URL) {
       browser.tabs.query({ active: true, currentWindow: true }).then(([tab]) => {

@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { _DEFAULT_FIXED_POINT, _DEFAULT_IGNORE_SUBJECT_DATA } from "@/constants/default";
-import { _CHROME_STORAGE_GLOBAL_KEY } from "@/entrypoints/popup/default";
-import { _TAB_CATE } from "@/entrypoints/popup/type";
+import { _CHROME_STORAGE_GLOBAL_KEY } from "@/entrypoints/sidepanel/default";
+import { _TAB_CATE } from "@/entrypoints/sidepanel/type";
 
 type GlobalStorageType = {
   tab: _TAB_CATE;

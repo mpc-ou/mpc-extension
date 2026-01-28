@@ -1,4 +1,4 @@
-import { ScoreFilterType, ScoreSummaryType } from "@/entrypoints/popup/PointTab/type";
+import { ScoreFilterType, ScoreSummaryType } from "@/entrypoints/sidepanel/PointTab/type";
 
 const _CHROME_STORAGE_TYPE: _CHROME_STORAGE_CATE = "local";
 const _CHROME_STORAGE_NAME = "pointData" as const;

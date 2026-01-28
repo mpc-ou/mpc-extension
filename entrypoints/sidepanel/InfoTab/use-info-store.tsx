@@ -3,8 +3,8 @@ import {
   _CHROME_STORAGE_INFO_KEY,
   _DEFAULT_COURSE_DATA,
   _DEFAULT_USER_DATA
-} from "@/entrypoints/popup/InfoTab/default";
-import { CourseType, UserType } from "@/entrypoints/popup/InfoTab/type";
+} from "@/entrypoints/sidepanel/InfoTab/default";
+import { CourseType, UserType } from "@/entrypoints/sidepanel/InfoTab/type";
 
 type InfoStorageType = {
   userData: UserType;

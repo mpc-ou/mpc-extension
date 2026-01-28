@@ -1,5 +1,5 @@
 import { utils as XLSXUtils, writeFile as XLSXWriteFile } from "xlsx";
-import { CourseType, UserType } from "@/entrypoints/popup/InfoTab/type";
+import { CourseType, UserType } from "@/entrypoints/sidepanel/InfoTab/type";
 
 type MappingType = Record<string, string>;
 

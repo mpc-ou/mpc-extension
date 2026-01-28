@@ -1,7 +1,7 @@
 import { ArcElement, Chart as ChartJS, Legend, Title, Tooltip } from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import { Pie } from "react-chartjs-2";
-import type { PointCharacterType } from "@/entrypoints/popup/PointTab/type";
+import type { PointCharacterType } from "@/entrypoints/sidepanel/PointTab/type";
 
 ChartJS.register(ArcElement, Tooltip, Legend, Title, ChartDataLabels);
 
