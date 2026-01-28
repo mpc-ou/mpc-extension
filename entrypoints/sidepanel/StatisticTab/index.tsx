@@ -2,11 +2,11 @@ import { ImportIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
-import { useScoreStore } from "@/entrypoints/popup/PointTab/use-score-store";
-import { CharacterPointChart } from "@/entrypoints/popup/StatisticTab/Chartjs/character-point-chart";
-import { SemesterAverageChart } from "@/entrypoints/popup/StatisticTab/Chartjs/semester-avg-chart";
-import { StatisticDataType } from "@/entrypoints/popup/StatisticTab/type";
-import { calculateStatistics } from "@/entrypoints/popup/StatisticTab/utils";
+import { useScoreStore } from "@/entrypoints/sidepanel/PointTab/use-score-store";
+import { CharacterPointChart } from "@/entrypoints/sidepanel/StatisticTab/Chartjs/character-point-chart";
+import { SemesterAverageChart } from "@/entrypoints/sidepanel/StatisticTab/Chartjs/semester-avg-chart";
+import { StatisticDataType } from "@/entrypoints/sidepanel/StatisticTab/type";
+import { calculateStatistics } from "@/entrypoints/sidepanel/StatisticTab/utils";
 import { useGlobalStore } from "@/store/use-global-store";
 
 const StatisticTab = () => {

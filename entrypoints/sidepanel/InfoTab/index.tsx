@@ -13,9 +13,9 @@ import {
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
 import { _GET_USER_DATA } from "@/constants/chrome";
 import { _DEFAULT_SITE_URL_MAPPING } from "@/constants/default";
-import { _COURSE_LABEL_MAPPING, _USER_LABEL_MAPPING } from "@/entrypoints/popup/InfoTab/default";
-import { CourseType, UserType } from "@/entrypoints/popup/InfoTab/type";
-import { handleExportData } from "@/entrypoints/popup/InfoTab/utils";
+import { _COURSE_LABEL_MAPPING, _USER_LABEL_MAPPING } from "@/entrypoints/sidepanel/InfoTab/default";
+import { CourseType, UserType } from "@/entrypoints/sidepanel/InfoTab/type";
+import { handleExportData } from "@/entrypoints/sidepanel/InfoTab/utils";
 import { useGlobalStore } from "@/store/use-global-store";
 import { navigateToURL } from "@/utils";
 import { DataTable } from "./data-table";

@@ -1,4 +1,4 @@
-import { PointCharacterType } from "@/entrypoints/popup/PointTab/type";
+import { PointCharacterType } from "@/entrypoints/sidepanel/PointTab/type";
 
 export const _DEFAULT_CHARACTER_COUNT: Record<PointCharacterType, number> = {
   "A+": 0,

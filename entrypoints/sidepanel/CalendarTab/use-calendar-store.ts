@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { _CHROME_STORAGE_CALENDAR_KEY } from "@/entrypoints/popup/CalendarTab/default";
+import { _CHROME_STORAGE_CALENDAR_KEY } from "@/entrypoints/sidepanel/CalendarTab/default";
 import type { CalendarEntry, CalendarStorageType, SemesterData } from "./type";
 import { buildScheduleMap } from "./utils/format";
 

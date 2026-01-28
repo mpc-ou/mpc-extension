@@ -1,4 +1,9 @@
-import { CourseLabelMappingType, CourseType, UserLabelMappingType, UserType } from "@/entrypoints/popup/InfoTab/type";
+import {
+  CourseLabelMappingType,
+  CourseType,
+  UserLabelMappingType,
+  UserType
+} from "@/entrypoints/sidepanel/InfoTab/type";
 
 const _CHROME_STORAGE_TYPE: _CHROME_STORAGE_CATE = "local";
 const _CHROME_STORAGE_NAME = "infoData" as const;

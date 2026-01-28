@@ -44,8 +44,8 @@ export function CalendarView(_props: CalendarViewProps) {
   const schedule = selectedDate ? getScheduleForDate(selectedDate, scheduleMap) : [];
 
   return (
-    <div className='flex items-start justify-center gap-4 overflow-auto'>
-      <div className='flex flex-col items-center justify-start'>
+    <div className='space-y-4'>
+      <div className='flex justify-center'>
         <Calendar
           className='rounded-md border'
           components={calendarComponents}
@@ -55,7 +55,7 @@ export function CalendarView(_props: CalendarViewProps) {
           selected={selectedDate}
         />
       </div>
-      <div className='min-w-0 flex-1'>
+      <div>
         <CalendarDetail schedule={schedule} selectedDate={selectedDate} />
       </div>
     </div>

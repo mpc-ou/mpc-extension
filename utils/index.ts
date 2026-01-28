@@ -2,7 +2,7 @@
 
 import { _GET_CURRENT_URL, _NAVIGATE_TO_URL, _OPEN_NEW_TAB } from "@/constants/chrome";
 import { _DEFAULT_POINT_MAPPING } from "@/constants/default";
-import { PointCharacterType, PointScale4Type } from "@/entrypoints/popup/PointTab/type";
+import { PointCharacterType, PointScale4Type } from "@/entrypoints/sidepanel/PointTab/type";
 
 export const removeVietnameseTones = (str: string) => {
   return str

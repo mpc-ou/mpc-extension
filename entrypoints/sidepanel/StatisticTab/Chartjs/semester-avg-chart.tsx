@@ -10,7 +10,7 @@ import {
 } from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import { Line } from "react-chartjs-2";
-import { StatisticDataType } from "@/entrypoints/popup/StatisticTab/type";
+import { StatisticDataType } from "@/entrypoints/sidepanel/StatisticTab/type";
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend, Title, ChartDataLabels);
 

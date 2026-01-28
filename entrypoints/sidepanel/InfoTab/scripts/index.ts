@@ -1,4 +1,4 @@
-import { CourseType, UserType } from "@/entrypoints/popup/InfoTab/type";
+import { CourseType, UserType } from "@/entrypoints/sidepanel/InfoTab/type";
 
 const getUserData = () => {
   const appUserElement = document.querySelector("app-thongtin-user") as HTMLElement;

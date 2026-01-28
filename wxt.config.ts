@@ -22,7 +22,14 @@ export default defineConfig({
     name: "MPC Extension",
     version: "1.3.2",
     description: "Extension hỗ trợ sinh viên trường Đại học Mở TP. HCM trong việc lên kế hoạch học tập.",
-    permissions: ["scripting", "activeTab", "storage"]
+    permissions: ["scripting", "activeTab", "storage", "sidePanel"],
+    host_permissions: ["https://tienichsv.ou.edu.vn/*", "https://tienichkcq.oude.edu.vn/*"],
+    action: {
+      default_title: "MPC Extension"
+    },
+    page_action: {
+      default_title: "MPC Extension"
+    }
   },
   manifestVersion: 3
 });
