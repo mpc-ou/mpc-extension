@@ -1,3 +1,10 @@
+## [1.4.1](https://github.com/mpc-ou/mpc-extension/compare/v1.4.0...v1.4.1) (2026-02-05)
+
+
+### Bug Fixes
+
+* url mapping has been changed ([e260ad1](https://github.com/mpc-ou/mpc-extension/commit/e260ad188ac1f0e6f6ae125ee5cb59c88971e3eb))
+
 # [1.4.0](https://github.com/mpc-ou/mpc-extension/compare/v1.3.2...v1.4.0) (2026-01-28)
 
 
