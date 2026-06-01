@@ -68,8 +68,8 @@ function App() {
         const data = await browser.runtime.sendMessage({
           type: _GET_BASIC_INFO
         });
-        if (data?.studentId) {
-          setCurrentUser(data.studentId, data.displayName, data.avatar || "");
+        if (data?.status === "success" && data.data?.studentId) {
+          setCurrentUser(data.data.studentId, data.data.displayName, data.data.avatar || "");
           await Promise.all([getInfoData(), getScoreData(), getCalendarData(), getTuitionData()]);
         }
       } catch {

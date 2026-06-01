@@ -73,13 +73,13 @@ export function useImportActions() {
     try {
       // biome-ignore lint/suspicious/noExplicitAny: API response is a dynamic message payload
       const data = await sendWithTimeout<any>(_GET_USER_DATA);
-      if (data && !data.error) {
-        useInfoStore.getState().setUserData(data.userData);
-        useInfoStore.getState().setCourseData(data.courseData);
+      if (data?.status === "success") {
+        useInfoStore.getState().setUserData(data.data.userData);
+        useInfoStore.getState().setCourseData(data.data.courseData);
         await useInfoStore.getState().saveData(studentId);
         toast.success("Lấy thông tin thành công!");
       } else {
-        toast.error(`Lỗi: ${data?.error || "Không thể lấy dữ liệu"}`);
+        toast.error(data?.message || "Không thể lấy dữ liệu");
       }
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Lỗi khi lấy thông tin");
@@ -105,8 +105,8 @@ export function useImportActions() {
     toast.info("Đang lấy điểm...");
     try {
       const data = await browser.runtime.sendMessage({ type: _GET_POINT_DATA });
-      if (data && !data.error) {
-        const updated = updateIgnoreSubject(data, ignoreList);
+      if (data?.status === "success") {
+        const updated = updateIgnoreSubject(data.data, ignoreList);
         const withAvg = updateScoreAvg(updated);
         useScoreStore.getState().setOriginalScores(withAvg);
         useScoreStore.getState().setScores(withAvg);
@@ -114,7 +114,7 @@ export function useImportActions() {
         await useScoreStore.getState().saveData(studentId);
         toast.success("Lấy điểm thành công!");
       } else {
-        toast.error(`Lỗi: ${data?.error || "Không thể lấy dữ liệu"}`);
+        toast.error(data?.message || "Không thể lấy dữ liệu");
       }
     } catch (e) {
       toast.error("Lỗi khi lấy điểm");
@@ -151,17 +151,17 @@ export function useImportActions() {
       // biome-ignore lint/suspicious/noExplicitAny: API response is a dynamic message payload
       const data = await sendWithTimeout<any>(type);
 
-      if (!data || data.error) {
-        toast.error(`Lỗi: ${data?.error || "Không thể lấy dữ liệu"}`);
+      if (!data || data.status !== "success") {
+        toast.error(data?.message || "Không thể lấy dữ liệu");
         return;
       }
       if (isExam) {
-        setExamCalendarData(data);
+        setExamCalendarData(data.data);
       } else {
-        setStudyCalendarData(data);
+        setStudyCalendarData(data.data);
       }
       await saveCalendarData(studentId);
-      toast.success(`Lấy lịch thành công ${data.length || 0} học kỳ!`);
+      toast.success(`Lấy lịch thành công ${data.data.length || 0} học kỳ!`);
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Lỗi khi lấy lịch");
     } finally {
@@ -202,11 +202,11 @@ export function useImportActions() {
     try {
       // biome-ignore lint/suspicious/noExplicitAny: API response is a dynamic message payload
       const data = await sendWithTimeout<any>(_GET_TUITION_DATA);
-      if (data && !data.error) {
-        await saveTuitionData(data);
+      if (data?.status === "success") {
+        await saveTuitionData(data.data);
         toast.success("Lấy học phí thành công!");
       } else {
-        toast.error(`Lỗi: ${data?.error || "Không thể lấy dữ liệu"}`);
+        toast.error(data?.message || "Không thể lấy dữ liệu");
       }
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Lỗi khi lấy học phí");

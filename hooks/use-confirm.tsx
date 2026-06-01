@@ -53,9 +53,12 @@ export function ConfirmDialogProvider() {
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>{options.title || "Xác nhận"}</AlertDialogTitle>
-          <AlertDialogDescription>
-            {options.description || "Bạn có chắc chắn muốn thực hiện hành động này?"}
-          </AlertDialogDescription>
+          <AlertDialogDescription
+            // biome-ignore lint/security/noDangerouslySetInnerHtml: description is always authored by developers, never user input
+            dangerouslySetInnerHTML={{
+              __html: options.description || "Bạn có chắc chắn muốn thực hiện hành động này?"
+            }}
+          />
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel onClick={() => close(false)}>{options.cancelText || "Hủy"}</AlertDialogCancel>

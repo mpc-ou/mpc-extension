@@ -1,10 +1,10 @@
 import { format } from "date-fns";
 import {
+  CalculatorIcon,
   ClipboardCopyIcon,
   DownloadIcon,
   FileOutputIcon,
   ImportIcon,
-  InfoIcon,
   MonitorIcon,
   Trash2
 } from "lucide-react";
@@ -19,18 +19,18 @@ import {
 
 export function ScoreToolbar({
   lastUpdate,
+  onCalcGuide,
   onClearData,
   onCopyData,
   onExportData,
-  onGuideOpen,
   onImportAuto,
   onImportManual
 }: {
   lastUpdate: Date | null;
+  onCalcGuide: () => void;
   onClearData: () => void;
   onCopyData: () => void;
   onExportData: () => void;
-  onGuideOpen: () => void;
   onImportAuto: () => void;
   onImportManual: () => void;
 }) {
@@ -42,9 +42,9 @@ export function ScoreToolbar({
         </span>
       )}
 
-      <Button className='text-muted-foreground' onClick={onGuideOpen} size='sm' variant='ghost'>
-        <InfoIcon className='mr-2 h-4 w-4' />
-        Hướng dẫn
+      <Button className='text-muted-foreground' onClick={onCalcGuide} size='sm' variant='ghost'>
+        <CalculatorIcon className='mr-2 h-4 w-4' />
+        Cách tính điểm
       </Button>
 
       <DropdownMenu>

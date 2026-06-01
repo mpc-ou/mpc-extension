@@ -5,9 +5,11 @@ import type {
   WeekData,
 } from "@/types";
 
+type ScrapeResult<T> = { status: "success"; data: T; message: string } | { status: "error"; data: null; message: string };
+
 const getCalendars = async (
   onProgress?: ProgressCallback,
-): Promise<SemesterData[]> => {
+): Promise<ScrapeResult<SemesterData[]>> => {
   // biome-ignore lint/performance/useTopLevelRegex: Must be scoped within function for injection via executeScript
   const SUBJECT_CODE_REGEX = /\((.*?)\)/;
   // biome-ignore lint/performance/useTopLevelRegex: Must be scoped within function for injection via executeScript
@@ -115,8 +117,14 @@ const getCalendars = async (
       progressText: "mpc-crawl-progress-text",
       message: "mpc-crawl-message",
       semesterInfo: "mpc-crawl-semester-info",
+      cancelBtn: "mpc-crawl-cancel-btn",
     },
   };
+
+  const _CANCEL_KEY = "__MPC_CANCEL__";
+  const _CANCELLED_MSG = "Người dùng đã dừng nhập dữ liệu";
+
+  const isCancelled = (): boolean => !!(window as unknown as Record<string, unknown>)[_CANCEL_KEY];
 
   // ── Smart polling: check condition every POLL_INTERVAL ms, resolve early, reject on timeout ──
   const pollUntil = (
@@ -207,13 +215,28 @@ const getCalendars = async (
     info.appendChild(progressText);
     info.appendChild(semesterInfo);
 
+    const cancelBtn = document.createElement("button");
+    cancelBtn.id = CONFIG.overlayIds.cancelBtn;
+    cancelBtn.textContent = "Hủy";
+    cancelBtn.style.cssText =
+      "width:100%;padding:8px 16px;border:1px solid #d1d5db;border-radius:6px;background:#f9fafb;color:#374151;font-size:14px;font-weight:500;cursor:pointer;margin-bottom:12px;transition:background 0.15s";
+    cancelBtn.addEventListener("mouseenter", () => { cancelBtn.style.background = "#f3f4f6"; });
+    cancelBtn.addEventListener("mouseleave", () => { cancelBtn.style.background = "#f9fafb"; });
+    cancelBtn.addEventListener("click", () => {
+      (window as unknown as Record<string, unknown>)[_CANCEL_KEY] = true;
+      cancelBtn.textContent = "Đang hủy...";
+      cancelBtn.disabled = true;
+      cancelBtn.style.opacity = "0.6";
+      cancelBtn.style.cursor = "not-allowed";
+    });
+
     const warning = document.createElement("div");
     warning.style.cssText =
       "background:#fef2f2;border:1px solid #fecaca;border-radius:6px;padding:12px;font-size:13px;color:#991b1b;line-height:1.5";
     warning.innerHTML =
       "<strong>⚠️ Lưu ý:</strong> Không tắt hay thu nhỏ cửa sổ, tắt popup hay chuyển trang. Quá trình này có thể mất vài phút tùy vào số lượng dữ liệu.";
 
-    card.append(title, message, progressBg, info, warning);
+    card.append(title, message, progressBg, info, cancelBtn, warning);
     overlay.appendChild(card);
     return overlay;
   };
@@ -693,8 +716,7 @@ const getCalendars = async (
   const scrapeScheduleTable = (): WeekData[] => {
     const table = document.querySelector(CONFIG.selectors.table);
     if (!table) {
-      console.warn("Không tìm thấy bảng TKB");
-      return [];
+      throw new Error("Không tìm thấy bảng TKB. Hãy đảm bảo bạn đang ở trang TKB Học kỳ.");
     }
 
     const rows = [...table.querySelectorAll(CONFIG.selectors.tableRows)];
@@ -872,11 +894,10 @@ const getCalendars = async (
 
   // ==================== MAIN EXECUTION ====================
   try {
+    (window as unknown as Record<string, unknown>)[_CANCEL_KEY] = false;
 
     if (!window.location.hash.includes("/tkb-hocky")) {
-      throw new Error(
-        "Vui lòng chuyển đến trang 'Thời khóa biểu dạng học kỳ' để thực hiện thao tác này.",
-      );
+      return { status: "error", data: null, message: "Vui lòng chuyển đến trang 'Thời khóa biểu dạng học kỳ' để thực hiện thao tác này." };
     }
 
     showOverlay();
@@ -885,7 +906,7 @@ const getCalendars = async (
 
     const semesters = await getSemesters();
     if (semesters.length === 0) {
-      throw new Error("Không tìm thấy học kỳ nào");
+      return { status: "error", data: null, message: "Không tìm thấy học kỳ nào" };
     }
 
     const allData: SemesterData[] = [];
@@ -896,6 +917,11 @@ const getCalendars = async (
       semesterIndex < semesters.length;
       semesterIndex++
     ) {
+      if (isCancelled()) {
+        hideOverlay();
+        return { status: "error", data: null, message: _CANCELLED_MSG };
+      }
+
       const semester = semesters[semesterIndex];
       const semesterProgress = (semesterIndex / totalSemesters) * 100;
 
@@ -904,6 +930,11 @@ const getCalendars = async (
       updateSemesterInfo(`${semesterIndex + 1}/${totalSemesters}`);
 
       await selectSemester(semester);
+
+      if (isCancelled()) {
+        hideOverlay();
+        return { status: "error", data: null, message: _CANCELLED_MSG };
+      }
 
       const weeks = scrapeScheduleTable();
       allData.push({ semester, weeks });
@@ -915,18 +946,20 @@ const getCalendars = async (
     await wait(CONFIG.timeouts.completionDelay);
     hideOverlay();
 
-    return allData;
+    return { status: "success", data: allData, message: "" };
   } catch (err) {
     console.error("Lỗi khi lấy dữ liệu lịch học:", err);
-    const errorMsg = `Lỗi: ${err instanceof Error ? err.message : String(err)}`;
+    const errorMsg = err instanceof Error ? err.message : String(err);
 
     onProgress?.(-1, errorMsg);
-    updateOverlay(0, errorMsg);
+    updateOverlay(0, `Lỗi: ${errorMsg}`);
 
     await wait(CONFIG.timeouts.errorDisplay);
     hideOverlay();
 
-    throw err;
+    return { status: "error", data: null, message: `Lỗi: ${errorMsg}` };
+  } finally {
+    (window as unknown as Record<string, unknown>)[_CANCEL_KEY] = false;
   }
 };
 
@@ -939,7 +972,7 @@ export type {
 export { getCalendars };
 export const getExamCalendars = async (
   onProgress?: ProgressCallback,
-): Promise<SemesterData[]> => {
+): Promise<ScrapeResult<SemesterData[]>> => {
   // biome-ignore lint/performance/useTopLevelRegex: Must be scoped within function for injection via executeScript
   const WEEK_MATCH_REGEX =
     /Tuần \(\d{2}\/\d{2}\/(\d{4}) - \d{2}\/\d{2}\/(\d{4})\)/;
@@ -975,10 +1008,15 @@ export const getExamCalendars = async (
       progressText: "mpc-crawl-progress-text",
       message: "mpc-crawl-message",
       semesterInfo: "mpc-crawl-semester-info",
+      cancelBtn: "mpc-crawl-cancel-btn",
     },
   };
 
   // ==================== HELPER FUNCTIONS ====================
+  const _CANCEL_KEY = "__MPC_CANCEL__";
+  const _CANCELLED_MSG = "Người dùng đã dừng nhập dữ liệu";
+  const isCancelled = (): boolean => !!(window as unknown as Record<string, unknown>)[_CANCEL_KEY];
+
   const wait = (ms: number): Promise<void> =>
     new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -1026,13 +1064,28 @@ export const getExamCalendars = async (
     info.appendChild(progressText);
     info.appendChild(semesterInfo);
 
+    const cancelBtn = document.createElement("button");
+    cancelBtn.id = CONFIG.overlayIds.cancelBtn;
+    cancelBtn.textContent = "Hủy";
+    cancelBtn.style.cssText =
+      "width:100%;padding:8px 16px;border:1px solid #d1d5db;border-radius:6px;background:#f9fafb;color:#374151;font-size:14px;font-weight:500;cursor:pointer;margin-bottom:12px;transition:background 0.15s";
+    cancelBtn.addEventListener("mouseenter", () => { cancelBtn.style.background = "#f3f4f6"; });
+    cancelBtn.addEventListener("mouseleave", () => { cancelBtn.style.background = "#f9fafb"; });
+    cancelBtn.addEventListener("click", () => {
+      (window as unknown as Record<string, unknown>)[_CANCEL_KEY] = true;
+      cancelBtn.textContent = "Đang hủy...";
+      cancelBtn.disabled = true;
+      cancelBtn.style.opacity = "0.6";
+      cancelBtn.style.cursor = "not-allowed";
+    });
+
     const warning = document.createElement("div");
     warning.style.cssText =
       "background:#fef2f2;border:1px solid #fecaca;border-radius:6px;padding:12px;font-size:13px;color:#991b1b;line-height:1.5";
     warning.innerHTML =
       "<strong>⚠️ Lưu ý:</strong> Không tắt hay thu nhỏ cửa sổ, tắt popup hay chuyển trang. Quá trình này có thể mất vài phút tùy vào số lượng dữ liệu.";
 
-    card.append(title, message, progressBg, info, warning);
+    card.append(title, message, progressBg, info, cancelBtn, warning);
     overlay.appendChild(card);
     return overlay;
   };
@@ -1491,11 +1544,10 @@ export const getExamCalendars = async (
 
   // ==================== MAIN EXECUTION ====================
   try {
+    (window as unknown as Record<string, unknown>)[_CANCEL_KEY] = false;
 
     if (!window.location.hash.includes("/lichthi")) {
-      throw new Error(
-        "Vui lòng chuyển đến trang 'Xem lịch thi' để thực hiện thao tác này.",
-      );
+      return { status: "error", data: null, message: "Vui lòng chuyển đến trang 'Xem lịch thi' để thực hiện thao tác này." };
     }
 
     showOverlay();
@@ -1504,7 +1556,7 @@ export const getExamCalendars = async (
 
     const semesters = await getSemesters();
     if (semesters.length === 0) {
-      throw new Error("Không tìm thấy học kỳ nào");
+      return { status: "error", data: null, message: "Không tìm thấy học kỳ nào" };
     }
 
     const allData: SemesterData[] = [];
@@ -1515,6 +1567,11 @@ export const getExamCalendars = async (
       semesterIndex < semesters.length;
       semesterIndex++
     ) {
+      if (isCancelled()) {
+        hideOverlay();
+        return { status: "error", data: null, message: _CANCELLED_MSG };
+      }
+
       const semester = semesters[semesterIndex];
       const semesterProgress = (semesterIndex / totalSemesters) * 100;
 
@@ -1523,6 +1580,11 @@ export const getExamCalendars = async (
       updateSemesterInfo(`${semesterIndex + 1}/${totalSemesters}`);
 
       await selectSemester(semester, semesterIndex);
+
+      if (isCancelled()) {
+        hideOverlay();
+        return { status: "error", data: null, message: _CANCELLED_MSG };
+      }
 
       const weeks = scrapeScheduleTable();
       allData.push({ semester, weeks });
@@ -1534,17 +1596,19 @@ export const getExamCalendars = async (
     await wait(CONFIG.timeouts.completionDelay);
     hideOverlay();
 
-    return allData;
+    return { status: "success", data: allData, message: "" };
   } catch (err) {
     console.error("Lỗi khi lấy dữ liệu lịch thi:", err);
-    const errorMsg = `Lỗi: ${err instanceof Error ? err.message : String(err)}`;
+    const errorMsg = err instanceof Error ? err.message : String(err);
 
     onProgress?.(-1, errorMsg);
-    updateOverlay(0, errorMsg);
+    updateOverlay(0, `Lỗi: ${errorMsg}`);
 
     await wait(CONFIG.timeouts.errorDisplay);
     hideOverlay();
 
-    throw err;
+    return { status: "error", data: null, message: `Lỗi: ${errorMsg}` };
+  } finally {
+    (window as unknown as Record<string, unknown>)[_CANCEL_KEY] = false;
   }
 };

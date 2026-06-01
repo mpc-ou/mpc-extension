@@ -1,10 +1,12 @@
 // Only type imports are safe for functions injected via executeScript
 import type { SemesterTuitionDetail, TuitionReceiptGroup, TuitionReceiptItem, TuitionSummaryEntry } from "@/types";
 
-async function getTuitionData(): Promise<{
+type ScrapeResult<T> = { status: "success"; data: T; message: string } | { status: "error"; data: null; message: string };
+
+async function getTuitionData(): Promise<ScrapeResult<{
   summary: TuitionSummaryEntry[];
   details: Record<string, SemesterTuitionDetail>;
-}> {
+}>> {
   const AWAIT_ENABLE = false;
 
   const parseAmount = (raw: string): number => {
@@ -256,6 +258,11 @@ async function getTuitionData(): Promise<{
   const PROGRESS_TEXT_ID = "mpc-tuition-progress-text";
   const MESSAGE_ID = "mpc-tuition-message";
   const SEMESTER_ID = "mpc-tuition-semester-info";
+  const CANCEL_BTN_ID = "mpc-tuition-cancel-btn";
+
+  const _CANCEL_KEY = "__MPC_CANCEL__";
+  const _CANCELLED_MSG = "Người dùng đã dừng nhập dữ liệu";
+  const isCancelled = (): boolean => !!(window as unknown as Record<string, unknown>)[_CANCEL_KEY];
 
   const createOverlay = (): HTMLDivElement => {
     const overlay = document.createElement("div");
@@ -297,13 +304,28 @@ async function getTuitionData(): Promise<{
     info.appendChild(progressText);
     info.appendChild(semesterInfo);
 
+    const cancelBtn = document.createElement("button");
+    cancelBtn.id = CANCEL_BTN_ID;
+    cancelBtn.textContent = "Hủy";
+    cancelBtn.style.cssText =
+      "width:100%;padding:8px 16px;border:1px solid #d1d5db;border-radius:6px;background:#f9fafb;color:#374151;font-size:14px;font-weight:500;cursor:pointer;margin-bottom:12px;transition:background 0.15s";
+    cancelBtn.addEventListener("mouseenter", () => { cancelBtn.style.background = "#f3f4f6"; });
+    cancelBtn.addEventListener("mouseleave", () => { cancelBtn.style.background = "#f9fafb"; });
+    cancelBtn.addEventListener("click", () => {
+      (window as unknown as Record<string, unknown>)[_CANCEL_KEY] = true;
+      cancelBtn.textContent = "Đang hủy...";
+      cancelBtn.disabled = true;
+      cancelBtn.style.opacity = "0.6";
+      cancelBtn.style.cursor = "not-allowed";
+    });
+
     const warning = document.createElement("div");
     warning.style.cssText =
       "background:#fef2f2;border:1px solid #fecaca;border-radius:6px;padding:12px;font-size:13px;color:#991b1b;line-height:1.5";
     warning.innerHTML =
       "<strong>⚠️ Lưu ý:</strong> Không tắt hay thu nhỏ cửa sổ, tắt popup hay chuyển trang. Quá trình có thể mất vài phút tùy vào số lượng dữ liệu.";
 
-    card.append(title, message, progressBg, info, warning);
+    card.append(title, message, progressBg, info, cancelBtn, warning);
     overlay.appendChild(card);
     return overlay;
   };
@@ -352,11 +374,15 @@ async function getTuitionData(): Promise<{
   };
 
   // ── Execute ──
+  (window as unknown as Record<string, unknown>)[_CANCEL_KEY] = false;
   showOverlay();
 
   try {
     updateOverlay(0, "Đang đọc bảng tổng hợp...");
     const summary = scrapeSummary();
+    if (summary.length === 0) {
+      return { status: "error", data: null, message: "Không tìm thấy dữ liệu học phí. Hãy đảm bảo bạn đang ở trang học phí." };
+    }
 
     updateOverlay(5, "Đang lấy danh sách học kỳ...");
     const allOptions = await getOptions();
@@ -367,6 +393,10 @@ async function getTuitionData(): Promise<{
     const details: Record<string, SemesterTuitionDetail> = {};
 
     for (let i = 0; i < total; i++) {
+      if (isCancelled()) {
+        return { status: "error", data: null, message: _CANCELLED_MSG };
+      }
+
       const name = semesterOptions[i];
       const progress = 5 + Math.round(((i + 1) / total) * 90);
 
@@ -377,10 +407,19 @@ async function getTuitionData(): Promise<{
         continue;
       }
       await waitTable();
+
+      if (isCancelled()) {
+        return { status: "error", data: null, message: _CANCELLED_MSG };
+      }
+
       const d = scrapeDetail();
       if (d) {
         details[name] = d;
       }
+    }
+
+    if (isCancelled()) {
+      return { status: "error", data: null, message: _CANCELLED_MSG };
     }
 
     updateOverlay(97, "Đang quay lại tổng hợp...");
@@ -391,8 +430,11 @@ async function getTuitionData(): Promise<{
 
     updateOverlay(100, "Hoàn tất!");
     await new Promise((r) => setTimeout(r, 500));
-    return { summary, details };
+    return { status: "success", data: { summary, details }, message: "" };
+  } catch (err) {
+    return { status: "error", data: null, message: err instanceof Error ? err.message : "Lỗi khi đọc học phí" };
   } finally {
+    (window as unknown as Record<string, unknown>)[_CANCEL_KEY] = false;
     hideOverlay();
   }
 }

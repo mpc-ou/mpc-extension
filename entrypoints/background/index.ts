@@ -26,14 +26,14 @@ async function executeScraper<T>(scraperFn: () => T | Promise<T>, sendResponse: 
   };
 
   const timer = setTimeout(() => {
-    done({ error: "Mạng của bạn không ổn định, vui lòng thử lại" });
+    done({ status: "error", data: null, message: "Mạng của bạn không ổn định, vui lòng thử lại" });
   }, TIMEOUT_MS);
 
   try {
     const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
     if (!tab.id) {
       clearTimeout(timer);
-      done({ error: "Không tìm thấy tab hiện tại" });
+      done({ status: "error", data: null, message: "Không tìm thấy tab hiện tại" });
       return;
     }
     const results = await browser.scripting.executeScript({ target: { tabId: tab.id }, func: scraperFn });
@@ -41,7 +41,7 @@ async function executeScraper<T>(scraperFn: () => T | Promise<T>, sendResponse: 
     done(results[0].result);
   } catch (error) {
     clearTimeout(timer);
-    done({ error: error instanceof Error ? error.message : "Lỗi không xác định" });
+    done({ status: "error", data: null, message: error instanceof Error ? error.message : "Lỗi không xác định" });
   }
 }
 
@@ -71,7 +71,7 @@ export default defineBackground(() => {
     if (msg.type === _NAVIGATE_TO_URL) {
       browser.tabs.query({ active: true, currentWindow: true }).then(([tab]) => {
         if (!tab.id) {
-          sendResponse({ error: "Không tìm thấy tab hiện tại" });
+          sendResponse({ status: "error", data: null, message: "Không tìm thấy tab hiện tại" });
           return;
         }
         if (tab.url !== msg.url) {

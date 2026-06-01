@@ -239,14 +239,16 @@ export function ScoreDataTable({
       const isHighlighted = isModified || isNew;
 
       const renderDiff = (oldVal: string | number, newVal: string | number) => {
-        if (!isModified || oldVal === newVal) {
-          return <span>{newVal}</span>;
+        const displayOld = typeof oldVal === "number" && Number.isNaN(oldVal) ? "-" : oldVal;
+        const displayNew = typeof newVal === "number" && Number.isNaN(newVal) ? "-" : newVal;
+        if (!isModified || displayOld === displayNew) {
+          return <span>{displayNew}</span>;
         }
         return (
           <div className='flex items-center justify-center gap-1.5'>
-            <span className='text-muted-foreground text-xs line-through opacity-60'>{oldVal}</span>
+            <span className='text-muted-foreground text-xs line-through opacity-60'>{displayOld}</span>
             <span className='text-[10px] text-muted-foreground'>➔</span>
-            <span className='font-bold text-amber-600 dark:text-amber-400'>{newVal}</span>
+            <span className='font-bold text-amber-600 dark:text-amber-400'>{displayNew}</span>
           </div>
         );
       };

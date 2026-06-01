@@ -1,6 +1,7 @@
 import { CircleHelp } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
+import CachTinhToanMd from "@/assets/docs/cach_tinh_toan.md?raw";
 import HuongDanNhapDiemMd from "@/assets/docs/ke_hoach_diem_so.md?raw";
 import { FormSemesterDialog } from "@/components/custom/form-semester-dialog";
 import { MarkdownModal } from "@/components/custom/markdown-modal";
@@ -81,7 +82,8 @@ function ScorePlanPage() {
   const [selectedGrades, setSelectedGrades] = useState<Set<string>>(new Set(ALL_GRADES));
   const [filterOpen, setFilterOpen] = useState(false);
   const [semesterDialog, setSemesterDialog] = useState<SemesterDialogState>({ open: false, mode: "add" });
-  const [guideOpen, setGuideOpen] = useState(false);
+  const [guideImportOpen, setGuideImportOpen] = useState(false);
+  const [guideCalcOpen, setGuideCalcOpen] = useState(false);
   const [importModalOpen, setImportModalOpen] = useState(false);
   const [hideNonGPA, setHideNonGPA] = useState(false);
   const [showNonStandard, setShowNonStandard] = useState(true);
@@ -135,9 +137,23 @@ function ScorePlanPage() {
   }, [originalScores, trainingSemesters]);
 
   const handleImportSuccess = async (data: ScoreGroupType[]) => {
-    setSummary(getScoreSummary(data, trainingSemesters));
-    setScores(data);
-    setOriginalScores(data);
+    // Normalize NaN values from exempt/pass-fail subjects before display
+    const normalized = updateIgnoreAndAvg(
+      data.map((sem) => ({
+        ...sem,
+        data: sem.data.map((sub) => ({
+          ...sub,
+          point: {
+            ...sub.point,
+            scale10: Number.isNaN(sub.point.scale10) ? 0 : sub.point.scale10,
+            scale4: Number.isNaN(sub.point.scale4) ? 0 : sub.point.scale4
+          }
+        }))
+      }))
+    );
+    setSummary(getScoreSummary(normalized, trainingSemesters));
+    setScores(normalized);
+    setOriginalScores(normalized);
     setLastUpdate(new Date());
     await saveData();
     toast.success("Đã nhập dữ liệu điểm thành công!");
@@ -263,7 +279,11 @@ function ScorePlanPage() {
   }, [scores, trainingSemesters]);
 
   const handleImportAuto = () => {
-    setGuideOpen(true);
+    setGuideImportOpen(true);
+  };
+
+  const handleCalcGuide = () => {
+    setGuideCalcOpen(true);
   };
 
   const handleClearData = async () => {
@@ -344,9 +364,9 @@ function ScorePlanPage() {
   if (scores.length === 0) {
     return (
       <ScoreEmptyState
-        guideOpen={guideOpen}
+        guideOpen={guideImportOpen}
         importModalOpen={importModalOpen}
-        onGuideOpenChange={setGuideOpen}
+        onGuideOpenChange={setGuideImportOpen}
         onImportOpenChange={setImportModalOpen}
         onImportSuccess={handleImportSuccess}
         onOpenImportManual={() => setImportModalOpen(true)}
@@ -369,10 +389,10 @@ function ScorePlanPage() {
 
       <ScoreToolbar
         lastUpdate={lastUpdate}
+        onCalcGuide={handleCalcGuide}
         onClearData={handleClearData}
         onCopyData={handleCopyData}
         onExportData={() => handleExportScoreData(scores)}
-        onGuideOpen={() => setGuideOpen(true)}
         onImportAuto={handleImportAuto}
         onImportManual={() => setImportModalOpen(true)}
       />
@@ -453,11 +473,19 @@ function ScorePlanPage() {
       <MascotAdvisor />
 
       <MarkdownModal
-        isOpen={guideOpen}
+        isOpen={guideImportOpen}
         markdownContent={HuongDanNhapDiemMd}
-        onClose={() => setGuideOpen(false)}
+        onClose={() => setGuideImportOpen(false)}
         params={calcParams}
         title='Hướng dẫn Kế hoạch điểm số'
+      />
+
+      <MarkdownModal
+        isOpen={guideCalcOpen}
+        markdownContent={CachTinhToanMd}
+        onClose={() => setGuideCalcOpen(false)}
+        params={calcParams}
+        title='Cách tính điểm'
       />
 
       <ImportScoreModal

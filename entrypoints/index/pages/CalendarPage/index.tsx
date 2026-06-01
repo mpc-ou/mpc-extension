@@ -1,10 +1,28 @@
-import { CalendarPlus, Download, FileSpreadsheet, FileText, InfoIcon, LayoutList, Trash2 } from "lucide-react";
-import { useLayoutEffect, useMemo, useState } from "react";
+import {
+  CalendarPlus,
+  DownloadIcon,
+  FileSpreadsheet,
+  FileText,
+  ImportIcon,
+  InfoIcon,
+  LayoutList,
+  MonitorIcon,
+  Trash2
+} from "lucide-react";
+import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import lichHocLichThiMd from "@/assets/docs/lich_hoc_lich_thi.md?raw";
 import { ExportCalendarDialog } from "@/components/custom/export-calendar-dialog";
 import { MarkdownModal } from "@/components/custom/markdown-modal";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle
+} from "@/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,11 +30,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useConfirm } from "@/hooks/use-confirm";
 import { useCalendarStore } from "@/store/use-calendar-store";
 import type { CalendarEntry, SemesterData } from "@/types";
 import { formatSemesterLabel, normalizeSemesterName, parseSemesterName } from "@/utils/calendar-format";
+import { detectExcelType, mergeCalendarData, parseExamExcel, parseStudyExcel } from "@/utils/calendar-import";
 import { convertToCSV, convertToExcel } from "@/utils/excel-utils";
 import { downloadICS } from "@/utils/ics-utils";
 import { MonthViewCalendar } from "./components/month-view-calendar";
@@ -24,10 +45,24 @@ import { PeriodTimeView } from "./components/period-time-view";
 import { UpcomingEvents } from "./components/upcoming-events";
 
 export function CalendarPage() {
-  const { studyCalendarData, examCalendarData, lastUpdate, scheduleMap, getData, clearData } = useCalendarStore();
+  const {
+    studyCalendarData,
+    examCalendarData,
+    lastUpdate,
+    scheduleMap,
+    getData,
+    clearData,
+    setStudyCalendarData,
+    setExamCalendarData,
+    saveData
+  } = useCalendarStore();
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
+  const [importSemesterOpen, setImportSemesterOpen] = useState(false);
+  const [importSemesterName, setImportSemesterName] = useState("");
+  const [pendingImportFile, setPendingImportFile] = useState<File | null>(null);
   const [filterType, setFilterType] = useState<string>("ALL");
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const confirm = useConfirm();
 
   const mergedExportData = useMemo(() => {
@@ -163,6 +198,107 @@ export function CalendarPage() {
     }
   };
 
+  const handleImportExcel = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) {
+      return;
+    }
+    // Reset input so same file can be re-selected
+    e.target.value = "";
+
+    if (!(file.name.endsWith(".xlsx") || file.name.endsWith(".xls"))) {
+      toast.error("Vui lòng chọn file Excel (.xlsx, .xls)");
+      return;
+    }
+
+    try {
+      const buffer = await file.arrayBuffer();
+      const { read, utils } = await import("xlsx");
+      const workbook = read(buffer, { type: "array" });
+      const ws = workbook.Sheets[workbook.SheetNames[0]];
+      const rows: string[][] = utils.sheet_to_json(ws, { header: 1 });
+      const headers = (rows[0] as string[])?.map((h: string) => String(h || "").trim()) || [];
+      const type = detectExcelType(headers);
+
+      if (!type) {
+        toast.error("Không nhận dạng được định dạng file. Vui lòng kiểm tra lại.");
+        return;
+      }
+
+      setPendingImportFile(file);
+
+      if (type === "study") {
+        setImportSemesterName("");
+        setImportSemesterOpen(true);
+      } else {
+        processExamImport(file);
+      }
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Lỗi khi đọc file");
+    }
+  };
+
+  const processExamImport = async (file: File) => {
+    try {
+      const result = await parseExamExcel(file);
+      const existing = [...examCalendarData];
+      const { added, replaced } = mergeCalendarData(existing, result.data, "exam");
+
+      const isOverwrite = await confirm({
+        title: "Xác nhận nhập lịch thi",
+        description: `Tìm thấy <strong>${result.data[0]?.weeks.reduce((s, w) => s + w.schedule.length, 0) || 0} buổi thi</strong> trong học kỳ <strong>${result.data[0]?.semester || ""}</strong>.<br/>Có <strong>${added} mới</strong>${replaced > 0 ? `, <strong>${replaced} cập nhật</strong>` : ""}. Tiếp tục?`,
+        confirmText: "Nhập",
+        variant: "destructive"
+      });
+      if (!isOverwrite) {
+        return;
+      }
+
+      setExamCalendarData(existing);
+      await saveData();
+      toast.success(`Đã nhập ${added} buổi thi${replaced > 0 ? `, cập nhật ${replaced}` : ""}`);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Lỗi khi nhập lịch thi");
+    }
+  };
+
+  const handleStudySemesterConfirm = async () => {
+    if (!(importSemesterName.trim() && pendingImportFile)) {
+      toast.error("Vui lòng nhập tên học kỳ");
+      return;
+    }
+
+    setImportSemesterOpen(false);
+
+    try {
+      const result = await parseStudyExcel(pendingImportFile, importSemesterName.trim());
+      const existing = [...studyCalendarData];
+      const { added, replaced } = mergeCalendarData(existing, result.data, "study");
+
+      const totalImported = result.data[0]?.weeks.reduce((s, w) => s + w.schedule.length, 0) || 0;
+
+      const isOverwrite = await confirm({
+        title: "Xác nhận nhập lịch học",
+        description: `Tìm thấy <strong>${totalImported} buổi học</strong> trong học kỳ <strong>${importSemesterName.trim()}</strong>.<br/>Có <strong>${added} mới</strong>${replaced > 0 ? `, <strong>${replaced} cập nhật</strong>` : ""}. Tiếp tục?`,
+        confirmText: "Nhập",
+        variant: "destructive"
+      });
+      if (!isOverwrite) {
+        return;
+      }
+
+      setStudyCalendarData(existing);
+      await saveData();
+      toast.success(`Đã nhập ${added} buổi học${replaced > 0 ? `, cập nhật ${replaced}` : ""}`);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Lỗi khi nhập lịch học");
+    }
+  };
+
   if (studyCalendarData.length === 0 && examCalendarData.length === 0) {
     return (
       <div className='flex min-h-[60vh] flex-col items-center justify-center space-y-4'>
@@ -172,11 +308,30 @@ export function CalendarPage() {
         <h2 className='font-semibold text-2xl'>Chưa có dữ liệu lịch</h2>
         <p className='mb-6 max-w-md text-center text-muted-foreground'>
           Mở popup extension khi đang ở trang lịch học hoặc lịch thi trên cổng tiện ích sinh viên để nhập dữ liệu.
+          <br />
+          Hoặc nhập từ file Excel đã xuất trước đó.
         </p>
-        <Button onClick={() => setIsImportModalOpen(true)} variant='outline'>
-          <InfoIcon className='mr-2 h-4 w-4' />
-          Hướng dẫn nhập lịch
-        </Button>
+        <div className='flex gap-2'>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button size='sm'>
+                <ImportIcon className='mr-2 h-4 w-4' />
+                Nhập lịch
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuItem onClick={() => setIsImportModalOpen(true)}>
+                <MonitorIcon className='mr-2 h-4 w-4 text-blue-500' />
+                Nhập tự động
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleImportExcel}>
+                <DownloadIcon className='mr-2 h-4 w-4 text-green-500' />
+                Nhập thủ công
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <input accept='.xlsx,.xls' className='hidden' onChange={handleFileChange} ref={fileInputRef} type='file' />
+        </div>
         <MarkdownModal
           isOpen={isImportModalOpen}
           markdownContent={lichHocLichThiMd}
@@ -225,10 +380,36 @@ export function CalendarPage() {
             </SelectContent>
           </Select>
           <PeriodTimeView />
-          <Button onClick={() => setIsImportModalOpen(true)} variant='outline'>
-            <Download className='mr-2 h-4 w-4' />
-            Nhập lịch
+
+          <Button
+            className='text-muted-foreground'
+            onClick={() => setIsImportModalOpen(true)}
+            size='sm'
+            variant='ghost'
+          >
+            <InfoIcon className='mr-2 h-4 w-4' />
+            Hướng dẫn
           </Button>
+
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button size='sm'>
+                <ImportIcon className='mr-2 h-4 w-4' />
+                Nhập lịch
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuItem onClick={() => setIsImportModalOpen(true)}>
+                <MonitorIcon className='mr-2 h-4 w-4 text-blue-500' />
+                Nhập tự động
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleImportExcel}>
+                <DownloadIcon className='mr-2 h-4 w-4 text-green-500' />
+                Nhập thủ công
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <input accept='.xlsx,.xls' className='hidden' onChange={handleFileChange} ref={fileInputRef} type='file' />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button disabled={studyCalendarData.length === 0 && examCalendarData.length === 0} variant='outline'>
@@ -287,6 +468,35 @@ export function CalendarPage() {
         onOpenChange={setIsExportModalOpen}
         open={isExportModalOpen}
       />
+
+      <Dialog onOpenChange={setImportSemesterOpen} open={importSemesterOpen}>
+        <DialogContent className='sm:max-w-sm'>
+          <DialogHeader>
+            <DialogTitle>Nhập tên học kỳ</DialogTitle>
+            <DialogDescription>File Excel lịch học không có tên học kỳ. Vui lòng nhập tên học kỳ.</DialogDescription>
+          </DialogHeader>
+          <div className='mt-4 space-y-2'>
+            <Label htmlFor='semester-name'>Tên học kỳ</Label>
+            <Input
+              autoFocus
+              id='semester-name'
+              onChange={(e) => setImportSemesterName(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handleStudySemesterConfirm();
+                }
+              }}
+              placeholder='VD: Học kỳ 2 (2024-2025)'
+              value={importSemesterName}
+            />
+          </div>
+          <DialogFooter className='mt-4'>
+            <Button disabled={!importSemesterName.trim()} onClick={handleStudySemesterConfirm}>
+              Xác nhận
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

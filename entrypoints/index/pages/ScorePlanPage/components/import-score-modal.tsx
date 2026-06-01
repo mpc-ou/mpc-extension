@@ -87,14 +87,16 @@ export function ImportScoreModal({ open, onOpenChange, onImportSuccess }: Import
     if (secondCol && secondCol !== "Mã MH" && !firstCol.startsWith("-")) {
       const point10 = row[9] || "";
       const point4 = row[10] || "";
+      const parsed10 = Number.parseFloat(point10);
+      const parsed4 = Number.parseFloat(point4);
 
       currentSemester.data.push({
         code: secondCol,
         credit: Number.parseInt(row[4], 10) || 0,
         name: row[3] || "",
         point: {
-          scale10: point10 !== "" ? Number.parseFloat(point10) : 0,
-          scale4: point4 !== "" ? Number.parseFloat(point4) : 0,
+          scale10: point10 !== "" && !Number.isNaN(parsed10) ? parsed10 : 0,
+          scale4: point4 !== "" && !Number.isNaN(parsed4) ? parsed4 : 0,
           character: (row[11] || "") as PointCharacterType
         }
       });
