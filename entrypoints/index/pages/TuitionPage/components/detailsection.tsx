@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { _TUITION_CATEGORIES } from "@/constants/default";
-import type { SemesterTuitionDetail } from "@/types";
+import type { ScholarshipType, SemesterTuitionDetail } from "@/types";
 import type { FlatItem } from "./allitemstable";
 import { AllItemsTable } from "./allitemstable";
 import { SemesterCard } from "./semestercard";
@@ -18,6 +18,8 @@ const CATEGORY_LABELS: Record<string, string> = { "tất cả": "Tất cả", "h
 export function DetailSection({
   details,
   summary,
+  scholarships,
+  setScholarship,
   viewMode,
   setViewMode,
   categoryFilter,
@@ -33,6 +35,8 @@ export function DetailSection({
 }: {
   details: Record<string, SemesterTuitionDetail>;
   summary: { semesterName: string }[];
+  scholarships: Record<string, ScholarshipType>;
+  setScholarship: (semesterName: string, type: ScholarshipType) => Promise<void>;
   viewMode: "grouped" | "all";
   setViewMode: (v: "grouped" | "all") => void;
   categoryFilter: string;
@@ -119,6 +123,8 @@ export function DetailSection({
                   detail={detail}
                   idx={idx}
                   key={entry.semesterName}
+                  scholarship={scholarships[entry.semesterName] ?? null}
+                  setScholarship={setScholarship}
                   showNonCredit={showNonCredit}
                 />
               );

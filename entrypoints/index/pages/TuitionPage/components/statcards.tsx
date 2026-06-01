@@ -1,14 +1,4 @@
-import {
-  Calendar,
-  Coins,
-  GraduationCap,
-  InfoIcon,
-  Landmark,
-  ReceiptText,
-  TrendingDown,
-  TrendingUp,
-  Wallet
-} from "lucide-react";
+import { Coins, GraduationCap, InfoIcon, Landmark, ReceiptText, TrendingDown, TrendingUp, Wallet } from "lucide-react";
 import { memo } from "react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
@@ -60,7 +50,13 @@ const StatCard = memo(function StatCard({
   );
 });
 
-export const TuitionStatCards = memo(function TuitionStatCards({ stats }: { stats: TuitionStatsType }) {
+export const TuitionStatCards = memo(function TuitionStatCards({
+  stats,
+  scholarshipRefund
+}: {
+  stats: TuitionStatsType;
+  scholarshipRefund: { total: number; semesterCount: number };
+}) {
   return (
     <>
       <div className='grid grid-cols-2 gap-4 lg:grid-cols-4'>
@@ -98,6 +94,15 @@ export const TuitionStatCards = memo(function TuitionStatCards({ stats }: { stat
       <div className='grid grid-cols-2 gap-4 lg:grid-cols-4'>
         <StatCard
           colorClass='bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400'
+          icon={GraduationCap}
+          label='Tiền học bổng tổng nhận'
+          sub={
+            scholarshipRefund.semesterCount > 0 ? `${scholarshipRefund.semesterCount} kì có học bổng` : "Chưa đánh dấu"
+          }
+          value={formatVND(scholarshipRefund.total)}
+        />
+        <StatCard
+          colorClass='bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400'
           icon={TrendingUp}
           label='Kỳ cao nhất'
           sub={stats.mostExpensiveSemester.name}
@@ -117,12 +122,6 @@ export const TuitionStatCards = memo(function TuitionStatCards({ stats }: { stat
           label='Tổng tín chỉ'
           sub={`${stats.totalCreditsWithOther} nếu tính cả các môn khác`}
           value={`${stats.totalCredits}`}
-        />
-        <StatCard
-          colorClass='bg-teal-100 text-teal-700 dark:bg-teal-900/30 dark:text-teal-400'
-          icon={Calendar}
-          label='Số học kỳ'
-          value={`${stats.semesterCount}`}
         />
       </div>
     </>

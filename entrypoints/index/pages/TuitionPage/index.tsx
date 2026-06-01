@@ -17,7 +17,7 @@ import { useConfirm } from "@/hooks/use-confirm";
 import { useTuitionStore } from "@/store/use-tuition-store";
 import type { SemesterTuitionDetail } from "@/types";
 import { shortSemesterName } from "@/utils/calendar-format";
-import { computeTuitionStats } from "@/utils/tuition-compute";
+import { computeScholarshipRefund, computeTuitionStats } from "@/utils/tuition-compute";
 import { handleExportTuitionData } from "@/utils/tuition-export";
 import { flattenDetails } from "./components/allitemstable";
 import { CreditCostChart } from "./components/creditcostchart";
@@ -122,6 +122,8 @@ function tableReducer(state: TableState, action: TableAction): TableState {
 export function TuitionPage() {
   const summary = useTuitionStore((s) => s.summary);
   const details = useTuitionStore((s) => s.details);
+  const scholarships = useTuitionStore((s) => s.scholarships);
+  const setScholarship = useTuitionStore((s) => s.setScholarship);
   const lastUpdate = useTuitionStore((s) => s.lastUpdate);
 
   const [table, dispatch] = useReducer(tableReducer, {
@@ -137,6 +139,7 @@ export function TuitionPage() {
   const confirm = useConfirm();
 
   const stats = useMemo(() => computeTuitionStats(summary, details), [summary, details]);
+  const scholarshipRefund = useMemo(() => computeScholarshipRefund(summary, scholarships), [summary, scholarships]);
   const hasData = summary.length > 0;
 
   const allItems = useMemo(() => flattenDetails(details, table.categoryFilter), [details, table.categoryFilter]);
@@ -260,7 +263,7 @@ export function TuitionPage() {
         )}
       </div>
 
-      <TuitionStatCards stats={stats} />
+      <TuitionStatCards scholarshipRefund={scholarshipRefund} stats={stats} />
 
       <div className='grid gap-6 lg:grid-cols-2'>
         <TuitionBarChart barData={barData} hasDebt={stats.totalDebt > 0} />
@@ -271,8 +274,10 @@ export function TuitionPage() {
         categoryFilter={table.categoryFilter}
         details={details}
         handleSort={(key: SortKey) => dispatch({ type: "SET_SORT", payload: key })}
+        scholarships={scholarships}
         searchQuery={table.searchQuery}
         setCategoryFilter={(v: string) => dispatch({ type: "SET_CATEGORY", payload: v })}
+        setScholarship={setScholarship}
         setSearchQuery={(v: string) => dispatch({ type: "SET_SEARCH", payload: v })}
         setShowNonCredit={() => dispatch({ type: "TOGGLE_NON_CREDIT" })}
         setViewMode={(v: "grouped" | "all") => dispatch({ type: "SET_VIEW_MODE", payload: v })}

@@ -1,16 +1,18 @@
-import { ArrowRightIcon, BookOpenIcon, CalendarIcon, ClockIcon, WalletIcon } from "lucide-react";
+import { ArrowRightIcon, BookOpenIcon, CalendarIcon, WalletIcon } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import type { ChartConfig } from "@/components/ui/chart";
+import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { _DEFAULT_IGNORE_SEMESTER_TITLE, _DEFAULT_SCORE_SUMMARY } from "@/constants/default";
 import { useCalendarStore } from "@/store/use-calendar-store";
 import { useGlobalStore } from "@/store/use-global-store";
 import { useScoreStore } from "@/store/use-score-store";
 import { useTuitionStore } from "@/store/use-tuition-store";
 import { useUserSettingsStore } from "@/store/use-user-settings-store";
-import type { CalendarEntry, ScoreGroupType, ScoreSummaryType, SemesterData } from "@/types";
+import type { CalendarEntry, ScoreGroupType, ScoreSummaryType } from "@/types";
 import { getAcademicRank } from "@/utils/academic-compute";
+import { shortSemesterName } from "@/utils/calendar-format";
 import { computeScoreHash } from "@/utils/hash";
 import { formatSemesterShort, GRADE_COLORS, getScoreSummary } from "@/utils/score";
 import { formatVNDCompact } from "@/utils/tuition-compute";
@@ -19,34 +21,15 @@ import { CreditProgress, GpaChart, GradeDistribution, TrainingChart } from "./co
 import { GoalBanner } from "./components/goal-banner";
 import { SummaryCards } from "./components/summary-cards";
 
-function computeClassStats(calendarData: SemesterData[]) {
-  if (calendarData.length === 0) {
-    return null;
-  }
-  let totalSessions = 0;
-  const uniqueCourses = new Set<string>();
-  for (const sem of calendarData) {
-    for (const week of sem.weeks) {
-      for (const entry of week.schedule) {
-        if (entry.category !== "COURSE" && entry.category !== "LAB") {
-          continue;
-        }
-        totalSessions++;
-        if (entry.code) {
-          uniqueCourses.add(entry.code);
-        }
-      }
-    }
-  }
-  return { totalSessions, totalCourses: uniqueCourses.size, semesterCount: calendarData.length };
-}
+const tuitionChartConfig = {
+  collected: { label: "Đã nộp", color: "oklch(0.72 0.188 51)" }
+} satisfies ChartConfig;
 
 function DashboardPage() {
   const scores = useScoreStore((s) => s.scores);
   const originalScores = useScoreStore((s) => s.originalScores);
   const savedScoresHash = useScoreStore((s) => s.savedScoresHash);
   const tuitionSummary = useTuitionStore((s) => s.summary);
-  const studyCalendarData = useCalendarStore((s) => s.studyCalendarData);
   const scheduleMap = useCalendarStore((s) => s.scheduleMap);
   const fixedPoint = useGlobalStore((s) => s.fixedPoint);
   const { settings: userSettings } = useUserSettingsStore();
@@ -114,25 +97,16 @@ function DashboardPage() {
     { count: { label: "Số lượng" } } as ChartConfig
   );
 
-  const tuitionData = useMemo(() => {
+  const tuitionChartData = useMemo(() => {
     if (tuitionSummary.length === 0) {
-      return null;
+      return [];
     }
-    return chartDataTerm
-      .map((t) => {
-        const entry = tuitionSummary.find((e) => e.semesterName.includes(t.term.replace("HK", "Học kỳ ")));
-        return entry ? { term: t.term, tuition: entry.collected } : null;
-      })
-      .filter(Boolean) as { term: string; tuition: number }[];
-  }, [chartDataTerm, tuitionSummary]);
-
-  const classStats = useMemo(() => computeClassStats(studyCalendarData), [studyCalendarData]);
-
-  const totalSpent = useMemo(() => {
-    if (tuitionSummary.length === 0) {
-      return null;
-    }
-    return tuitionSummary.reduce((sum, e) => sum + e.collected, 0);
+    return tuitionSummary
+      .map((e) => ({
+        name: shortSemesterName(e.semesterName),
+        collected: e.collected
+      }))
+      .reverse(); // oldest on left
   }, [tuitionSummary]);
 
   const upcomingEvents = useMemo(() => {
@@ -198,89 +172,20 @@ function DashboardPage() {
           targetCredit={targetCredit}
           totalCredit={summary.totalCredit}
           totalProgramCredits={totalProgramCredits}
-          tuitionData={tuitionData ?? undefined}
         />
       </div>
 
-      {(classStats || totalSpent != null || upcomingEvents) && (
-        <div className='grid gap-6 lg:grid-cols-3'>
-          {classStats && (
-            <Card>
-              <CardHeader className='pb-2'>
-                <CardTitle className='flex items-center gap-2 text-base'>
-                  <ClockIcon className='h-4 w-4 text-primary' />
-                  Thống kê buổi học
-                </CardTitle>
-              </CardHeader>
-              <CardContent className='space-y-2'>
-                <div className='flex items-baseline justify-between'>
-                  <span className='text-muted-foreground text-sm'>Tổng buổi học</span>
-                  <span className='font-bold text-2xl'>{classStats.totalSessions}</span>
-                </div>
-                <div className='flex items-baseline justify-between'>
-                  <span className='text-muted-foreground text-sm'>Môn học</span>
-                  <span className='font-bold text-2xl'>{classStats.totalCourses}</span>
-                </div>
-                <div className='flex items-baseline justify-between'>
-                  <span className='text-muted-foreground text-sm'>Học kỳ có lịch</span>
-                  <span className='font-bold text-2xl'>{classStats.semesterCount}</span>
-                </div>
-                <Button
-                  className='mt-3 w-full'
-                  onClick={() => {
-                    window.location.hash = "calendar";
-                  }}
-                  size='sm'
-                  variant='outline'
-                >
-                  <CalendarIcon className='mr-2 h-4 w-4' />
-                  Xem lịch học
-                </Button>
-              </CardContent>
-            </Card>
-          )}
-
-          {totalSpent != null && (
-            <Card>
-              <CardHeader className='pb-2'>
-                <CardTitle className='flex items-center gap-2 text-base'>
-                  <WalletIcon className='h-4 w-4 text-primary' />
-                  Đã nộp cho trường
-                </CardTitle>
-              </CardHeader>
-              <CardContent className='space-y-2'>
-                <div className='flex items-baseline justify-between'>
-                  <span className='text-muted-foreground text-sm'>Tổng đã nộp</span>
-                  <span className='font-bold text-2xl'>{formatVNDCompact(totalSpent)}</span>
-                </div>
-                <div className='flex items-baseline justify-between'>
-                  <span className='text-muted-foreground text-sm'>Học kỳ</span>
-                  <span className='font-bold text-2xl'>{tuitionSummary.length}</span>
-                </div>
-                <Button
-                  className='mt-3 w-full'
-                  onClick={() => {
-                    window.location.hash = "tuition";
-                  }}
-                  size='sm'
-                  variant='outline'
-                >
-                  <ArrowRightIcon className='mr-2 h-4 w-4' />
-                  Xem học phí
-                </Button>
-              </CardContent>
-            </Card>
-          )}
-
-          {upcomingEvents && upcomingEvents.length > 0 && (
-            <Card>
-              <CardHeader className='pb-2'>
-                <CardTitle className='flex items-center gap-2 text-base'>
-                  <CalendarIcon className='h-4 w-4 text-primary' />
-                  Lịch sắp tới
-                </CardTitle>
-              </CardHeader>
-              <CardContent className='max-h-80 space-y-1 overflow-y-auto'>
+      <div className='grid gap-6 lg:grid-cols-2'>
+        <Card>
+          <CardHeader className='pb-2'>
+            <CardTitle className='flex items-center gap-2 text-base'>
+              <CalendarIcon className='h-4 w-4 text-primary' />
+              Sự kiện sắp tới
+            </CardTitle>
+          </CardHeader>
+          <CardContent className='max-h-80 space-y-1 overflow-y-auto'>
+            {upcomingEvents && upcomingEvents.length > 0 ? (
+              <>
                 {upcomingEvents.map((ev, i) => (
                   <div
                     className='flex items-start gap-2 border-muted border-b py-1.5 text-sm last:border-0'
@@ -309,11 +214,60 @@ function DashboardPage() {
                   <CalendarIcon className='mr-2 h-4 w-4' />
                   Xem tất cả
                 </Button>
-              </CardContent>
-            </Card>
-          )}
-        </div>
-      )}
+              </>
+            ) : (
+              <div className='flex h-40 items-center justify-center text-muted-foreground text-sm'>
+                Chưa có lịch học
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className='pb-2'>
+            <CardTitle className='flex items-center gap-2 text-base'>
+              <WalletIcon className='h-4 w-4 text-primary' />
+              Đã nộp cho trường từng kỳ
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            {tuitionChartData.length > 0 ? (
+              <>
+                <ChartContainer className='aspect-auto h-64 w-full' config={tuitionChartConfig}>
+                  <BarChart data={tuitionChartData} margin={{ left: 0, right: 10, top: 10 }}>
+                    <CartesianGrid vertical={false} />
+                    <XAxis axisLine={false} dataKey='name' tickLine={false} tickMargin={8} />
+                    <YAxis
+                      axisLine={false}
+                      tickFormatter={(v) => formatVNDCompact(Number(v))}
+                      tickLine={false}
+                      tickMargin={8}
+                      width={65}
+                    />
+                    <ChartTooltip content={<ChartTooltipContent />} />
+                    <Bar dataKey='collected' fill='var(--color-collected)' name='Đã nộp' radius={[4, 4, 0, 0]} />
+                  </BarChart>
+                </ChartContainer>
+                <Button
+                  className='mt-3 w-full'
+                  onClick={() => {
+                    window.location.hash = "tuition";
+                  }}
+                  size='sm'
+                  variant='outline'
+                >
+                  <ArrowRightIcon className='mr-2 h-4 w-4' />
+                  Xem học phí
+                </Button>
+              </>
+            ) : (
+              <div className='flex h-40 items-center justify-center text-muted-foreground text-sm'>
+                Chưa có dữ liệu học phí
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }

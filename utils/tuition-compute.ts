@@ -1,5 +1,5 @@
 import { _DEFAULT_IGNORE_SUBJECT_DATA } from "@/constants/default";
-import type { SemesterTuitionDetail, TuitionStatsType, TuitionSummaryEntry } from "@/types";
+import type { ScholarshipType, SemesterTuitionDetail, TuitionStatsType, TuitionSummaryEntry } from "@/types";
 
 const SEMESTER_RE = /Học kỳ\s+(\d+)\s+(?:-\s*)?Năm học\s+(\d{4})\s*[-–]\s*(\d{4})/;
 
@@ -159,4 +159,35 @@ export function getLatestAvgCreditCost(
 
   const { rates } = collectRates(detail.receiptGroups);
   return rates.length > 0 ? Math.round(rates.reduce((a, b) => a + b, 0) / rates.length) : null;
+}
+
+const SCHOLARSHIP_RATES: Record<NonNullable<ScholarshipType>, number> = {
+  xuat_sac: 1.0,
+  gioi: 0.7,
+  kha: 0.5,
+  mien_hoc_phi: 1.0
+};
+
+export function getScholarshipRate(type: NonNullable<ScholarshipType>): number {
+  return SCHOLARSHIP_RATES[type];
+}
+
+export function computeScholarshipRefund(
+  summary: TuitionSummaryEntry[],
+  scholarships: Record<string, ScholarshipType>
+): { total: number; semesterCount: number } {
+  let total = 0;
+  let semesterCount = 0;
+
+  for (const entry of summary) {
+    const sch = scholarships[entry.semesterName];
+    if (!sch) {
+      continue;
+    }
+    const rate = SCHOLARSHIP_RATES[sch];
+    total += Math.round(entry.collected * rate);
+    semesterCount++;
+  }
+
+  return { total, semesterCount };
 }

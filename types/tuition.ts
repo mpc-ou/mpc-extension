@@ -58,3 +58,18 @@ export type TuitionStatsType = {
   mostExpensiveSemester: { name: string; amount: number };
   cheapestSemester: { name: string; amount: number };
 };
+
+export type ScholarshipType = "xuat_sac" | "gioi" | "kha" | "mien_hoc_phi" | null;
+
+export type ScholarshipRecord = {
+  type: ScholarshipType;
+  rate: number; // 0-1
+  label: string;
+};
+
+export const SCHOLARSHIP_OPTIONS: { type: NonNullable<ScholarshipType>; rate: number; label: string }[] = [
+  { type: "xuat_sac", rate: 1.0, label: "Xuất sắc (100%)" },
+  { type: "gioi", rate: 0.7, label: "Giỏi (70%)" },
+  { type: "kha", rate: 0.5, label: "Khá (50%)" },
+  { type: "mien_hoc_phi", rate: 1.0, label: "Miễn học phí (100%)" }
+];

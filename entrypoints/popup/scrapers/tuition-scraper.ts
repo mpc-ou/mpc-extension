@@ -227,29 +227,60 @@ async function getTuitionData(): Promise<ScrapeResult<{
     return found;
   };
 
-  const waitTable = (ms = 1500): Promise<void> =>
+  /** Two-phase wait: old table disappears → new table appears → settle. */
+  const waitTable = (timeoutMs = 15_000): Promise<void> =>
     new Promise((resolve) => {
       const container = document.querySelector("app-hocphi");
       if (!container) {
         resolve();
         return;
       }
-      const table = container.querySelector("table");
-      if (!table) {
-        setTimeout(resolve, ms);
-        return;
-      }
-      const obs = new MutationObserver((mutations, o) => {
-        if (mutations.some((m) => m.type === "childList" && m.addedNodes.length > 0)) {
-          o.disconnect();
-          setTimeout(resolve, 500);
+
+      const pollInterval = 100;
+      const start = Date.now();
+
+      const isTableGone = () => {
+        const t = container.querySelector("table");
+        return !t || (t as HTMLElement).offsetParent === null;
+      };
+
+      const hasTable = () => {
+        const t = container.querySelector("table");
+        if (!t) return false;
+        // Verify it has actual rows (not just header or empty)
+        const rows = t.querySelectorAll("tbody tr");
+        return rows.length > 0;
+      };
+
+      // Phase 1: Wait for old table to be gone (Angular clearing DOM)
+      const waitForGone = () => {
+        if (isTableGone()) {
+          // Phase 2: Wait for new table to appear
+          waitForAppear();
+          return;
         }
-      });
-      obs.observe(table, { childList: true, subtree: true });
-      setTimeout(() => {
-        obs.disconnect();
-        resolve();
-      }, ms);
+        if (Date.now() - start > timeoutMs) {
+          resolve();
+          return;
+        }
+        setTimeout(waitForGone, pollInterval);
+      };
+
+      // Phase 2: Wait for new table to appear
+      const waitForAppear = () => {
+        if (hasTable()) {
+          // Settle: give Angular a moment to finish rendering
+          setTimeout(resolve, 500);
+          return;
+        }
+        if (Date.now() - start > timeoutMs) {
+          resolve();
+          return;
+        }
+        setTimeout(waitForAppear, pollInterval);
+      };
+
+      waitForGone();
     });
 
   // ── Overlay (progress UI) ──

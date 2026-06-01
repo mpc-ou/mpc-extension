@@ -1,9 +1,11 @@
-import { ChevronDown, ChevronRight } from "lucide-react";
+import { ChevronDown, ChevronRight, GraduationCap } from "lucide-react";
 import { useMemo, useState } from "react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { _TUITION_MAJOR_EXCLUDE_PREFIXES, _TUITION_SERVICE_CODES } from "@/constants/default";
 import { cn } from "@/lib/utils";
-import type { PairedReceiptGroup, SemesterTuitionDetail } from "@/types";
-import { formatVND, isNonCreditItem } from "@/utils/tuition-compute";
+import type { PairedReceiptGroup, ScholarshipType, SemesterTuitionDetail } from "@/types";
+import { SCHOLARSHIP_OPTIONS } from "@/types/tuition";
+import { formatVND, getScholarshipRate, isNonCreditItem } from "@/utils/tuition-compute";
 
 const isServiceItem = (code: string) => _TUITION_SERVICE_CODES.includes(code);
 
@@ -73,16 +75,21 @@ function ReceiptGroupBlock({ group, showNonCredit }: { group: PairedReceiptGroup
   );
 }
 
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: semester card has scholarship selector + receipt display
 export function SemesterCard({
   detail,
   idx,
   categoryFilter,
-  showNonCredit
+  showNonCredit,
+  scholarship,
+  setScholarship
 }: {
   detail: SemesterTuitionDetail;
   idx: number;
   categoryFilter: string;
   showNonCredit: boolean;
+  scholarship: ScholarshipType;
+  setScholarship: (semesterName: string, type: ScholarshipType) => Promise<void>;
 }) {
   const [expanded, setExpanded] = useState(false);
 
@@ -93,7 +100,11 @@ export function SemesterCard({
     return aReceipts.map((aGroup) => {
       const bGroup = bReceipts.find((b) => b.linkedPaymentNumber === aGroup.receiptNumber);
       if (bGroup) {
-        return { ...aGroup, linkedReceiptNumber: bGroup.receiptNumber, linkedReceiptDate: bGroup.createdAt };
+        return {
+          ...aGroup,
+          linkedReceiptNumber: bGroup.receiptNumber,
+          linkedReceiptDate: bGroup.createdAt
+        };
       }
       return { ...aGroup };
     });
@@ -160,9 +171,41 @@ export function SemesterCard({
             {receiptCount} phiếu · {totalCredits} tín chỉ
           </p>
         </div>
+
+        <button
+          className='flex shrink-0 cursor-default items-center gap-1 border-0 bg-transparent p-0'
+          onClick={(e) => e.stopPropagation()}
+          type='button'
+        >
+          <GraduationCap className='h-3.5 w-3.5 text-amber-600' />
+          <Select
+            onValueChange={(v) =>
+              setScholarship(detail.semesterName, v === "none" ? null : (v as NonNullable<ScholarshipType>))
+            }
+            value={scholarship ?? "none"}
+          >
+            <SelectTrigger className='h-7 w-32 text-[11px]'>
+              <SelectValue placeholder='Không có' />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value='none'>Không có</SelectItem>
+              {SCHOLARSHIP_OPTIONS.map((opt) => (
+                <SelectItem key={opt.type} value={opt.type}>
+                  {opt.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </button>
+
         <div className='shrink-0 text-right'>
           <p className='font-semibold text-sm'>{formatVND(totalAmount)}</p>
           {avgMajorPerCredit > 0 && <p className='text-muted-foreground text-xs'>{formatVND(avgMajorPerCredit)}/tín</p>}
+          {scholarship && (
+            <p className='font-semibold text-[11px] text-amber-700 dark:text-amber-400'>
+              +{formatVND(Math.round(totalAmount * getScholarshipRate(scholarship)))}
+            </p>
+          )}
         </div>
         {expanded ? (
           <ChevronDown className='h-4 w-4 shrink-0 text-muted-foreground' />
@@ -177,6 +220,7 @@ export function SemesterCard({
             <ReceiptGroupBlock group={group} key={group.receiptLabel} showNonCredit={showNonCredit} />
           ))}
           {detail.bankAccount && <p className='text-muted-foreground text-xs'>{detail.bankAccount}</p>}
+
           <div className='flex flex-wrap gap-x-6 gap-y-1 rounded-md bg-muted/50 p-3 text-sm'>
             <span>
               <strong>{receiptCount}</strong> phiếu
