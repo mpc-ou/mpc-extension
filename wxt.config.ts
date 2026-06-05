@@ -8,7 +8,7 @@ export default defineConfig({
   vite: () => ({
     plugins: [tailwindcss()],
     define: {
-      __MPC_KEY__: JSON.stringify(process.env.ENV_KEY || process.env.MPC_KEY || "MPC")
+      __MPC_KEY__: JSON.stringify(process.env.MPC_KEY || "MPC")
     },
     build: {
       rollupOptions: {

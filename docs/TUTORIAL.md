@@ -482,9 +482,9 @@ The `__MPC_KEY__` secret is injected dynamically at compile-time:
 // wxt.config.ts
 vite: () => ({
   define: {
-    __MPC_KEY__: JSON.stringify(process.env.ENV_KEY || process.env.MPC_KEY || "MPC")
+    __MPC_KEY__: JSON.stringify(process.env.MPC_KEY || "MPC")
   }
 })
 ```
 - **Local Dev**: Loads `MPC_KEY` from the root `.env` file.
-- **CI/CD Build**: The GitHub Actions / release pipeline automatically injects the production `ENV_KEY` secret.
+- **CI/CD Build**: The GitHub Actions / release pipeline automatically injects the production `MPC_KEY` secret.
