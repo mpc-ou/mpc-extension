@@ -45,7 +45,7 @@ pnpm build
 pnpm build:firefox # Dành cho Firefox
 ```
 
-Biến môi trường `MPC_KEY` (hoặc `ENV_KEY`) được inject lúc build và dùng để mã hóa dữ liệu lưu cục bộ. Giá trị mặc định `"MPC"` dùng tốt cho môi trường phát triển. Trên CI/CD, khóa này được đặt qua GitHub Secrets.
+Biến môi trường `MPC_KEY` được inject lúc build và dùng để mã hóa dữ liệu lưu cục bộ. Giá trị mặc định `"MPC"` dùng tốt cho môi trường phát triển. Trên CI/CD, khóa này được đặt qua GitHub Secrets.
 
 Sau khi build, folder **.output** sẽ được tạo ra. Bên trong có các folder tương ứng cho từng trình duyệt. Sử dụng folder này để cài đặt thủ công như hướng dẫn ở trên.
 

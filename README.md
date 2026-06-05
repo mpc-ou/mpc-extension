@@ -44,7 +44,7 @@ pnpm build
 pnpm build:firefox # For Firefox
 ```
 
-The `MPC_KEY` (or `ENV_KEY`) environment variable is injected at build time and used to encrypt locally stored data. The default value `"MPC"` is fine for local development. In CI/CD, this key is set via GitHub Secrets.
+The `MPC_KEY` environment variable is injected at build time and used to encrypt locally stored data. The default value `"MPC"` is fine for local development. In CI/CD, this key is set via GitHub Secrets.
 
 After building, the **.output** folder will be created. Inside, there are folders corresponding to each browser. Use these folders to install manually as described above.
 
