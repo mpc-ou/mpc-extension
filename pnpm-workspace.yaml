@@ -1,0 +1,5 @@
+# Disable native builds for these packages — they're optional platform-specific
+# deps not needed at runtime (esbuild is managed by WXT, spawn-sync is fallback).
+allowBuilds:
+  esbuild: false
+  spawn-sync: false

@@ -2,7 +2,12 @@
 
 import { _GET_CURRENT_URL, _NAVIGATE_TO_URL, _OPEN_NEW_TAB } from "@/constants/chrome";
 import { _DEFAULT_POINT_MAPPING } from "@/constants/default";
-import { PointCharacterType, PointScale4Type } from "@/entrypoints/sidepanel/PointTab/type";
+import { PointCharacterType, PointScale4Type } from "@/types";
+
+export const buildPageRegex = (baseRegexPrefix: string, tailUrl: string): string => {
+  const encoded = tailUrl.replace(/[/.*+?^${}()|[\]\\]/g, "\\$&");
+  return `${baseRegexPrefix}\\/?${encoded}.*$`;
+};
 
 export const removeVietnameseTones = (str: string) => {
   return str
@@ -38,4 +43,15 @@ export const openNewTab = async (url: string): Promise<void> => {
 
 export const navigateToURL = async (url: string): Promise<void> => {
   await browser.runtime.sendMessage({ type: _NAVIGATE_TO_URL, url });
+};
+
+export const formatFixed = (value: number, decimals: number): string =>
+  Number.parseFloat(value.toFixed(decimals)).toString();
+
+export const isMatchURL = (regexStr: string, plainUrl: string, currUrl: string): boolean => {
+  try {
+    return new RegExp(regexStr).test(currUrl);
+  } catch {
+    return currUrl === plainUrl || currUrl.startsWith(plainUrl);
+  }
 };

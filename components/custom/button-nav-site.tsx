@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { useGlobalStore } from "@/store/use-global-store";
+import { getCurrTabURL, navigateToURL, openNewTab } from "@/utils";
 
 type ButtonNavSiteProps = React.ComponentProps<typeof Button> & {
   url?: string;

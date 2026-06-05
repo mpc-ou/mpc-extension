@@ -35,11 +35,17 @@ Sau khi tải về, làm theo hướng dẫn sau để cài đặt thủ công:
 git clone https://github.com/mpc-ou/mpc-extension.git
 cd mpc-extension
 
+# Thiết lập khóa mã hóa (dùng để mã hóa dữ liệu local)
+cp .env.example .env
+# Sửa .env để đặt MPC_KEY riêng, hoặc giữ mặc định cho dev
+
 pnpm install
 
 pnpm build
 pnpm build:firefox # Dành cho Firefox
 ```
+
+Biến môi trường `MPC_KEY` được inject lúc build và dùng để mã hóa dữ liệu lưu cục bộ. Giá trị mặc định `"MPC"` dùng tốt cho môi trường phát triển. Trên CI/CD, khóa này được đặt qua GitHub Secrets.
 
 Sau khi build, folder **.output** sẽ được tạo ra. Bên trong có các folder tương ứng cho từng trình duyệt. Sử dụng folder này để cài đặt thủ công như hướng dẫn ở trên.
 

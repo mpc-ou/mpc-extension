@@ -34,4 +34,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           HUSKY: 0
+          MPC_KEY: ${{ secrets.MPC_KEY }}
         run: pnpm dlx semantic-release

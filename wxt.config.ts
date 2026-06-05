@@ -7,6 +7,9 @@ export default defineConfig({
   modules: [],
   vite: () => ({
     plugins: [tailwindcss()],
+    define: {
+      __MPC_KEY__: JSON.stringify(process.env.MPC_KEY || "MPC")
+    },
     build: {
       rollupOptions: {
         onwarn(warning, warn) {
@@ -22,7 +25,7 @@ export default defineConfig({
     name: "MPC Extension",
     version: "1.6.0",
     description: "Extension hỗ trợ sinh viên trường Đại học Mở TP. HCM trong việc lên kế hoạch học tập.",
-    permissions: ["scripting", "activeTab", "storage", "sidePanel"],
+    permissions: ["scripting", "activeTab", "storage", "sidePanel", "alarms", "notifications"],
     host_permissions: ["https://tienichsv.ou.edu.vn/*", "https://tienichkcq.oude.edu.vn/*"],
     action: {
       default_title: "MPC Extension"

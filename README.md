@@ -34,11 +34,17 @@ After downloading, follow these instructions to install manually:
 git clone https://github.com/mpc-ou/mpc-extension.git
 cd mpc-extension
 
+# Set up the encryption key (used for local data encryption)
+cp .env.example .env
+# Edit .env to set your own MPC_KEY, or keep the default for local dev
+
 pnpm install
 
 pnpm build
 pnpm build:firefox # For Firefox
 ```
+
+The `MPC_KEY` environment variable is injected at build time and used to encrypt locally stored data. The default value `"MPC"` is fine for local development. In CI/CD, this key is set via GitHub Secrets.
 
 After building, the **.output** folder will be created. Inside, there are folders corresponding to each browser. Use these folders to install manually as described above.
 

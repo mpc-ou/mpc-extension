@@ -43,13 +43,40 @@ Message type constants are defined in [constants/chrome.ts](constants/chrome.ts)
 
 ### State Management
 
-Three Zustand stores, each persisted to `chrome.storage.local`:
+Zustand stores with tiered persistence:
 
-| Store | File | Manages |
-|-------|------|---------|
-| Global config | [store/use-global-store.ts](store/use-global-store.ts) | Active tab, site URL, ignored subjects, fixed points |
-| Grade data | [entrypoints/sidepanel/PointTab/use-score-store.ts](entrypoints/sidepanel/PointTab/use-score-store.ts) | Semester scores, GPA calculations |
-| Calendar data | [entrypoints/sidepanel/CalendarTab/use-calendar-store.ts](entrypoints/sidepanel/CalendarTab/use-calendar-store.ts) | Class schedules, exam events |
+| Store | File | Storage | Manages |
+|-------|------|---------|---------|
+| Global config | [store/use-global-store.ts](store/use-global-store.ts) | `sync:global` | Theme, fixedPoint, ignoreList, siteURLMapping, school-wide params (retakeRatioLimit, maxCreditsPerSemester, minCreditsPerSemester, maxCreditsWarning, maxCreditsSummer, drlWarningThreshold) |
+| Current user | [store/use-current-user-store.ts](store/use-current-user-store.ts) | `local:currentUser` + `local:{MSSV}:avatar` | studentId, displayName, avatar (avatar stored in separate key, not in JSON) |
+| User settings | [store/use-user-settings-store.ts](store/use-user-settings-store.ts) | `local:{MSSV}:userSettings` | trainingSemesters, totalProgramCredits (per-MSSV, switches with effectiveStudentId) |
+| Grade data | [store/use-score-store.ts](store/use-score-store.ts) | `local:{MSSV}:pointData` | Semester scores, GPA calculations |
+| Info data | [store/use-info-store.ts](store/use-info-store.ts) | `local:{MSSV}:userData` | Student profile, course data |
+| Calendar data | [store/use-calendar-store.ts](store/use-calendar-store.ts) | `local:{MSSV}:calendarData` / `local:{MSSV}:examData` | Class schedules, exam events |
+
+**Key pattern**: All per-user data stores use `effectiveStudentId` from `useCurrentUserStore` — supports view-only account switching.
+
+### Academic Compute Module
+
+[utils/academic-compute.ts](utils/academic-compute.ts) — pure functions, no side effects:
+- `computeSummary(data, trainingSemesters)` — GPA + DRL summary
+- `getAcademicRank(gpa4)` / `getTrainingRank(point)` — Vietnamese rank labels
+- `computeSemesterGPA(sem)` / `computeCumulativeGPA(data, idx)` — per-semester/cumulative
+- `countRetakeCredits(data)` / `getRetakeRisk(...)` — retake F credits + degree downgrade risk
+- `getDrlWarnings(data, threshold)` — DRL below threshold consecutive semester warnings
+- `getMaxCreditsForStudent(gpa4, ...)` — credit limits based on academic standing
+
+Re-exported via [utils/score.ts](utils/score.ts) for backward compatibility.
+
+### Parameter System (when adding new configurable values)
+
+1. Define type in `types/point.ts`
+2. Add default in `constants/default.ts`
+3. School-wide → `useGlobalStore` (sync, editable in Settings); Per-user → `UserSettingsType` → `useUserSettingsStore`
+4. Compute logic → `utils/academic-compute.ts`
+5. Update `SettingsPage/index.tsx` with input
+6. Update `assets/docs/cach_tinh_toan.md` with `{{VAR}}` placeholders
+7. Update `AboutUsPage` `calcParams` for markdown rendering
 
 ### Content Scripts (DOM Scrapers)
 
@@ -76,5 +103,6 @@ Defined in [constants/default.ts](constants/default.ts) (`_DEFAULT_SITE_URL_MAPP
 - **Linter/Formatter**: Biome (not ESLint/Prettier) — config in [biome.jsonc](biome.jsonc)
 - **Commits**: Conventional Commits enforced by commitlint + husky (required for semantic-release versioning)
 - **Path alias**: `@/*` maps to the repo root
+- **Constants & Definitions**: When coding magic numbers, defining thresholds, or adding constant configuration functions, ALWAYS check the `constants/` directory (e.g., `constants/default.ts`) to reuse existing values or define them centrally.
 - **Grade conversion**: 10-point → 4-point scale logic is in [utils/index.ts](utils/index.ts)
 - **Release**: Automated via semantic-release on push to `main`; updates `package.json`, `wxt.config.ts`, `CHANGELOG.md`, and `assets/data/info.json`
