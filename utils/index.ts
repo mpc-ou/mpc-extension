@@ -4,6 +4,11 @@ import { _GET_CURRENT_URL, _NAVIGATE_TO_URL, _OPEN_NEW_TAB } from "@/constants/c
 import { _DEFAULT_POINT_MAPPING } from "@/constants/default";
 import { PointCharacterType, PointScale4Type } from "@/types";
 
+export const buildPageRegex = (baseRegexPrefix: string, tailUrl: string): string => {
+  const encoded = tailUrl.replace(/[/.*+?^${}()|[\]\\]/g, "\\$&");
+  return `${baseRegexPrefix}\\/?${encoded}.*$`;
+};
+
 export const removeVietnameseTones = (str: string) => {
   return str
     .normalize("NFD") // Chuẩn hóa chuỗi theo dạng chuẩn Unicode

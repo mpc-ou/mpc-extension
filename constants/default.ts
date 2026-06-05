@@ -10,6 +10,7 @@ import type {
   UserSettingsType,
   UserType
 } from "@/types";
+import { buildPageRegex } from "@/utils";
 
 export const _DEFAULT_IGNORE_SEMESTER_TITLE: string = "Bảo lưu";
 export const _DEFAULT_FIXED_POINT: number = 3;
@@ -38,11 +39,6 @@ export const _DEFAULT_IGNORE_SUBJECT_DATA: string[] = [
   "_BHYT6T"
 ];
 
-function _buildPageRegex(baseRegexPrefix: string, tailUrl: string): string {
-  const encoded = tailUrl.replace(/[/.*+?^${}()|[\]\\]/g, "\\$&");
-  return `${baseRegexPrefix}\\/?${encoded}.*$`;
-}
-
 function _createSiteConfig(
   label: string,
   homepageUrl: string,
@@ -58,7 +54,7 @@ function _createSiteConfig(
   for (const [key, page] of Object.entries(pages)) {
     config.pages[key as _PAGE_CATE] = {
       tailUrl: page.tailUrl,
-      regex: _buildPageRegex(baseRegexPrefix, page.tailUrl),
+      regex: buildPageRegex(baseRegexPrefix, page.tailUrl),
       label: page.label
     };
   }

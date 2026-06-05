@@ -8,7 +8,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { _DEFAULT_USER_SETTINGS, _OUCOMMUNITY_PROGRAM_URL } from "@/constants/default";
 import type { UserSettingsType } from "@/types";
 
-const STORAGE_KEY = "local:mpc-onboarding-completed";
+const _STORAGE_KEY = "local:mpc-onboarding-completed";
 const TOTAL_STEPS = 3;
 
 type OnboardingDialogProps = {
@@ -24,12 +24,12 @@ export function OnboardingDialog({ open, onComplete, onSkip }: OnboardingDialogP
   const dotKeys = useMemo(() => Array.from({ length: TOTAL_STEPS }, (_, i) => `dot-${i}`), []);
 
   const handleFinish = () => {
-    storage.setItem(STORAGE_KEY, "1");
+    storage.setItem(_STORAGE_KEY, "1");
     onComplete(settings);
   };
 
   const handleSkip = () => {
-    storage.setItem(STORAGE_KEY, "1");
+    storage.setItem(_STORAGE_KEY, "1");
     onSkip();
   };
 
