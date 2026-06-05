@@ -1,3 +1,23 @@
+# [2.0.0](https://github.com/mpc-ou/mpc-extension/compare/v1.6.0...v2.0.0) (2026-06-05)
+
+
+### Code Refactoring
+
+* convert from popup to new page (BREAKING CHANGE) ([0686d9e](https://github.com/mpc-ou/mpc-extension/commit/0686d9e241fd536f03ea2b0f2c8cdeb14a3e1302)), closes [#54](https://github.com/mpc-ou/mpc-extension/issues/54)
+
+
+### BREAKING CHANGES
+
+* - Complete dashboard
+- Complete GPA calculator
+- Complete study/exam schedule feature
+- Complete study roadmap
+- Redesign UI/UX
+- Improve popup for student portal interaction
+- Complete information and settings pages
+- Refactor popup architecture to tab
+- Testing and bug fixing
+
 # [1.6.0](https://github.com/mpc-ou/mpc-extension/compare/v1.5.0...v1.6.0) (2026-05-03)
 
 
