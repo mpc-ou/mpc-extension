@@ -1,17 +1,15 @@
 export const _REPORT_BUG_URL: string = "https://youtu.be/dQw4w9WgXcQ" as const;
 
-export const GRADE_ORDER = ["F", "D", "D+", "C", "C+", "B", "B+", "A", "A+"] as const;
+export const _GRADE_ORDER = ["F", "D", "D+", "C", "C+", "B", "B+", "A", "A+"] as const;
 
 export const _FACEBOOK_URL: string = "https://www.facebook.com/CLBLapTrinhTrenThietBiDiDong" as const;
 export const _MESSENGER_URL: string = "https://m.me/168697773726618" as const;
 export const _GITHUB_URL: string = "https://github.com/mpc-ou/mpc-extension" as const;
 export const _GITHUB_RELEASE_URL: string = "https://github.com/mpc-ou/mpc-extension/releases" as const;
+export const _OUCOMMUNITY_PROGRAM_URL: string = "https://www.oucommunity.dev/tuyen-sinh/gioi-thieu-nganh/" as const;
 
-const _CHROME_STORAGE_TYPE: _CHROME_STORAGE_CATE = "local";
-/** Sync-first global settings key — falls back to local if sync is unavailable. */
-export const _CHROME_STORAGE_GLOBAL_SYNC_KEY = "sync:global" as const;
-export const _CHROME_STORAGE_GLOBAL_LOCAL_KEY = "local:global" as const;
-export const _CHROME_STORAGE_POINT_KEY = `${_CHROME_STORAGE_TYPE}:pointData` as const;
+export const _SEMESTER_TITLE_REGEX = /Học kỳ\s+(.*?)\s+-\s+Năm học\s+(\d{4})\s*-\s*(\d{4})/i;
+export const _SEMESTER_SHORT_REGEX = /Học kỳ\s+(.*?)\s+-\s+Năm học\s+\d{2}(\d{2})\s*-\s*\d{2}(\d{2})/i;
 export const _WEEK_YEAR_REGEX = /\d{2}\/\d{2}\/(\d{4})/;
 export const _DATE_MATCH_REGEX = /\((\d{2})\/(\d{2})\)/;
 export const _SUBJECT_CODE_REGEX = /\((.*?)\)/;
@@ -20,20 +18,6 @@ export const _WEEK_SORT_REGEX = /Tuần \((\d{2})\/(\d{2})\/(\d{4})\)/;
 export const _DATE_RANGE_REGEX = /(\d{2}\/\d{2}\/\d{2})\s*đến\s*(\d{2}\/\d{2}\/\d{2})/;
 export const _SINGLE_DATE_REGEX = /(\d{2}\/\d{2}\/\d{2})/;
 
-// ==================== CATEGORY TYPES ====================
-
-export const _CATEGORY_TYPES = {
-  COURSE: "COURSE",
-  LAB: "LAB",
-  EXAM: "EXAM",
-  HOLIDAY: "HOLIDAY",
-  LESSON: "LESSON",
-  OTHER: "OTHER"
-} as const;
-
-// ==================== CATEGORY LABELS ====================
-
-/** Vietnamese labels for calendar entry categories */
 export const _CATEGORY_LABELS: Record<string, string> = {
   COURSE: "Học",
   LAB: "Thực hành",
@@ -43,16 +27,9 @@ export const _CATEGORY_LABELS: Record<string, string> = {
   OTHER: "Khác"
 };
 
-/**
- * Get Vietnamese label for a category
- * @param category - Category type
- * @returns Vietnamese label or the original category if not found
- */
-export function _getCategoryLabel(category: string): string {
+export function getCategoryLabel(category: string): string {
   return _CATEGORY_LABELS[category] || category;
 }
-
-// ==================== CATEGORY COLORS ====================
 
 export const _CATEGORY_COLORS: Record<string, string> = {
   COURSE: "bg-blue-500",
@@ -88,23 +65,6 @@ export const _SUBJECT_HEX_PALETTE = [
 ];
 
 export const _SUBJECT_HEX_DEFAULT = "#6b7280"; // gray-500
-
-// ==================== EXCEL CONFIGURATION ====================
-
-export const _EXCEL_COLUMN_CONFIG = [
-  { header: "Tuần", width: 20 },
-  { header: "Ngày", width: 15 },
-  { header: "Tiết", width: 10 },
-  { header: "Thời gian", width: 15 },
-  { header: "Môn học", width: 30 },
-  { header: "Mã môn", width: 12 },
-  { header: "Nhóm", width: 10 },
-  { header: "Phòng", width: 12 },
-  { header: "Giảng viên", width: 25 },
-  { header: "Loại", width: 12 }
-];
-
-export const _EXCEL_MAX_SHEET_NAME_LENGTH = 31;
 
 // ==================== ICS CONFIGURATION ====================
 

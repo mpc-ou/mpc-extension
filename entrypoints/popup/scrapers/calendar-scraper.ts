@@ -22,7 +22,7 @@ const getCalendars = async (
     /(\d{2}\/\d{2}\/\d{2})\s*đến\s*(\d{2}\/\d{2}\/\d{2})/;
   // biome-ignore lint/performance/useTopLevelRegex: Must be scoped within function for injection via executeScript
   const SINGLE_DATE_REGEX = /(\d{2}\/\d{2}\/\d{2})/;
-  const PERIOD_TIME_MAP_GROUP_1: Record<
+  const _PERIOD_TIME_MAP_GROUP_1: Record<
     number,
     { start: string; end: string }
   > = {
@@ -44,7 +44,7 @@ const getCalendars = async (
     16: { start: "20:50", end: "21:40" },
   };
 
-  const PERIOD_TIME_MAP_GROUP_2: Record<
+  const _PERIOD_TIME_MAP_GROUP_2: Record<
     number,
     { start: string; end: string }
   > = {
@@ -620,8 +620,8 @@ const getCalendars = async (
     );
 
     const timeMap = ["NB", "LB"].includes(locationType)
-      ? PERIOD_TIME_MAP_GROUP_2
-      : PERIOD_TIME_MAP_GROUP_1;
+      ? _PERIOD_TIME_MAP_GROUP_2
+      : _PERIOD_TIME_MAP_GROUP_1;
 
     const { start: startTime, end: endTime } = {
       start: timeMap[startPeriod]?.start || "",

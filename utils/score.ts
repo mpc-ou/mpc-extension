@@ -1,13 +1,6 @@
 import { utils as XLSXUtils, writeFile as XLSXWriteFile } from "xlsx";
-import {
-  _DEFAULT_GRADE_COLORS,
-  _EXPORT_COL_WIDTHS,
-  _EXPORT_FILE_PREFIX,
-  _EXPORT_SHEET_NAME,
-  _MAX_SEMESTER_TERMS,
-  _SEMESTER_SHORT_REGEX,
-  _SEMESTER_TITLE_REGEX
-} from "@/constants/default";
+import { _SEMESTER_SHORT_REGEX, _SEMESTER_TITLE_REGEX } from "@/constants";
+import { _DEFAULT_GRADE_COLORS, _DEFAULT_MAX_SEMESTER_TERMS } from "@/constants/default";
 import type { ScoreGroupType, ScoreRecordType, ScoreSummaryType } from "@/types";
 import { computeSummary as computeAcademicSummary } from "./academic-compute";
 import { removeVietnameseTones } from "./index";
@@ -188,6 +181,10 @@ const updateScoreAvg = (data: ScoreGroupType[]) => {
 };
 
 const handleExportScoreData = (data: ScoreGroupType[]) => {
+  const _EXPORT_FILE_PREFIX = "bang_diem_mpc";
+  const _EXPORT_SHEET_NAME = "Bảng điểm";
+  const _EXPORT_COL_WIDTHS = [5, 30, 15, 50, 10, 10, 10, 10, 20];
+
   const worksheetData: (string | number)[][] = [];
 
   worksheetData.push([
@@ -249,7 +246,7 @@ function getNextSemesterName(currentName: string): string | null {
   let term = Number.parseInt(match[1], 10);
   let yearStart = Number.parseInt(match[2], 10);
   let yearEnd = Number.parseInt(match[3], 10);
-  if (term === _MAX_SEMESTER_TERMS) {
+  if (term === _DEFAULT_MAX_SEMESTER_TERMS) {
     term = 1;
     yearStart++;
     yearEnd++;

@@ -14,7 +14,7 @@ import {
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { _COURSE_LABEL_MAPPING, _USER_LABEL_MAPPING } from "@/constants/default";
+import { _DEFAULT_COURSE_LABEL_MAPPING, _DEFAULT_USER_LABEL_MAPPING } from "@/constants/default";
 import { useConfirm } from "@/hooks/use-confirm";
 import { useInfoStore } from "@/store/use-info-store";
 
@@ -129,31 +129,31 @@ export function PersonalInfoPage() {
             </CardHeader>
             <CardContent className='grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-2'>
               <div>
-                <p className='text-muted-foreground text-xs'>{_USER_LABEL_MAPPING.dateOfBirth}</p>
+                <p className='text-muted-foreground text-xs'>{_DEFAULT_USER_LABEL_MAPPING.dateOfBirth}</p>
                 <CopyableField value={userData.dateOfBirth} />
               </div>
               <div>
-                <p className='text-muted-foreground text-xs'>{_USER_LABEL_MAPPING.gender}</p>
+                <p className='text-muted-foreground text-xs'>{_DEFAULT_USER_LABEL_MAPPING.gender}</p>
                 <p className='font-medium text-sm'>{userData.gender}</p>
               </div>
               <div>
-                <p className='text-muted-foreground text-xs'>{_USER_LABEL_MAPPING.identityNumber}</p>
+                <p className='text-muted-foreground text-xs'>{_DEFAULT_USER_LABEL_MAPPING.identityNumber}</p>
                 <CopyableField value={userData.identityNumber} />
               </div>
               <div>
-                <p className='text-muted-foreground text-xs'>{_USER_LABEL_MAPPING.placeOfBirth}</p>
+                <p className='text-muted-foreground text-xs'>{_DEFAULT_USER_LABEL_MAPPING.placeOfBirth}</p>
                 <CopyableField value={userData.placeOfBirth} />
               </div>
               <div>
-                <p className='text-muted-foreground text-xs'>{_USER_LABEL_MAPPING.ethnicity}</p>
+                <p className='text-muted-foreground text-xs'>{_DEFAULT_USER_LABEL_MAPPING.ethnicity}</p>
                 <p className='font-medium text-sm'>{userData.ethnicity}</p>
               </div>
               <div>
-                <p className='text-muted-foreground text-xs'>{_USER_LABEL_MAPPING.religion}</p>
+                <p className='text-muted-foreground text-xs'>{_DEFAULT_USER_LABEL_MAPPING.religion}</p>
                 <p className='font-medium text-sm'>{userData.religion}</p>
               </div>
               <div>
-                <p className='text-muted-foreground text-xs'>{_USER_LABEL_MAPPING.nationality}</p>
+                <p className='text-muted-foreground text-xs'>{_DEFAULT_USER_LABEL_MAPPING.nationality}</p>
                 <p className='font-medium text-sm'>{userData.nationality}</p>
               </div>
             </CardContent>
@@ -167,23 +167,23 @@ export function PersonalInfoPage() {
             </CardHeader>
             <CardContent className='grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-2'>
               <div>
-                <p className='text-muted-foreground text-xs'>{_COURSE_LABEL_MAPPING.major}</p>
+                <p className='text-muted-foreground text-xs'>{_DEFAULT_COURSE_LABEL_MAPPING.major}</p>
                 <p className='font-medium text-sm'>{courseData.major}</p>
               </div>
               <div>
-                <p className='text-muted-foreground text-xs'>{_COURSE_LABEL_MAPPING.faculty}</p>
+                <p className='text-muted-foreground text-xs'>{_DEFAULT_COURSE_LABEL_MAPPING.faculty}</p>
                 <p className='font-medium text-sm'>{courseData.faculty}</p>
               </div>
               <div>
-                <p className='text-muted-foreground text-xs'>{_COURSE_LABEL_MAPPING.classCode}</p>
+                <p className='text-muted-foreground text-xs'>{_DEFAULT_COURSE_LABEL_MAPPING.classCode}</p>
                 <p className='font-medium text-sm'>{courseData.classCode}</p>
               </div>
               <div>
-                <p className='text-muted-foreground text-xs'>{_COURSE_LABEL_MAPPING.academicYear}</p>
+                <p className='text-muted-foreground text-xs'>{_DEFAULT_COURSE_LABEL_MAPPING.academicYear}</p>
                 <p className='font-medium text-sm'>{courseData.academicYear}</p>
               </div>
               <div className='sm:col-span-2'>
-                <p className='text-muted-foreground text-xs'>{_COURSE_LABEL_MAPPING.degreeProgram}</p>
+                <p className='text-muted-foreground text-xs'>{_DEFAULT_COURSE_LABEL_MAPPING.degreeProgram}</p>
                 <p className='font-medium text-sm'>{courseData.degreeProgram}</p>
               </div>
             </CardContent>

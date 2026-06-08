@@ -1,7 +1,22 @@
 import type { WorkBook, WorkSheet } from "xlsx";
 import { utils, write } from "xlsx";
-import { _EXCEL_COLUMN_CONFIG, _EXCEL_MAX_SHEET_NAME_LENGTH, _getCategoryLabel } from "@/constants";
+import { getCategoryLabel } from "@/constants";
 import type { CalendarEntry, SemesterData, WeekData } from "@/types";
+
+const _EXCEL_COLUMN_CONFIG = [
+  { header: "Tuần", width: 20 },
+  { header: "Ngày", width: 15 },
+  { header: "Tiết", width: 10 },
+  { header: "Thời gian", width: 15 },
+  { header: "Môn học", width: 30 },
+  { header: "Mã môn", width: 12 },
+  { header: "Nhóm", width: 10 },
+  { header: "Phòng", width: 12 },
+  { header: "Giảng viên", width: 25 },
+  { header: "Loại", width: 12 }
+];
+
+const _EXCEL_MAX_SHEET_NAME_LENGTH = 31;
 
 export function convertToExcel(data: SemesterData[]): void {
   const workbook = buildWorkbook(data);
@@ -50,7 +65,7 @@ function buildWeekRows(week: WeekData): (string | number)[][] {
     entry.group || "",
     entry.room || "",
     entry.teacher || "",
-    _getCategoryLabel(entry.category)
+    getCategoryLabel(entry.category)
   ]);
 }
 
@@ -102,7 +117,7 @@ function buildCSVRow(week: WeekData, entry: CalendarEntry): string[] {
     entry.group || "",
     entry.room || "",
     entry.teacher || "",
-    _getCategoryLabel(entry.category)
+    getCategoryLabel(entry.category)
   ];
 }
 

@@ -4,6 +4,28 @@ import { _GET_CURRENT_URL, _NAVIGATE_TO_URL, _OPEN_NEW_TAB } from "@/constants/c
 import { _DEFAULT_POINT_MAPPING } from "@/constants/default";
 import { PointCharacterType, PointScale4Type } from "@/types";
 
+export const createSiteConfig = (
+  label: string,
+  homepageUrl: string,
+  baseRegexPrefix: string,
+  pages: Record<string, { tailUrl: string; label: string }>
+): _SITE_CONFIG => {
+  const config: _SITE_CONFIG = {
+    label,
+    homepage: { url: homepageUrl, regex: `${baseRegexPrefix}.*$` },
+    baseRegexPrefix,
+    pages: {} as Record<_PAGE_CATE, _PAGE_CONFIG>
+  };
+  for (const [key, page] of Object.entries(pages)) {
+    config.pages[key as _PAGE_CATE] = {
+      tailUrl: page.tailUrl,
+      regex: buildPageRegex(baseRegexPrefix, page.tailUrl),
+      label: page.label
+    };
+  }
+  return config;
+};
+
 export const buildPageRegex = (baseRegexPrefix: string, tailUrl: string): string => {
   const encoded = tailUrl.replace(/[/.*+?^${}()|[\]\\]/g, "\\$&");
   return `${baseRegexPrefix}\\/?${encoded}.*$`;

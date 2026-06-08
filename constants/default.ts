@@ -10,7 +10,7 @@ import type {
   UserSettingsType,
   UserType
 } from "@/types";
-import { buildPageRegex } from "@/utils";
+import { createSiteConfig } from "@/utils";
 
 export const _DEFAULT_IGNORE_SEMESTER_TITLE: string = "Bảo lưu";
 export const _DEFAULT_FIXED_POINT: number = 3;
@@ -39,30 +39,8 @@ export const _DEFAULT_IGNORE_SUBJECT_DATA: string[] = [
   "_BHYT6T"
 ];
 
-function _createSiteConfig(
-  label: string,
-  homepageUrl: string,
-  baseRegexPrefix: string,
-  pages: Record<string, { tailUrl: string; label: string }>
-): _SITE_CONFIG {
-  const config: _SITE_CONFIG = {
-    label,
-    homepage: { url: homepageUrl, regex: `${baseRegexPrefix}.*$` },
-    baseRegexPrefix,
-    pages: {} as Record<_PAGE_CATE, _PAGE_CONFIG>
-  };
-  for (const [key, page] of Object.entries(pages)) {
-    config.pages[key as _PAGE_CATE] = {
-      tailUrl: page.tailUrl,
-      regex: buildPageRegex(baseRegexPrefix, page.tailUrl),
-      label: page.label
-    };
-  }
-  return config;
-}
-
 export const _DEFAULT_SITE_URL_MAPPING: _SITE_MAPPING = {
-  sv: _createSiteConfig(
+  sv: createSiteConfig(
     "Tiện ích SV (Dành cho SV chính quy)",
     "https://tienichsv.ou.edu.vn",
     "^https:\\/\\/tienichsv\\.ou\\.edu\\.vn(?:\\/[^#]*)?",
@@ -74,7 +52,7 @@ export const _DEFAULT_SITE_URL_MAPPING: _SITE_MAPPING = {
       info: { tailUrl: "#/home?mode=userinfo", label: "Thông tin cá nhân" }
     }
   ),
-  kcq: _createSiteConfig(
+  kcq: createSiteConfig(
     "Tiện ích KCQ",
     "https://tienichkcq.oude.edu.vn/",
     "^https:\\/\\/tienichkcq\\.oude\\.edu\\.vn(?:\\/[^#]*)?",
@@ -101,27 +79,27 @@ export const _DEFAULT_GRADE_COLORS: Record<string, string> = {
 };
 
 /** Course codes classified as dịch vụ (BHYT, etc.) rather than học phí học tập. */
-export const _TUITION_SERVICE_CODES = ["_BHYTTN1", "_BHYT12T", "_BHYT6T", "_BHYT12"];
+export const _DEFAULT_TUITION_SERVICE_CODES = ["_BHYTTN1", "_BHYT12T", "_BHYT6T", "_BHYT12"];
+
+/** Mã môn bị loại khỏi tính đơn giá trung bình chuyên ngành (GENG, DEDU, PEDU). */
+export const _DEFAULT_TUITION_MAJOR_EXCLUDE_PREFIXES = ["GENG", "DEDU", "PEDU"] as const;
 
 /** Tooltip mô tả cho từng xếp loại khi hover trên bảng điểm. */
-export const _GRADE_TOOLTIP: Record<string, string> = {
-  "A+": "Điểm hệ 10 từ 9.0 – 10.0",
-  A: "Điểm hệ 10 từ 8.5 – 9.0",
-  "B+": "Điểm hệ 10 từ 8.0 – 8.5",
-  B: "Điểm hệ 10 từ 7.0 – 8.0",
-  "C+": "Điểm hệ 10 từ 6.5 – 7.0",
-  C: "Điểm hệ 10 từ 5.5 – 6.5",
-  "D+": "Điểm hệ 10 từ 5.0 – 5.5",
-  D: "Điểm hệ 10 từ 4.0 – 5.0",
+export const _DEFAULT_GRADE_TOOLTIP: Record<string, string> = {
+  "A+": "Điểm hệ 10 từ 9.0 - 10.0",
+  A: "Điểm hệ 10 từ 8.5 - 9.0",
+  "B+": "Điểm hệ 10 từ 8.0 - 8.5",
+  B: "Điểm hệ 10 từ 7.0 - 8.0",
+  "C+": "Điểm hệ 10 từ 6.5 - 7.0",
+  C: "Điểm hệ 10 từ 5.5 - 6.5",
+  "D+": "Điểm hệ 10 từ 5.0 - 5.5",
+  D: "Điểm hệ 10 từ 4.0 - 5.0",
   F: "Điểm hệ 10 dưới 4.0",
   M: "Môn này bạn được miễn học, không tính vào GPA",
   Đ: "Bạn đạt điểm Đạt của môn này, không tính trong GPA"
 };
 
-/** Mã môn bị loại khỏi tính đơn giá trung bình chuyên ngành (GENG, DEDU, PEDU). */
-export const _TUITION_MAJOR_EXCLUDE_PREFIXES = ["GENG", "DEDU", "PEDU"] as const;
-
-export const _TUITION_CATEGORIES = ["tất cả", "học phí", "dịch vụ"] as const;
+export const _DEFAULT_TUITION_CATEGORIES = ["tất cả", "học phí", "dịch vụ"] as const;
 
 export const _DEFAULT_ACADEMIC_RANKS: { minGpa4: number; rank: AcademicRankType }[] = [
   {
@@ -180,20 +158,8 @@ export const _DEFAULT_ACADEMIC_RANKS: { minGpa4: number; rank: AcademicRankType 
   }
 ];
 
-/** Regex pattern to parse semester titles like "Học kỳ 1 - Năm học 2024 - 2025" */
-export const _SEMESTER_TITLE_REGEX = /Học kỳ\s+(.*?)\s+-\s+Năm học\s+(\d{4})\s*-\s*(\d{4})/i;
-
-/** Regex pattern to extract short semester format like "HK1 24-25" */
-export const _SEMESTER_SHORT_REGEX = /Học kỳ\s+(.*?)\s+-\s+Năm học\s+\d{2}(\d{2})\s*-\s*\d{2}(\d{2})/i;
-
 /** Max number of terms per academic year before rolling over */
-export const _MAX_SEMESTER_TERMS = 3;
-
-/** Excel export column widths */
-export const _EXPORT_COL_WIDTHS = [5, 30, 15, 50, 10, 10, 10, 10, 20];
-
-/** Excel export sheet name */
-export const _EXPORT_SHEET_NAME = "Bảng điểm";
+export const _DEFAULT_MAX_SEMESTER_TERMS = 3;
 
 export const _DEFAULT_USER_SETTINGS: UserSettingsType = {
   trainingSemesters: 10,
@@ -203,19 +169,13 @@ export const _DEFAULT_USER_SETTINGS: UserSettingsType = {
 /** School-wide: max retake credit ratio before degree downgrade */
 export const _DEFAULT_RETAKE_RATIO_LIMIT = 0.05;
 
-/** School-wide: credit limits per semester */
 export const _DEFAULT_MAX_CREDITS_PER_SEMESTER = 25;
 export const _DEFAULT_MIN_CREDITS_PER_SEMESTER = 14;
 export const _DEFAULT_MAX_CREDITS_WARNING = 14;
 export const _DEFAULT_MAX_CREDITS_SUMMER = 12;
 
-/** Default user settings for new users */
-export const _EXPORT_FILE_PREFIX = "bang_diem_mpc";
-
-/** Max credits required for graduation (used for score prediction) */
 export const _DEFAULT_MAX_CREDITS = 135;
 
-/** Excellent GPA threshold (used for advisor mascot) */
 export const _DEFAULT_EXCELLENT_GPA_THRESHOLD = 3.6;
 
 export const _DEFAULT_TRAINING_RANKS: TrainingRankType[] = [
@@ -233,14 +193,9 @@ export const _DEFAULT_TRAINING_RANKS: TrainingRankType[] = [
   { minPoint: 0, label: "Kém", emoji: "❌", color: "text-red-500", bg: "bg-red-50 dark:bg-red-950/30" }
 ];
 
-/** Threshold for DRL (Điểm rèn luyện) below which triggers a warning (2 consecutive semesters). */
 export const _DEFAULT_DRL_WARNING_THRESHOLD = 50;
 
-/** Threshold for minimum training point required for scholarship */
 export const _DEFAULT_MIN_TRAINING_POINT_SCHOLARSHIP = 65;
-
-/** OUCommunity program reference URL — used in Settings & Onboarding */
-export const _OUCOMMUNITY_PROGRAM_URL = "https://www.oucommunity.dev/tuyen-sinh/gioi-thieu-nganh/";
 
 export const _DEFAULT_USER_DATA: UserType = {
   userId: "",
@@ -270,7 +225,7 @@ export const _DEFAULT_COURSE_DATA: CourseType = {
   updatedAt: new Date().toISOString()
 };
 
-export const _USER_LABEL_MAPPING: UserLabelMappingType = {
+export const _DEFAULT_USER_LABEL_MAPPING: UserLabelMappingType = {
   userId: "Mã SV",
   fullName: "Họ và tên",
   dateOfBirth: "Ngày sinh",
@@ -289,7 +244,7 @@ export const _USER_LABEL_MAPPING: UserLabelMappingType = {
   updatedAt: "Cập nhật"
 };
 
-export const _COURSE_LABEL_MAPPING: CourseLabelMappingType = {
+export const _DEFAULT_COURSE_LABEL_MAPPING: CourseLabelMappingType = {
   classCode: "Mã lớp",
   major: "Ngành",
   faculty: "Khoa",

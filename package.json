@@ -7,9 +7,6 @@
   "keywords": [],
   "author": "@mpc",
   "license": "GNU General Public License v3.0",
-  "contributors": [
-    "holedev <phanleho002@gmail.com>"
-  ],
   "packageManager": "pnpm@11.1.3",
   "scripts": {
     "dev": "wxt",
@@ -23,9 +20,9 @@
     "prepare": "husky",
     "lint-staged": "lint-staged",
     "commitlint": "commitlint --edit",
-    "ultracite:check": "pnpm dlx ultracite check",
-    "ultracite:fix": "pnpm dlx ultracite fix",
-    "ultracite:fix:unsafe": "pnpm dlx ultracite fix --unsafe"
+    "lint:check": "pnpm dlx ultracite check",
+    "lint:fix": "pnpm dlx ultracite fix",
+    "lint:fix:unsafe": "pnpm dlx ultracite fix --unsafe"
   },
   "dependencies": {
     "@radix-ui/react-alert-dialog": "^1.1.15",

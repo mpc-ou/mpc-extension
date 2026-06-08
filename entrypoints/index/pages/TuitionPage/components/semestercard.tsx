@@ -1,13 +1,13 @@
 import { ChevronDown, ChevronRight, GraduationCap } from "lucide-react";
 import { useMemo, useState } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { _TUITION_MAJOR_EXCLUDE_PREFIXES, _TUITION_SERVICE_CODES } from "@/constants/default";
+import { _DEFAULT_TUITION_MAJOR_EXCLUDE_PREFIXES, _DEFAULT_TUITION_SERVICE_CODES } from "@/constants/default";
 import { cn } from "@/lib/utils";
 import type { PairedReceiptGroup, ScholarshipType, SemesterTuitionDetail } from "@/types";
 import { SCHOLARSHIP_OPTIONS } from "@/types/tuition";
 import { formatVND, getScholarshipRate, isNonCreditItem } from "@/utils/tuition-compute";
 
-const isServiceItem = (code: string) => _TUITION_SERVICE_CODES.includes(code);
+const isServiceItem = (code: string) => _DEFAULT_TUITION_SERVICE_CODES.includes(code);
 
 function ReceiptGroupBlock({ group, showNonCredit }: { group: PairedReceiptGroup; showNonCredit: boolean }) {
   const displayItems = showNonCredit ? group.items : group.items.filter((i) => !isNonCreditItem(i.courseCode));
@@ -144,7 +144,7 @@ export function SemesterCard({
       if (!isNonCreditItem(item.courseCode) && item.credits > 0) {
         totalCredits += item.credits;
         creditAmount += item.amount;
-        if (!_TUITION_MAJOR_EXCLUDE_PREFIXES.some((p) => item.courseCode.startsWith(p))) {
+        if (!_DEFAULT_TUITION_MAJOR_EXCLUDE_PREFIXES.some((p) => item.courseCode.startsWith(p))) {
           majorCredits += item.credits;
           majorAmount += item.amount;
         }

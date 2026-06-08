@@ -1,5 +1,6 @@
 import { Check, ChevronDown, Trash2, User as UserIcon } from "lucide-react";
 import { toast } from "sonner";
+import { storage } from "#imports";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -17,8 +18,11 @@ import { useCurrentUserStore } from "@/store/use-current-user-store";
 import { useInfoStore } from "@/store/use-info-store";
 import { useScoreStore } from "@/store/use-score-store";
 
-async function deleteStudentData(studentId: string): Promise<void> {
-  await browser.storage.local.remove([...getStudentKeys(studentId), getAvatarKey(studentId)]);
+async function _deleteStudentData(studentId: string) {
+  const studentKeys = getStudentKeys(studentId);
+  const avtKey = getAvatarKey(studentId);
+  const removeListKeys = [...studentKeys, avtKey];
+  await storage.removeItems(removeListKeys);
 }
 
 export function UserMenu() {
@@ -32,18 +36,20 @@ export function UserMenu() {
       toast.error("Chưa có MSSV để xóa");
       return;
     }
+
     const isConfirmed = await confirm({
       title: "Xóa dữ liệu người dùng",
       description: `Bạn có chắc muốn xóa toàn bộ dữ liệu của MSSV <strong>${studentId}</strong>. Thao tác này không thể hoàn tác.`,
       confirmText: "Xóa",
       variant: "destructive"
     });
+
     if (!isConfirmed) {
       return;
     }
 
     try {
-      await deleteStudentData(studentId);
+      await _deleteStudentData(studentId);
       useInfoStore.getState().setUserData(_DEFAULT_USER_DATA);
       useInfoStore.getState().setCourseData(_DEFAULT_COURSE_DATA);
       useScoreStore.getState().setScores([]);

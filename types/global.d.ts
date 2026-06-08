@@ -30,3 +30,5 @@ declare module "*.md?raw" {
   const content: string;
   export default content;
 }
+
+declare const __MPC_KEY__: string;

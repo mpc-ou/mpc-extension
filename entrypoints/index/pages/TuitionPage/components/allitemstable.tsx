@@ -1,4 +1,4 @@
-import { _TUITION_SERVICE_CODES } from "@/constants/default";
+import { _DEFAULT_TUITION_SERVICE_CODES } from "@/constants/default";
 import { cn } from "@/lib/utils";
 import type { SemesterTuitionDetail, TuitionReceiptItem } from "@/types";
 import { shortSemesterName } from "@/utils/calendar-format";
@@ -45,7 +45,7 @@ function SortHeader({
 
 export function flattenDetails(details: Record<string, SemesterTuitionDetail>, categoryFilter: string): FlatItem[] {
   const result: FlatItem[] = [];
-  const isService = (code: string) => _TUITION_SERVICE_CODES.includes(code);
+  const isService = (code: string) => _DEFAULT_TUITION_SERVICE_CODES.includes(code);
   for (const detail of Object.values(details)) {
     for (const group of detail.receiptGroups) {
       if (group.receiptType === "B") {

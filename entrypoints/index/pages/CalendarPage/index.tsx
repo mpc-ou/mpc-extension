@@ -231,6 +231,8 @@ export function CalendarPage() {
 
       setPendingImportFile(file);
 
+      // magic number
+
       if (type === "study") {
         setImportSemesterName("");
         setImportSemesterOpen(true);

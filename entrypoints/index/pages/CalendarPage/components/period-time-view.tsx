@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { PERIOD_TIME_TABLES } from "@/constants/period-time";
+import { _PERIOD_TIME_TABLES } from "@/constants/period-time";
 import type { PeriodSession, PeriodTimeSlot, PeriodTimeTable } from "@/types";
 
 function SessionTable({ session, showLab }: { session: PeriodSession; showLab: boolean }) {
@@ -81,15 +81,15 @@ export function PeriodTimeView() {
         <DialogHeader>
           <DialogTitle>Khung giờ học theo tiết</DialogTitle>
         </DialogHeader>
-        <Tabs defaultValue={PERIOD_TIME_TABLES[0].groupName}>
+        <Tabs defaultValue={_PERIOD_TIME_TABLES[0].groupName}>
           <TabsList className='w-full'>
-            {PERIOD_TIME_TABLES.map((t) => (
+            {_PERIOD_TIME_TABLES.map((t) => (
               <TabsTrigger className='flex-1' key={t.groupName} value={t.groupName}>
                 {t.groupName}
               </TabsTrigger>
             ))}
           </TabsList>
-          {PERIOD_TIME_TABLES.map((table) => (
+          {_PERIOD_TIME_TABLES.map((table) => (
             <TabsContent key={table.groupName} value={table.groupName}>
               <GroupSchedule table={table} />
             </TabsContent>

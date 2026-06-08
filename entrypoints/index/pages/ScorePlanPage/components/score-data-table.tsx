@@ -34,7 +34,7 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { _DEFAULT_FORM_DATA, _GRADE_TOOLTIP } from "@/constants/default";
+import { _DEFAULT_FORM_DATA, _DEFAULT_GRADE_TOOLTIP } from "@/constants/default";
 import { cn } from "@/lib/utils";
 import type { ScoreGroupType, ScoreRecordType } from "@/types";
 import { formatFixed, parseScale10ToCharacterAndScale4, removeVietnameseTones } from "@/utils";
@@ -321,9 +321,9 @@ export function ScoreDataTable({
                     return "Chưa có điểm / Đang học";
                   }
                   if (sub.point.character === "D" && (sub.point.scale10 === 0 || sub.point.scale4 === 0)) {
-                    return _GRADE_TOOLTIP.Đ;
+                    return _DEFAULT_GRADE_TOOLTIP.Đ;
                   }
-                  return _GRADE_TOOLTIP[sub.point.character] ?? `Xếp loại: ${sub.point.character}`;
+                  return _DEFAULT_GRADE_TOOLTIP[sub.point.character] ?? `Xếp loại: ${sub.point.character}`;
                 })()}
               </TooltipContent>
             </Tooltip>

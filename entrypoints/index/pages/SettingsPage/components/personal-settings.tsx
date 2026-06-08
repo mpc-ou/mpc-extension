@@ -1,6 +1,6 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { _OUCOMMUNITY_PROGRAM_URL } from "@/constants/default";
+import { _OUCOMMUNITY_PROGRAM_URL } from "@/constants";
 
 export function PersonalSettings({
   totalProgramCredits,

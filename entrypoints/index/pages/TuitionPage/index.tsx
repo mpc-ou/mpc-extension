@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { _DEFAULT_IGNORE_SUBJECT_DATA, _TUITION_MAJOR_EXCLUDE_PREFIXES } from "@/constants/default";
+import { _DEFAULT_IGNORE_SUBJECT_DATA, _DEFAULT_TUITION_MAJOR_EXCLUDE_PREFIXES } from "@/constants/default";
 import { useConfirm } from "@/hooks/use-confirm";
 import { useTuitionStore } from "@/store/use-tuition-store";
 import type { SemesterTuitionDetail } from "@/types";
@@ -44,7 +44,7 @@ function collectRates(detail: SemesterTuitionDetail) {
       }
       const rate = item.amount / item.credits;
       rates.push(rate);
-      if (!_TUITION_MAJOR_EXCLUDE_PREFIXES.some((p) => item.courseCode.startsWith(p))) {
+      if (!_DEFAULT_TUITION_MAJOR_EXCLUDE_PREFIXES.some((p) => item.courseCode.startsWith(p))) {
         ratesMajor.push(rate);
       }
     }

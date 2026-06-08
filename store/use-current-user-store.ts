@@ -1,7 +1,5 @@
 import { create } from "zustand";
-import { getAvatarKey } from "@/constants/storage";
-
-const _KEY = "local:currentUser";
+import { _CHROME_STORAGE_CURRENT_USER_KEY, getAvatarKey } from "@/constants/storage";
 
 type CurrentUserState = {
   studentId: string;
@@ -23,14 +21,14 @@ export const useCurrentUserStore = create<CurrentUserState>((set, get) => ({
   effectiveStudentId: "",
   setCurrentUser: (studentId: string, displayName: string, avatar: string) => {
     set({ studentId, displayName, avatar, viewStudentId: "", effectiveStudentId: studentId });
-    storage.setItem(_KEY, JSON.stringify({ studentId, displayName }));
+    storage.setItem(_CHROME_STORAGE_CURRENT_USER_KEY, JSON.stringify({ studentId, displayName }));
     if (avatar) {
       storage.setItem(getAvatarKey(studentId), avatar);
     }
   },
   clearCurrentUser: () => {
     set({ studentId: "", displayName: "", avatar: "", viewStudentId: "", effectiveStudentId: "" });
-    storage.setItem(_KEY, "{}");
+    storage.setItem(_CHROME_STORAGE_CURRENT_USER_KEY, "{}");
   },
   setViewStudentId: (id: string) => {
     const sid = id || get().studentId;
@@ -38,7 +36,7 @@ export const useCurrentUserStore = create<CurrentUserState>((set, get) => ({
   },
   load: async () => {
     try {
-      const raw = await storage.getItem(_KEY);
+      const raw = await storage.getItem(_CHROME_STORAGE_CURRENT_USER_KEY);
       if (typeof raw === "string") {
         const parsed = JSON.parse(raw);
         if (parsed.studentId) {

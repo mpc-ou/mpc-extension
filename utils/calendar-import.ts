@@ -1,5 +1,5 @@
 import { read, utils } from "xlsx";
-import { PERIOD_TIME_MAP_GROUP_1, PERIOD_TIME_MAP_GROUP_2 } from "@/constants/period-time";
+import { _PERIOD_TIME_MAP_GROUP_1, _PERIOD_TIME_MAP_GROUP_2 } from "@/constants/period-time";
 import type { CalendarEntry, SemesterData, WeekData } from "@/types";
 
 const STUDY_HEADERS = [
@@ -15,6 +15,7 @@ const STUDY_HEADERS = [
   "Giảng viên",
   "Thời gian học"
 ];
+
 const EXAM_HEADERS = ["Stt", "Mã MH", "Tên môn học", "Nhóm thi"];
 
 const DAY_PARTS_REGEX = /\((\d{2})\/(\d{2})\)/;
@@ -71,9 +72,9 @@ function guessLocationType(room: string): {
 } {
   const lower = room.trim().toUpperCase();
   if (lower.startsWith("NB") || lower.startsWith("LB")) {
-    return { locationType: lower.startsWith("NB") ? "NB" : "LB", timeMap: PERIOD_TIME_MAP_GROUP_2 };
+    return { locationType: lower.startsWith("NB") ? "NB" : "LB", timeMap: _PERIOD_TIME_MAP_GROUP_2 };
   }
-  return { locationType: "OTHER", timeMap: PERIOD_TIME_MAP_GROUP_1 };
+  return { locationType: "OTHER", timeMap: _PERIOD_TIME_MAP_GROUP_1 };
 }
 
 function studyEntryKey(e: CalendarEntry): string {

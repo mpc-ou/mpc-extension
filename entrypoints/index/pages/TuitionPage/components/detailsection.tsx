@@ -4,7 +4,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { _TUITION_CATEGORIES } from "@/constants/default";
+import { _DEFAULT_TUITION_CATEGORIES } from "@/constants/default";
 import type { ScholarshipType, SemesterTuitionDetail } from "@/types";
 import type { FlatItem } from "./allitemstable";
 import { AllItemsTable } from "./allitemstable";
@@ -61,7 +61,7 @@ export function DetailSection({
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                {_TUITION_CATEGORIES.map((cat) => (
+                {_DEFAULT_TUITION_CATEGORIES.map((cat) => (
                   <SelectItem key={cat} value={cat}>
                     {CATEGORY_LABELS[cat]}
                   </SelectItem>

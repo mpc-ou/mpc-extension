@@ -1,15 +1,18 @@
 import { ArrowLeft, ArrowRight, Check, HelpCircle, Sparkles, Zap } from "lucide-react";
 import { useMemo, useState } from "react";
+import { storage } from "#imports";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { _DEFAULT_USER_SETTINGS, _OUCOMMUNITY_PROGRAM_URL } from "@/constants/default";
+import { _OUCOMMUNITY_PROGRAM_URL } from "@/constants";
+import { _DEFAULT_USER_SETTINGS } from "@/constants/default";
+import { _LOCAL } from "@/constants/storage";
 import type { UserSettingsType } from "@/types";
 
-const _STORAGE_KEY = "local:mpc-onboarding-completed";
-const TOTAL_STEPS = 3;
+const _STORAGE_KEY = `${_LOCAL}:mpc-onboarding-completed` as const;
+const _TOTAL_STEPS = 3;
 
 type OnboardingDialogProps = {
   open: boolean;
@@ -21,7 +24,7 @@ export function OnboardingDialog({ open, onComplete, onSkip }: OnboardingDialogP
   const [step, setStep] = useState(0);
   const [settings, setSettings] = useState<UserSettingsType>({ ..._DEFAULT_USER_SETTINGS });
 
-  const dotKeys = useMemo(() => Array.from({ length: TOTAL_STEPS }, (_, i) => `dot-${i}`), []);
+  const dotKeys = useMemo(() => Array.from({ length: _TOTAL_STEPS }, (_, i) => `dot-${i}`), []);
 
   const handleFinish = () => {
     storage.setItem(_STORAGE_KEY, "1");
@@ -34,7 +37,7 @@ export function OnboardingDialog({ open, onComplete, onSkip }: OnboardingDialogP
   };
 
   const handleNext = () => {
-    if (step < TOTAL_STEPS - 1) {
+    if (step < _TOTAL_STEPS - 1) {
       setStep((s) => s + 1);
     } else {
       handleFinish();
@@ -60,7 +63,7 @@ export function OnboardingDialog({ open, onComplete, onSkip }: OnboardingDialogP
         showCloseButton={false}
       >
         <div className='flex justify-center gap-1.5'>
-          {Array.from({ length: TOTAL_STEPS }).map((_, i) => (
+          {Array.from({ length: _TOTAL_STEPS }).map((_, i) => (
             <div
               className={`h-1.5 rounded-full transition-all duration-300 ${
                 i <= step ? "w-6 bg-primary" : "w-1.5 bg-muted"
@@ -223,7 +226,7 @@ export function OnboardingDialog({ open, onComplete, onSkip }: OnboardingDialogP
               </Button>
             )}
             <Button onClick={handleNext} size='sm'>
-              {step === TOTAL_STEPS - 1 ? (
+              {step === _TOTAL_STEPS - 1 ? (
                 <>
                   <Check className='h-4 w-4' />
                   Hoàn thành

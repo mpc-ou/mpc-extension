@@ -1,6 +1,3 @@
-// Since __MPC_KEY__ is injected by Vite, we declare it for TypeScript
-declare const __MPC_KEY__: string;
-
 const KEY_STRING = typeof __MPC_KEY__ !== "undefined" ? __MPC_KEY__ : "MPC";
 
 /**

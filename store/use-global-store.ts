@@ -1,5 +1,4 @@
 import { create } from "zustand";
-import { _CHROME_STORAGE_GLOBAL_LOCAL_KEY, _CHROME_STORAGE_GLOBAL_SYNC_KEY } from "@/constants";
 import {
   _DEFAULT_DRL_WARNING_THRESHOLD,
   _DEFAULT_FIXED_POINT,
@@ -11,6 +10,7 @@ import {
   _DEFAULT_RETAKE_RATIO_LIMIT,
   _DEFAULT_SITE_URL_MAPPING
 } from "@/constants/default";
+import { _CHROME_STORAGE_LOCAL_GLOBAL_KEY, _CHROME_STORAGE_SYNC_GLOBAL_KEY } from "@/constants/storage";
 import { _TAB_CATE } from "@/types";
 
 type GlobalStorageType = {
@@ -137,20 +137,20 @@ export const useGlobalStore = create<GlobalState>((set, get) => ({
     };
     const payload = JSON.stringify(data);
     try {
-      await storage.setItem(_CHROME_STORAGE_GLOBAL_SYNC_KEY, payload);
+      await storage.setItem(_CHROME_STORAGE_SYNC_GLOBAL_KEY, payload);
     } catch {
-      await storage.setItem(_CHROME_STORAGE_GLOBAL_LOCAL_KEY, payload);
+      await storage.setItem(_CHROME_STORAGE_LOCAL_GLOBAL_KEY, payload);
     }
   },
   getData: async () => {
     let raw: string | null = null;
     try {
-      raw = await storage.getItem<string>(_CHROME_STORAGE_GLOBAL_SYNC_KEY);
+      raw = await storage.getItem<string>(_CHROME_STORAGE_SYNC_GLOBAL_KEY);
     } catch {
       /* sync storage unavailable, fallback to local */
     }
     if (!raw) {
-      raw = await storage.getItem<string>(_CHROME_STORAGE_GLOBAL_LOCAL_KEY);
+      raw = await storage.getItem<string>(_CHROME_STORAGE_LOCAL_GLOBAL_KEY);
     }
     const savedData = JSON.parse(raw || "{}") as Partial<GlobalStorageType>;
     applySavedGlobalData(savedData, set);

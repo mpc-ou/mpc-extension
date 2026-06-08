@@ -9,7 +9,7 @@ import type { PeriodSession, PeriodTimeTable } from "@/types";
  *     including break periods and lab-group split variants. ──
  */
 
-export const PERIOD_TIME_MAP_GROUP_1: Record<number, { start: string; end: string }> = {
+export const _PERIOD_TIME_MAP_GROUP_1: Record<number, { start: string; end: string }> = {
   1: { start: "07:00", end: "07:50" },
   2: { start: "07:50", end: "08:40" },
   3: { start: "08:40", end: "09:45" },
@@ -28,7 +28,7 @@ export const PERIOD_TIME_MAP_GROUP_1: Record<number, { start: string; end: strin
   16: { start: "20:50", end: "21:40" }
 };
 
-export const PERIOD_TIME_MAP_GROUP_2: Record<number, { start: string; end: string }> = {
+export const _PERIOD_TIME_MAP_GROUP_2: Record<number, { start: string; end: string }> = {
   1: { start: "07:30", end: "08:20" },
   2: { start: "08:20", end: "09:10" },
   3: { start: "09:10", end: "10:15" },
@@ -49,7 +49,7 @@ export const PERIOD_TIME_MAP_GROUP_2: Record<number, { start: string; end: strin
 
 // ── Group 1: VVT, MLA, GP ──
 
-const GROUP1_NORMAL: PeriodSession[] = [
+const _GROUP1_NORMAL: PeriodSession[] = [
   {
     sessionName: "Sáng",
     slots: [
@@ -84,7 +84,7 @@ const GROUP1_NORMAL: PeriodSession[] = [
   }
 ];
 
-const GROUP1_LAB: PeriodSession[] = [
+const _GROUP1_LAB: PeriodSession[] = [
   {
     sessionName: "Sáng",
     slots: [
@@ -117,7 +117,7 @@ const GROUP1_LAB: PeriodSession[] = [
 
 // ── Group 2: NB, LB, Bình Dương ──
 
-const GROUP2_NORMAL: PeriodSession[] = [
+const _GROUP2_NORMAL: PeriodSession[] = [
   {
     sessionName: "Sáng",
     slots: [
@@ -152,7 +152,7 @@ const GROUP2_NORMAL: PeriodSession[] = [
   }
 ];
 
-const GROUP2_LAB: PeriodSession[] = [
+const _GROUP2_LAB: PeriodSession[] = [
   {
     sessionName: "Sáng",
     slots: [
@@ -183,23 +183,23 @@ const GROUP2_LAB: PeriodSession[] = [
   }
 ];
 
-export const PERIOD_TIME_TABLES: PeriodTimeTable[] = [
+export const _PERIOD_TIME_TABLES: PeriodTimeTable[] = [
   {
     groupName: "Nhóm 1",
     campuses: "97 Võ Văn Tần, 02 Mai Thị Lựu (VVT, MLA)",
-    normalSchedule: GROUP1_NORMAL,
-    labGroupSchedule: GROUP1_LAB
+    normalSchedule: _GROUP1_NORMAL,
+    labGroupSchedule: _GROUP1_LAB
   },
   {
     groupName: "Nhóm 2",
     campuses: "Nhơn Đức (Nhà Bè), Long Bình Tân (Long Hưng), Bình Dương, Gia Phú  (NB, LB, GP)",
-    normalSchedule: GROUP2_NORMAL,
-    labGroupSchedule: GROUP2_LAB
+    normalSchedule: _GROUP2_NORMAL,
+    labGroupSchedule: _GROUP2_LAB
   }
 ];
 
 /** Map locationType → which group's period map to use. */
-export const LOCATION_PERIOD_GROUP: Record<string, number> = {
+export const _LOCATION_PERIOD_GROUP: Record<string, number> = {
   VVT: 1,
   MLA: 1,
   GP: 2,
