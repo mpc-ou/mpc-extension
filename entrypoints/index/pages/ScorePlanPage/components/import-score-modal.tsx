@@ -90,7 +90,12 @@ export function ImportScoreModal({ open, onOpenChange, onImportSuccess }: Import
       const parsed10 = Number.parseFloat(point10);
       const parsed4 = Number.parseFloat(point4);
 
+      const generateId = () =>
+        typeof crypto !== "undefined" && crypto.randomUUID
+          ? crypto.randomUUID()
+          : `sub-${Math.random().toString(36).substring(2, 11)}-${Date.now()}`;
       currentSemester.data.push({
+        id: generateId(),
         code: secondCol,
         credit: Number.parseInt(row[4], 10) || 0,
         name: row[3] || "",

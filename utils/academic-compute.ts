@@ -11,7 +11,7 @@ export function computeSummary(data: ScoreGroupType[], trainingSemesters = 0): S
   for (const sem of data) {
     for (const sub of sem.data) {
       const { credit, point } = sub;
-      if (sub.isIgnore || !point.character) {
+      if (sub.isIgnore || !point.character || point.character === "M") {
         continue;
       }
       if (typeof credit !== "number" || typeof point.scale10 !== "number" || typeof point.scale4 !== "number") {
@@ -48,7 +48,8 @@ type Rank = { label: string; emoji: string; color: string; bg: string };
 type TrainingRank = Rank & { minPoint: number };
 
 export function getAcademicRank(gpa4: number): Rank {
-  const found = _DEFAULT_ACADEMIC_RANKS.find((r) => gpa4 >= r.minGpa4);
+  const rounded = Math.round(gpa4 * 100) / 100;
+  const found = _DEFAULT_ACADEMIC_RANKS.find((r) => rounded >= r.minGpa4);
   return (found?.rank ?? _DEFAULT_ACADEMIC_RANKS.at(-1)?.rank) as Rank;
 }
 
@@ -60,7 +61,7 @@ export function getTrainingRank(point: number): TrainingRank {
 // ── Semester helpers ──
 
 export function computeSemesterGPA(sem: ScoreGroupType): { scale10: number | null; scale4: number | null } {
-  const subjects = sem.data.filter((s) => !s.isIgnore && s.point.character);
+  const subjects = sem.data.filter((s) => !s.isIgnore && s.point.character && s.point.character !== "M");
   if (subjects.length === 0) {
     return { scale10: null, scale4: null };
   }

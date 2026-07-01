@@ -72,7 +72,7 @@ export const useTuitionStore = create<TuitionState>((set, get) => ({
 
   saveData: async (studentIdParam?: string) => {
     const gsid = useCurrentUserStore.getState();
-    const key = getTuitionKey(studentIdParam || gsid.studentId);
+    const key = getTuitionKey(studentIdParam || gsid.effectiveStudentId);
     const data: TuitionStorageType = {
       summary: get().summary,
       details: get().details,

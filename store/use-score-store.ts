@@ -50,10 +50,30 @@ export const useScoreStore = create<ScoreState>((set, get) => ({
     }
     if (scoresData) {
       const parsedData = scoresData as PointStorageType;
-      const loadedScores = parsedData.data || [];
+      const generateId = () =>
+        typeof crypto !== "undefined" && crypto.randomUUID
+          ? crypto.randomUUID()
+          : `sub-${Math.random().toString(36).substring(2, 11)}-${Date.now()}`;
+
+      const loadedScores = (parsedData.data || []).map((sem) => ({
+        ...sem,
+        data: sem.data.map((sub) => ({
+          ...sub,
+          id: sub.id || generateId()
+        }))
+      }));
+
+      const loadedOriginal = (parsedData.originalData || loadedScores).map((sem) => ({
+        ...sem,
+        data: sem.data.map((sub) => ({
+          ...sub,
+          id: sub.id || generateId()
+        }))
+      }));
+
       set({
         scores: loadedScores,
-        originalScores: parsedData.originalData || loadedScores,
+        originalScores: loadedOriginal,
         filter: parsedData.filter || get().filter,
         lastUpdate: parsedData.updatedAt ? new Date(parsedData.updatedAt) : null,
         savedScoresHash: computeScoreHash(loadedScores)
@@ -62,7 +82,7 @@ export const useScoreStore = create<ScoreState>((set, get) => ({
   },
   saveData: async (studentId?: string) => {
     const gsid = useCurrentUserStore.getState();
-    const sid = studentId || gsid.studentId;
+    const sid = studentId || gsid.effectiveStudentId;
     const allScores = get().scores;
     const key = getPointKey(sid);
     const data: PointStorageType = {

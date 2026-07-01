@@ -1,7 +1,6 @@
-import { ArrowUpDown, EditIcon, MoreVerticalIcon, PlusIcon, Trash2Icon } from "lucide-react";
-import { useId, useState } from "react";
-import subjectsData from "@/assets/data/subject.json";
-import { Combobox } from "@/components/custom/combobox";
+import { ArrowUpDown, EditIcon, GitFork, MoreVerticalIcon, PlusIcon, Trash2Icon } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -15,30 +14,22 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle
-} from "@/components/ui/dialog";
-import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { _DEFAULT_FORM_DATA, _DEFAULT_GRADE_TOOLTIP } from "@/constants/default";
+import { _DEFAULT_GRADE_TOOLTIP } from "@/constants/default";
 import { cn } from "@/lib/utils";
 import type { ScoreGroupType, ScoreRecordType } from "@/types";
-import { formatFixed, parseScale10ToCharacterAndScale4, removeVietnameseTones } from "@/utils";
+import { formatFixed, removeVietnameseTones } from "@/utils";
 import { computeSummary, getAcademicRank, getTrainingRank } from "@/utils/academic-compute";
+import { ImprovementDetailsDialog } from "./improvement-details-dialog";
+import { LinkImprovementDialog } from "./link-improvement-dialog";
+import { SubjectDialog } from "./subject-dialog";
 
 type SortKey = "code" | "name" | "credit" | "scale10" | "scale4" | "character";
 type SortDir = "asc" | "desc";
@@ -61,6 +52,7 @@ type Props = {
   ) => void;
   handleEditSemester?: (semesterIdx: number) => void;
   handleDeleteSemester?: (semesterIdx: number) => void;
+  handleLinkImprovement?: (newSubId: string, oldSubId: string | null) => void;
 };
 
 function sortRecords(
@@ -111,7 +103,8 @@ export function ScoreDataTable({
   handleAddSubject,
   handleEditSubject,
   handleEditSemester,
-  handleDeleteSemester
+  handleDeleteSemester,
+  handleLinkImprovement
 }: Props) {
   const [sortKey, setSortKey] = useState<SortKey | null>(null);
   const [sortDir, setSortDir] = useState<SortDir>("asc");
@@ -120,17 +113,113 @@ export function ScoreDataTable({
   const [selectedSemesterIdx, setSelectedSemesterIdx] = useState(0);
   const [selectedSubjectIdx, setSelectedSubjectIdx] = useState(0);
   const [deletingSemesterIdx, setDeletingSemesterIdx] = useState<number | null>(null);
-  const [formData, setFormData] = useState(_DEFAULT_FORM_DATA);
 
-  const idCode = useId();
-  const idName = useId();
-  const idCredit = useId();
-  const idScale10 = useId();
+  const [linkImprovementSubject, setLinkImprovementSubject] = useState<ScoreRecordType | null>(null);
+  const [editingSubject, setEditingSubject] = useState<ScoreRecordType | null>(null);
+  const [detailImprovementPair, setDetailImprovementPair] = useState<{
+    oldSub: ScoreRecordType;
+    oldSem: string;
+    newSub: ScoreRecordType;
+    newSem: string;
+  } | null>(null);
 
-  const subjectOptions = subjectsData.map((s) => ({
-    value: `${s.code}|${s.name}|${s.credit}`,
-    label: `${s.code} - ${s.name} (${s.credit} TC)`
-  }));
+  const findManualLinkagePair = (
+    sub: ScoreRecordType,
+    subSemTitle: string,
+    semData: ScoreGroupType[]
+  ): { oldSub: ScoreRecordType; oldSem: string; newSub: ScoreRecordType; newSem: string } | null => {
+    if (sub.improvesSubjectId) {
+      for (const sem of semData) {
+        const found = sem.data.find((s) => s.id === sub.improvesSubjectId);
+        if (found) {
+          return {
+            oldSub: found,
+            oldSem: sem.title,
+            newSub: sub,
+            newSem: subSemTitle
+          };
+        }
+      }
+    }
+
+    for (const sem of semData) {
+      const found = sem.data.find((s) => s.improvesSubjectId === sub.id);
+      if (found) {
+        return {
+          oldSub: sub,
+          oldSem: subSemTitle,
+          newSub: found,
+          newSem: sem.title
+        };
+      }
+    }
+
+    return null;
+  };
+
+  const findAutomaticLinkagePair = (
+    sub: ScoreRecordType,
+    subSemIdx: number,
+    subSemTitle: string,
+    semData: ScoreGroupType[]
+  ): { oldSub: ScoreRecordType; oldSem: string; newSub: ScoreRecordType; newSem: string } | null => {
+    for (let i = 0; i < semData.length; i++) {
+      const sem = semData[i];
+      for (const s of sem.data) {
+        if (s.id !== sub.id && s.name === sub.name && s.credit === sub.credit && s.isImproved) {
+          if (i < subSemIdx) {
+            return {
+              oldSub: sub,
+              oldSem: subSemTitle,
+              newSub: s,
+              newSem: sem.title
+            };
+          }
+          return {
+            oldSub: s,
+            oldSem: sem.title,
+            newSub: sub,
+            newSem: subSemTitle
+          };
+        }
+      }
+    }
+    return null;
+  };
+
+  const getImprovementPair = (
+    sub: ScoreRecordType,
+    semData: ScoreGroupType[]
+  ): { oldSub: ScoreRecordType; oldSem: string; newSub: ScoreRecordType; newSem: string } | null => {
+    let subSemIdx = -1;
+    let subSemTitle = "";
+    for (let i = 0; i < semData.length; i++) {
+      if (semData[i].data.some((s) => s.id === sub.id)) {
+        subSemIdx = i;
+        subSemTitle = semData[i].title;
+        break;
+      }
+    }
+    if (subSemIdx === -1) {
+      return null;
+    }
+
+    const manual = findManualLinkagePair(sub, subSemTitle, semData);
+    if (manual) {
+      return manual;
+    }
+
+    return findAutomaticLinkagePair(sub, subSemIdx, subSemTitle, semData);
+  };
+
+  const handleOpenImprovementDetails = (sub: ScoreRecordType) => {
+    const pair = getImprovementPair(sub, data);
+    if (pair) {
+      setDetailImprovementPair(pair);
+    } else {
+      toast.error("Không tìm thấy thông tin đối chiếu cải thiện!");
+    }
+  };
 
   const toggleSort = (key: SortKey) => {
     if (sortKey === key) {
@@ -157,17 +246,10 @@ export function ScoreDataTable({
     return nameMatch && gradeMatch;
   };
 
-  const handleSubjectSelect = (val: string) => {
-    if (val) {
-      const [code, name, credit] = val.split("|");
-      setFormData({ ...formData, code, name, credit });
-    }
-  };
-
   const handleOpenAdd = (semIdx: number) => {
     setSelectedSemesterIdx(semIdx);
     setIsEditMode(false);
-    setFormData({ code: "", name: "", credit: "", scale10: "" });
+    setEditingSubject(null);
     setDialogOpen(true);
   };
 
@@ -175,24 +257,11 @@ export function ScoreDataTable({
     setSelectedSemesterIdx(semIdx);
     setSelectedSubjectIdx(subIdx);
     setIsEditMode(true);
-    setFormData({
-      code: sub.code,
-      name: sub.name,
-      credit: sub.credit?.toString() || "",
-      scale10: sub.point.scale10?.toString() || ""
-    });
+    setEditingSubject(sub);
     setDialogOpen(true);
   };
 
-  const handleSubmit = () => {
-    const s10 = Number(formData.scale10);
-    const { scale4, character } = parseScale10ToCharacterAndScale4(s10);
-    const subjectData = {
-      code: formData.code,
-      name: formData.name,
-      credit: Number(formData.credit),
-      point: { scale10: s10, scale4, character }
-    };
+  const handleSubjectSubmit = (subjectData: Omit<ScoreRecordType, "isIgnore" | "isHead">) => {
     if (isEditMode) {
       handleEditSubject(selectedSemesterIdx, selectedSubjectIdx, subjectData);
     } else {
@@ -200,8 +269,6 @@ export function ScoreDataTable({
     }
     setDialogOpen(false);
   };
-
-  const isFormValid = formData.code && formData.name && formData.credit && formData.scale10;
 
   const renderSortHeader = (label: string, k: SortKey, className?: string) => {
     const isCenter = className?.includes("text-center");
@@ -269,12 +336,22 @@ export function ScoreDataTable({
                 <TooltipContent>{sub.name}</TooltipContent>
               </Tooltip>
               {sub.isImproved && sub.isIgnore && (
-                <span className='rounded bg-muted px-1.5 py-0.5 text-[10px] text-muted-foreground'>Được cải thiện</span>
+                <button
+                  className='cursor-pointer rounded border-none bg-muted px-1.5 py-0.5 text-[10px] text-muted-foreground outline-none hover:bg-muted/80'
+                  onClick={() => handleOpenImprovementDetails(sub)}
+                  type='button'
+                >
+                  Được cải thiện
+                </button>
               )}
               {sub.isImproved && !sub.isIgnore && (
-                <span className='rounded bg-primary/15 px-1.5 py-0.5 font-medium text-[10px] text-primary'>
+                <button
+                  className='cursor-pointer rounded border-none bg-primary/15 px-1.5 py-0.5 font-medium text-[10px] text-primary outline-none hover:bg-primary/25'
+                  onClick={() => handleOpenImprovementDetails(sub)}
+                  type='button'
+                >
                   Cải thiện
-                </span>
+                </button>
               )}
               {!sub.isImproved && sub.isIgnore && (
                 <Tooltip>
@@ -338,6 +415,35 @@ export function ScoreDataTable({
                   onClick={() => handleOpenEdit(sub._semIdx, sub._subIdx, sub)}
                 />
               )}
+              {(() => {
+                const showFork = !sub.isIgnore || sub.improvesSubjectId;
+                if (!showFork) {
+                  return null;
+                }
+                return (
+                  <button
+                    className='cursor-pointer border-none bg-transparent p-0 outline-none'
+                    onClick={() => {
+                      setLinkImprovementSubject(sub);
+                    }}
+                    title={
+                      sub.improvesSubjectId
+                        ? "Môn học này đang liên kết cải thiện"
+                        : "Thiết lập liên kết cải thiện môn học"
+                    }
+                    type='button'
+                  >
+                    <GitFork
+                      className={cn(
+                        "h-4 w-4",
+                        sub.improvesSubjectId
+                          ? "text-emerald-500 hover:text-emerald-700"
+                          : "text-amber-500 hover:text-amber-700"
+                      )}
+                    />
+                  </button>
+                );
+              })()}
               <AlertDialog>
                 <AlertDialogTrigger asChild>
                   <Trash2Icon className='h-4 w-4 cursor-pointer text-red-500 hover:text-red-700' />
@@ -386,130 +492,23 @@ export function ScoreDataTable({
             <TableBody>{renderRows(allRecords, true)}</TableBody>
           </Table>
         </div>
-        {renderSubjectDialog()}
+        <SubjectDialog
+          initialData={
+            editingSubject
+              ? {
+                  code: editingSubject.code,
+                  name: editingSubject.name,
+                  credit: editingSubject.credit?.toString() || "",
+                  scale10: editingSubject.point.scale10?.toString() || ""
+                }
+              : null
+          }
+          isEditMode={isEditMode}
+          onOpenChange={setDialogOpen}
+          onSubmit={handleSubjectSubmit}
+          open={dialogOpen}
+        />
       </div>
-    );
-  }
-
-  function renderSubjectDialog() {
-    return (
-      <>
-        <Dialog onOpenChange={setDialogOpen} open={dialogOpen}>
-          <DialogContent className='sm:max-w-150'>
-            <DialogHeader>
-              <DialogTitle>{isEditMode ? "Chỉnh sửa môn học" : "Thêm môn học"}</DialogTitle>
-              <DialogDescription>
-                {isEditMode ? "Cập nhật thông tin." : "Nhập thông tin môn học mới."}
-              </DialogDescription>
-            </DialogHeader>
-            <div className='grid gap-4 py-4'>
-              <div className='grid grid-cols-4 items-center gap-4'>
-                <Label className='text-right'>Chọn môn học</Label>
-                <div className='col-span-3'>
-                  <Combobox
-                    emptyText='Không tìm thấy'
-                    onValueChange={handleSubjectSelect}
-                    options={subjectOptions}
-                    placeholder='Chọn từ danh sách...'
-                    searchPlaceholder='Tìm kiếm...'
-                  />
-                </div>
-              </div>
-              <Separator />
-              <div className='grid grid-cols-4 items-center gap-4'>
-                <Label className='text-right' htmlFor={idCode}>
-                  Mã môn
-                </Label>
-                <Input
-                  className='col-span-3'
-                  id={idCode}
-                  onChange={(e) => setFormData({ ...formData, code: e.target.value })}
-                  value={formData.code}
-                />
-              </div>
-              <div className='grid grid-cols-4 items-center gap-4'>
-                <Label className='text-right' htmlFor={idName}>
-                  Tên môn
-                </Label>
-                <Input
-                  className='col-span-3'
-                  id={idName}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  value={formData.name}
-                />
-              </div>
-              <div className='grid grid-cols-4 items-center gap-4'>
-                <Label className='text-right' htmlFor={idCredit}>
-                  Tín chỉ
-                </Label>
-                <Input
-                  className='col-span-3'
-                  id={idCredit}
-                  max='6'
-                  min='1'
-                  onChange={(e) => setFormData({ ...formData, credit: e.target.value })}
-                  type='number'
-                  value={formData.credit}
-                />
-              </div>
-              <div className='grid grid-cols-4 items-center gap-4'>
-                <Label className='text-right' htmlFor={idScale10}>
-                  Điểm hệ 10
-                </Label>
-                <Input
-                  className='col-span-3'
-                  id={idScale10}
-                  max='10'
-                  min='0'
-                  onChange={(e) => {
-                    const v = Number.parseFloat(e.target.value);
-                    if (e.target.value === "" || Number.isNaN(v)) {
-                      setFormData({ ...formData, scale10: "" });
-                    } else {
-                      setFormData({ ...formData, scale10: String(Math.min(10, Math.max(0, v))) });
-                    }
-                  }}
-                  step='0.1'
-                  type='number'
-                  value={formData.scale10}
-                />
-              </div>
-            </div>
-            <DialogFooter>
-              <Button onClick={() => setDialogOpen(false)} variant='outline'>
-                Hủy
-              </Button>
-              <Button disabled={!isFormValid} onClick={handleSubmit}>
-                {isEditMode ? "Cập nhật" : "Thêm"}
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-
-        <AlertDialog onOpenChange={(open) => !open && setDeletingSemesterIdx(null)} open={deletingSemesterIdx !== null}>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Xóa học kỳ?</AlertDialogTitle>
-              <AlertDialogDescription>
-                Học kỳ "{data[deletingSemesterIdx ?? 0]?.title}" sẽ bị xóa vĩnh viễn.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Hủy</AlertDialogCancel>
-              <AlertDialogAction
-                onClick={() => {
-                  if (deletingSemesterIdx !== null) {
-                    handleDeleteSemester?.(deletingSemesterIdx);
-                    setDeletingSemesterIdx(null);
-                  }
-                }}
-              >
-                Xóa
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-      </>
     );
   }
 
@@ -594,7 +593,57 @@ export function ScoreDataTable({
           </div>
         );
       })}
-      {renderSubjectDialog()}
+      <SubjectDialog
+        initialData={
+          editingSubject
+            ? {
+                code: editingSubject.code,
+                name: editingSubject.name,
+                credit: editingSubject.credit?.toString() || "",
+                scale10: editingSubject.point.scale10?.toString() || ""
+              }
+            : null
+        }
+        isEditMode={isEditMode}
+        onOpenChange={setDialogOpen}
+        onSubmit={handleSubjectSubmit}
+        open={dialogOpen}
+      />
+      <LinkImprovementDialog
+        data={data}
+        handleLinkImprovement={handleLinkImprovement}
+        onOpenChange={(open) => !open && setLinkImprovementSubject(null)}
+        open={linkImprovementSubject !== null}
+        subject={linkImprovementSubject}
+      />
+      <ImprovementDetailsDialog
+        onOpenChange={(open) => !open && setDetailImprovementPair(null)}
+        open={detailImprovementPair !== null}
+        pair={detailImprovementPair}
+      />
+      <AlertDialog onOpenChange={(open) => !open && setDeletingSemesterIdx(null)} open={deletingSemesterIdx !== null}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Xóa học kỳ?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Học kỳ "{data[deletingSemesterIdx ?? 0]?.title}" sẽ bị xóa vĩnh viễn.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Hủy</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                if (deletingSemesterIdx !== null) {
+                  handleDeleteSemester?.(deletingSemesterIdx);
+                  setDeletingSemesterIdx(null);
+                }
+              }}
+            >
+              Xóa
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

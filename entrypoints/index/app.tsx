@@ -2,6 +2,7 @@ import { useCallback, useEffect, useLayoutEffect, useState } from "react";
 import { AppHeader } from "@/components/custom/app-header";
 import { AppSidebar } from "@/components/custom/app-sidebar";
 import { OnboardingDialog } from "@/components/custom/onboarding-dialog";
+import { UserIdentityDialog } from "@/components/custom/user-identity-dialog";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ConfirmDialogProvider } from "@/hooks/use-confirm";
 import { useTheme } from "@/lib/theme";
@@ -40,6 +41,7 @@ function App() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(() => window.innerWidth < 1024);
   const [showOnboarding, setShowOnboarding] = useState(true);
+  const [showIdentityDialog, setShowIdentityDialog] = useState(false);
   const [storageReady, setStorageReady] = useState(false);
   const { theme, changeTheme } = useTheme();
 
@@ -74,6 +76,10 @@ function App() {
   useLayoutEffect(() => {
     const init = async () => {
       await loadCurrentUser();
+      const currentSid = useCurrentUserStore.getState().studentId;
+      if (!currentSid) {
+        setShowIdentityDialog(true);
+      }
       getData();
       getScoreData();
       getInfoData();
@@ -220,6 +226,7 @@ function App() {
         </div>
       </div>
       <ConfirmDialogProvider />
+      {showIdentityDialog && <UserIdentityDialog onOpenChange={setShowIdentityDialog} open={showIdentityDialog} />}
       {storageReady && (
         <OnboardingDialog onComplete={handleOnboardingComplete} onSkip={handleOnboardingSkip} open={showOnboarding} />
       )}

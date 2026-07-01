@@ -37,7 +37,12 @@ const getPointData = (): ScrapeResult<ScoreGroupType[]> => {
       if (code.startsWith("_")) {
         return;
       }
+      const generateId = () =>
+        typeof crypto !== "undefined" && crypto.randomUUID
+          ? crypto.randomUUID()
+          : `sub-${Math.random().toString(36).substring(2, 11)}-${Date.now()}`;
       data.at(-1)?.data.push({
+        id: generateId(),
         code,
         name: columns[3].innerText,
         credit: Number.parseFloat(columns[4].innerText) || 0,
