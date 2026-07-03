@@ -23,16 +23,16 @@ export function UserIdentityDialog({ open, onOpenChange }: UserIdentityDialogPro
     const cleanName = displayName.trim();
 
     if (!cleanId) {
-      toast.error("Vui lòng nhập Mã số sinh viên (MSSV)!");
+      toast.error("Vui lòng nhập MSSV!");
       return;
     }
     if (!cleanName) {
-      toast.error("Vui lòng nhập Họ và tên!");
+      toast.error("Vui lòng nhập họ và tên!");
       return;
     }
 
     setCurrentUser(cleanId, cleanName, "");
-    toast.success(`Chào mừng ${cleanName} (${cleanId}) đến với MPC Extension!`);
+    toast.success(`Đã lưu thông tin ${cleanName} (${cleanId})!`);
     onOpenChange(false);
   };
 
@@ -58,8 +58,7 @@ export function UserIdentityDialog({ open, onOpenChange }: UserIdentityDialogPro
             Thông tin sinh viên
           </DialogTitle>
           <DialogDescription className='text-muted-foreground text-sm leading-relaxed'>
-            Dường như đây là lần đầu bạn truy cập Dashboard hoặc chưa liên kết tài khoản từ cổng thông tin. Vui lòng
-            nhập họ tên và MSSV để MPC chuẩn bị không gian học tập riêng cho bạn nhé!
+            Có vẻ bạn chưa liên kết tài khoản. Nhập họ tên và MSSV để MPC chuẩn bị không gian học tập cho bạn.
           </DialogDescription>
         </DialogHeader>
 
@@ -67,7 +66,7 @@ export function UserIdentityDialog({ open, onOpenChange }: UserIdentityDialogPro
           <div className='space-y-1.5'>
             <Label className='flex items-center gap-1.5' htmlFor='displayName'>
               <User2Icon className='h-3.5 w-3.5 text-muted-foreground' />
-              Họ và tên của bạn
+              Họ và tên
             </Label>
             <Input
               id='displayName'
@@ -81,7 +80,7 @@ export function UserIdentityDialog({ open, onOpenChange }: UserIdentityDialogPro
           <div className='space-y-1.5'>
             <Label className='flex items-center gap-1.5' htmlFor='studentId'>
               <IdCardIcon className='h-3.5 w-3.5 text-muted-foreground' />
-              Mã số sinh viên (MSSV)
+              MSSV
             </Label>
             <Input
               id='studentId'
@@ -94,8 +93,11 @@ export function UserIdentityDialog({ open, onOpenChange }: UserIdentityDialogPro
 
           <div className='flex justify-end pt-2'>
             <Button className='w-full sm:w-auto' type='submit'>
-              Xác nhận thông tin
+              Xác nhận
             </Button>
+          </div>
+          <div className='text-muted-foreground text-sm'>
+            P/S: Bạn cũng có thể đăng nhập Tiện ích sinh viên rồi mở Popup để MPC tự nhận diện thông tin.
           </div>
         </form>
       </DialogContent>

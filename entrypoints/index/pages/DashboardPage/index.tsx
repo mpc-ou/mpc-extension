@@ -1,3 +1,4 @@
+import { isAfter, isSameDay, parseISO, startOfDay } from "date-fns";
 import { ArrowRightIcon, BookOpenIcon, CalendarIcon, WalletIcon } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
@@ -113,21 +114,28 @@ function DashboardPage() {
     if (scheduleMap.size === 0) {
       return null;
     }
-    const now = new Date();
-    now.setHours(0, 0, 0, 0);
     const events: { date: Date; entry: CalendarEntry }[] = [];
-    for (const [dateStr, entries] of scheduleMap) {
-      const [day, month, year] = dateStr.split("/").map(Number);
-      const date = new Date(year, month - 1, day);
-      if (date >= now) {
+    const today = startOfDay(new Date());
+
+    for (const [dateKey, entries] of scheduleMap) {
+      const date = parseISO(dateKey);
+      if (isAfter(date, today) || isSameDay(date, today)) {
         for (const entry of entries) {
           events.push({ date, entry });
         }
       }
     }
-    events.sort((a, b) => a.date.getTime() - b.date.getTime());
-    return events.slice(0, 20);
+    events.sort((a, b) => {
+      const dateDiff = a.date.getTime() - b.date.getTime();
+      if (dateDiff !== 0) {
+        return dateDiff;
+      }
+      return (a.entry.startTime || "").localeCompare(b.entry.startTime || "");
+    });
+    return events.slice(0, 11);
   }, [scheduleMap]);
+  const dashboardUpcomingEvents = upcomingEvents?.slice(0, 10) ?? [];
+  const hasMoreUpcomingEvents = (upcomingEvents?.length ?? 0) > 10;
 
   if (displayScores.length === 0) {
     return (
@@ -135,10 +143,10 @@ function DashboardPage() {
         <div className='mb-4 rounded-full bg-muted p-6'>
           <BookOpenIcon className='h-12 w-12 text-muted-foreground' />
         </div>
-        <h2 className='font-semibold text-2xl'>Chưa có dữ liệu điểm số</h2>
+        <h2 className='font-semibold text-2xl'>Chưa có dữ liệu</h2>
         <p className='max-w-md text-center text-muted-foreground'>
-          Hệ thống chưa tìm thấy dữ liệu điểm của bạn. Vui lòng truy cập trang web Xem điểm của trường và mở tiện ích
-          (popup) để đồng bộ dữ liệu nhé!
+          Vui lòng đến từng hạng mục thông tin và nhập dữ liệu của bạn. MPC sẽ tự động tổng hợp và hiển thị thông tin
+          học tập của bạn tại đây.
         </p>
       </div>
     );
@@ -184,9 +192,9 @@ function DashboardPage() {
             </CardTitle>
           </CardHeader>
           <CardContent className='max-h-80 space-y-1 overflow-y-auto'>
-            {upcomingEvents && upcomingEvents.length > 0 ? (
+            {dashboardUpcomingEvents.length > 0 ? (
               <>
-                {upcomingEvents.map((ev, i) => (
+                {dashboardUpcomingEvents.map((ev, i) => (
                   <div
                     className='flex items-start gap-2 border-muted border-b py-1.5 text-sm last:border-0'
                     key={`${ev.date.toISOString()}-${i}`}
@@ -203,17 +211,15 @@ function DashboardPage() {
                     </div>
                   </div>
                 ))}
-                <Button
-                  className='mt-3 w-full'
-                  onClick={() => {
-                    window.location.hash = "calendar";
-                  }}
-                  size='sm'
-                  variant='outline'
-                >
-                  <CalendarIcon className='mr-2 h-4 w-4' />
-                  Xem tất cả
-                </Button>
+                {hasMoreUpcomingEvents && (
+                  <a
+                    className='mt-3 flex w-full items-center justify-center gap-2 rounded-md border bg-background px-3 py-2 font-medium text-sm shadow-xs transition-colors hover:bg-accent hover:text-accent-foreground'
+                    href='#calendar'
+                  >
+                    <CalendarIcon className='h-4 w-4' />
+                    Xem chi tiết trong Lịch học tập
+                  </a>
+                )}
               </>
             ) : (
               <div className='flex h-40 items-center justify-center text-muted-foreground text-sm'>

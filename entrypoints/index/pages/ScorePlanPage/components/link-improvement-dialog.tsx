@@ -101,6 +101,9 @@ export function LinkImprovementDialog({
           <DialogDescription>
             Liên kết môn <strong>{subject.name}</strong> ({subject.credit} TC, {subject.point.scale10} điểm) thay thế
             cho môn cũ nào dưới đây?
+            <p className='text-muted-foreground italic'>
+              Tính năng dùng để cải thiện điểm số môn học thủ công nếu hệ thống chưa nhận diện đúng.
+            </p>
           </DialogDescription>
         </DialogHeader>
 
