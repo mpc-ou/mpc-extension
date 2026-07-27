@@ -77,4 +77,6 @@ export const _ICS_METADATA = {
   TIMEZONE: "Asia/Ho_Chi_Minh"
 };
 
+export const _ICS_DEFAULT_EXAM_DURATION_MINUTES = 60;
+
 export const _ICS_UID_DOMAIN = "mpc-extension";

@@ -1,4 +1,10 @@
-import { _DATE_MATCH_REGEX, _ICS_METADATA, _ICS_UID_DOMAIN, _WEEK_YEAR_REGEX } from "@/constants";
+import {
+  _DATE_MATCH_REGEX,
+  _ICS_DEFAULT_EXAM_DURATION_MINUTES,
+  _ICS_METADATA,
+  _ICS_UID_DOMAIN,
+  _WEEK_YEAR_REGEX
+} from "@/constants";
 import type { CalendarEntry, SemesterData } from "@/types";
 
 export type ICSReminderUnit = "minutes" | "hours" | "days";
@@ -10,6 +16,8 @@ export type ICSReminderOptions = {
   unit: ICSReminderUnit;
   action: ICSReminderAction;
 };
+
+const _ROOM_LABEL_SPLIT_REGEX = /,| - /;
 
 export type ICSExportOptions = {
   calendarName?: string;
@@ -39,8 +47,14 @@ function formatICSDateTime(date: Date): string {
   return `${year}${month}${day}T${hour}${minute}${second}Z`;
 }
 
+function getShortRoomLabel(room: string): string {
+  return room.split(_ROOM_LABEL_SPLIT_REGEX)[0].trim();
+}
+
 function generateUID(entry: CalendarEntry, dateKey: string): string {
-  return `${entry.code}-${dateKey}-${entry.startPeriod}@${_ICS_UID_DOMAIN}`;
+  const eventType = entry.eventType || entry.category;
+  const group = entry.group || "0";
+  return `${entry.code}-${group}-${eventType}-${dateKey}-${entry.startPeriod}@${_ICS_UID_DOMAIN}`;
 }
 
 function escapeICSText(text: string): string {
@@ -115,15 +129,18 @@ function createEventFromEntry(
   const [, day, month] = scheduleDateMatch;
   const dateKey = `${year}-${month}-${day}`;
 
-  if (!(entry.startTime && entry.endTime)) {
+  if (!entry.startTime) {
     return null;
   }
 
   const startDate = parseDateTime(dateKey, entry.startTime);
-  const endDate = parseDateTime(dateKey, entry.endTime);
+  const endDate = entry.endTime
+    ? parseDateTime(dateKey, entry.endTime)
+    : new Date(startDate.getTime() + _ICS_DEFAULT_EXAM_DURATION_MINUTES * 60_000);
 
   const uid = generateUID(entry, dateKey);
-  const summary = escapeICSText(`${entry.title} (${entry.code})`);
+  const roomLabel = entry.room ? getShortRoomLabel(entry.room) : "";
+  const summary = escapeICSText(roomLabel ? `${roomLabel} - ${entry.title}` : entry.title);
   const location = escapeICSText(entry.room || "");
 
   const descriptionParts = [
