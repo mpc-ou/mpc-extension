@@ -1,3 +1,15 @@
+# [2.1.0](https://github.com/mpc-ou/mpc-extension/compare/v2.0.0...v2.1.0) (2026-08-13)
+
+
+### Bug Fixes
+
+* add default exam duration constant and improve ICS event generation with fallback end time ([577505d](https://github.com/mpc-ou/mpc-extension/commit/577505de72b2fbd62bfd937f43c08bd1a9a1516e))
+
+
+### Features
+
+* add ICS export with reminders, semester sorting, and improved date handling ([a4848bf](https://github.com/mpc-ou/mpc-extension/commit/a4848bfd704dc968656cc3aa44dcca2366f686d8))
+
 # [2.0.0](https://github.com/mpc-ou/mpc-extension/compare/v1.6.0...v2.0.0) (2026-06-05)
 
 
