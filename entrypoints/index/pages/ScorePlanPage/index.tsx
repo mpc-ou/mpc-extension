@@ -152,10 +152,10 @@ function ScorePlanPage() {
       }))
     );
     setSummary(getScoreSummary(normalized, trainingSemesters));
-    setScores(normalized);
-    setOriginalScores(normalized);
-    setLastUpdate(new Date());
-    await saveData();
+    useScoreStore.getState().setScores(normalized);
+    useScoreStore.getState().setOriginalScores(normalized);
+    useScoreStore.getState().setLastUpdate(new Date());
+    await useScoreStore.getState().saveData(effectiveStudentId);
     toast.success("Đã nhập dữ liệu điểm thành công!");
   };
 
@@ -258,7 +258,7 @@ function ScorePlanPage() {
   };
 
   const handleSaveChanges = async () => {
-    await saveData();
+    await useScoreStore.getState().saveData(effectiveStudentId);
     await useScoreStore.getState().getData();
     toast.success("Đã lưu kế hoạch điểm!");
   };
@@ -266,10 +266,11 @@ function ScorePlanPage() {
   const handleRestoreOriginal = async () => {
     if (originalScores.length > 0) {
       const restored = structuredClone(originalScores);
-      setScores(restored);
+      const store = useScoreStore.getState();
+      store.setScores(restored);
       setSummary(getScoreSummary(restored, trainingSemesters));
-      await saveData();
-      await useScoreStore.getState().getData();
+      await store.saveData(effectiveStudentId);
+      await store.getData();
       toast.success("Đã khôi phục dữ liệu gốc");
     }
   };
@@ -321,16 +322,50 @@ function ScorePlanPage() {
     subject: Omit<ScoreRecordType, "isIgnore" | "isHead">
   ) => {
     const newData = [...scores];
-    newData[semesterIdx].data[subjectIdx] = subject;
+    const existing = newData[semesterIdx].data[subjectIdx];
+    newData[semesterIdx].data[subjectIdx] = {
+      ...existing,
+      ...subject,
+      id:
+        existing.id ||
+        (typeof crypto !== "undefined" && crypto.randomUUID
+          ? crypto.randomUUID()
+          : `sub-${Math.random().toString(36).substring(2, 11)}-${Date.now()}`)
+    };
     saveCurrentData(newData);
     toast.success("Cập nhật môn học thành công!");
   };
 
   const handleAddSubject = (semesterIdx: number, subject: Omit<ScoreRecordType, "isIgnore" | "isHead">) => {
+    const generateId = () =>
+      typeof crypto !== "undefined" && crypto.randomUUID
+        ? crypto.randomUUID()
+        : `sub-${Math.random().toString(36).substring(2, 11)}-${Date.now()}`;
     const newData = [...scores];
-    newData[semesterIdx].data.unshift(subject);
+    newData[semesterIdx].data.unshift({
+      ...subject,
+      id: generateId()
+    });
     saveCurrentData(newData);
     toast.success("Thêm môn học thành công!");
+  };
+
+  const handleLinkImprovement = (newSubId: string, oldSubId: string | null) => {
+    const newData = scores.map((sem) => ({
+      ...sem,
+      data: sem.data.map((sub) => {
+        if (sub.id === newSubId) {
+          return { ...sub, improvesSubjectId: oldSubId || undefined };
+        }
+        return sub;
+      })
+    }));
+    saveCurrentData(newData);
+    if (oldSubId) {
+      toast.success("Đã thiết lập liên kết cải thiện môn học!");
+    } else {
+      toast.success("Đã hủy liên kết cải thiện!");
+    }
   };
 
   const handleDeleteSemester = (semesterIdx: number) => {
@@ -434,6 +469,7 @@ function ScorePlanPage() {
         handleDeleteSubject={handleDeleteSubject}
         handleEditSemester={(idx) => setSemesterDialog({ open: true, mode: "edit", semesterIdx: idx })}
         handleEditSubject={handleEditSubject}
+        handleLinkImprovement={handleLinkImprovement}
         initialData={originalScores}
         searchText={searchText}
         selectedGrades={selectedGrades}

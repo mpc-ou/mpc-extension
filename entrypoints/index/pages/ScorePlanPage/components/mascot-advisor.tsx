@@ -1,13 +1,4 @@
-import {
-  AlertCircle,
-  ArrowRightIcon,
-  Shield,
-  ShieldAlert,
-  ShieldCheck,
-  Sparkles,
-  Star,
-  TriangleAlert
-} from "lucide-react";
+import { AlertCircle, ArrowRightIcon, ShieldAlert, ShieldCheck, Sparkles, Star, TriangleAlert } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -27,6 +18,8 @@ import { useUserSettingsStore } from "@/store/use-user-settings-store";
 import type { ScoreGroupType, ScoreRecordType } from "@/types";
 import { getAcademicRank, getTrainingRank } from "@/utils/academic-compute";
 import { getScoreSummary, isSameSubject } from "@/utils/score";
+import { GPALadder } from "./gpa-ladder";
+import { ProgressTimeline } from "./progress-timeline";
 
 function buildImprovementSemesters(
   subjects: ScoreRecordType[],
@@ -86,7 +79,7 @@ function markSubjectsIgnored(
 }
 
 function isGpaEligible(sub: ScoreRecordType): boolean {
-  if (sub.isIgnore || !sub.point.character) {
+  if (sub.isIgnore || !sub.point.character || sub.point.character === "M") {
     return false;
   }
   const { credit, point } = sub;
@@ -184,7 +177,8 @@ function getSuggestedSubjects(
       runSumCr += sub.credit;
     }
     suggested.push(sub);
-    if (runSumCr > 0 && runSum4 / runSumCr >= targetGpa) {
+    const roundedProj = Math.round((runSum4 / runSumCr) * 100) / 100;
+    if (runSumCr > 0 && roundedProj >= targetGpa) {
       break;
     }
   }
@@ -208,7 +202,8 @@ function checkTargetReachability(
   const allNewSems = buildImprovementSemesters(improvableSubjects, maxId, maxCreditsPerSemester);
   const bestSummary = getScoreSummary([...allNewSems, ...allIgnored], trainingSemesters);
   const bestPossibleGpa = bestSummary.gpa4;
-  return { bestPossibleGpa, isTargetUnreachable: bestPossibleGpa < targetGpa };
+  const roundedBest = Math.round(bestPossibleGpa * 100) / 100;
+  return { bestPossibleGpa, isTargetUnreachable: roundedBest < targetGpa };
 }
 
 export function MascotAdvisor() {
@@ -249,7 +244,7 @@ export function MascotAdvisor() {
     const improvableSubjects = scores
       .flatMap((s) => s.data)
       .filter((sub) => !sub.isIgnore && (sub.point.scale4 ?? 0) < 4.0 && sub.point.character !== "M")
-      .sort((a, b) => b.credit - a.credit);
+      .sort((a, b) => b.credit - a.credit || (a.point.scale4 ?? 0) - (b.point.scale4 ?? 0));
 
     const suggestedSubjects = getSuggestedSubjects(scores, improvableSubjects, targetGpa);
 
@@ -462,202 +457,188 @@ export function MascotAdvisor() {
         }}
         open={open}
       >
-        <DialogContent className='max-h-[85vh] overflow-y-auto border bg-card p-6 shadow-xl sm:max-w-lg'>
+        <DialogContent className='max-h-[92vh] w-[92vw] overflow-y-auto border bg-card p-6 shadow-xl sm:max-w-4xl'>
           <DialogHeader>
-            <DialogTitle className='text-lg'>🧑‍🏫 Cố vấn học tập</DialogTitle>
+            <DialogTitle className='flex items-center gap-2 font-bold text-lg'>🧑‍🏫 Cố vấn học tập</DialogTitle>
           </DialogHeader>
 
-          <div className='mb-4 grid grid-cols-2 gap-3'>
-            <div className='rounded-lg border bg-muted/30 p-3'>
-              <p className='mb-2 text-muted-foreground text-xs'>Hiện tại</p>
-              <p className='font-bold text-xl'>
-                {analysis.currentRank.emoji} {analysis.currentRank.label}
-              </p>
-              <p className='font-mono text-muted-foreground text-sm'>GPA {currentGpa.toFixed(2)}</p>
-              <div className='mt-2 flex items-center gap-1.5 border-t pt-2 text-muted-foreground text-xs'>
-                <Shield className='h-3.5 w-3.5' />
-                ĐRL {analysis.currentTrainingPoint.toFixed(0)} — {analysis.trainingRank.label}
+          <div className='mt-4 grid grid-cols-1 gap-6 md:grid-cols-12'>
+            <div className='space-y-5 md:col-span-6'>
+              <GPALadder
+                currentGpa={currentGpa}
+                projectedGpa={improvedSubjects.size > 0 && simulation ? simulation.simulatedGpa : currentGpa}
+              />
+
+              <ProgressTimeline currentCredits={currentCredit} totalCredits={totalProgramCredits} />
+
+              <div className='rounded-lg border bg-muted/10 p-3 text-sm'>
+                <p className='flex items-start gap-2'>
+                  {renderDrlStatus(analysis.currentTrainingPoint, analysis.trainingRank.label)}
+                </p>
               </div>
-            </div>
-            <div className='rounded-lg border bg-muted/30 p-3'>
-              <p className='mb-2 text-muted-foreground text-xs'>Tốt nhất có thể</p>
-              <p className='font-bold text-xl'>
-                {getAcademicRank(analysis.maxPossibleGpa).emoji} {getAcademicRank(analysis.maxPossibleGpa).label}
-              </p>
-              <p className='font-mono text-muted-foreground text-sm'>GPA {analysis.maxPossibleGpa.toFixed(2)}</p>
-              <p className='mt-2 border-t pt-2 text-muted-foreground text-xs'>
-                {analysis.remainingCredits > 0 ? `Nếu A+ ${analysis.remainingCredits} TC còn lại` : "Đã đủ tín chỉ"}
-              </p>
-            </div>
-          </div>
 
-          {/* ── DRL warning ── */}
-          <div className='mb-4 rounded-lg border bg-muted/20 p-3 text-sm'>
-            <p className='flex items-start gap-2'>
-              {renderDrlStatus(analysis.currentTrainingPoint, analysis.trainingRank.label)}
-            </p>
-          </div>
-
-          {higherRanks.length > 0 ? (
-            <div className='mb-4'>
-              <p className='mb-2 font-medium text-sm'>🎯 Bạn muốn cải thiện lên hạng nào?</p>
-              <div className='flex flex-wrap gap-1.5'>
-                <button
+              {analysis.lowSubjects.length > 0 && analysis.remainingCredits > 0 && (
+                <div
                   className={cn(
-                    "rounded-full border px-3 py-1 text-sm transition-colors",
-                    targetRankLabel ? "border-border hover:bg-muted" : "border-foreground/30 bg-foreground/10"
+                    "rounded-lg border p-3 text-xs leading-relaxed",
+                    analysis.canFinish
+                      ? "border-emerald-500/20 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300"
+                      : "border-amber-500/20 bg-amber-500/10 text-amber-700 dark:text-amber-300"
                   )}
-                  onClick={() => {
-                    setTargetRankLabel("");
-                    setImprovedSubjects(new Set());
-                  }}
-                  type='button'
                 >
-                  📈 Tốt hơn?
-                </button>
-                {higherRanks.map((r) => (
-                  <button
-                    className={cn(
-                      "rounded-full border px-3 py-1 text-sm transition-colors",
-                      targetRankLabel === r.rank.label
-                        ? "border-foreground/30 bg-foreground/10 font-medium"
-                        : "border-border hover:bg-muted"
-                    )}
-                    key={r.rank.label}
-                    onClick={() => {
-                      setTargetRankLabel(targetRankLabel === r.rank.label ? "" : r.rank.label);
-                      setImprovedSubjects(new Set());
-                    }}
-                    type='button'
-                  >
-                    {r.rank.emoji} {r.rank.label}
-                  </button>
-                ))}
-              </div>
+                  {getGraduationMessage(analysis, trainingSemesters, maxCreditsPerSemester)}
+                </div>
+              )}
             </div>
-          ) : (
-            <div className='mb-4 rounded-lg border bg-muted/20 p-3 text-center text-sm'>
-              <Star className='mx-auto mb-1 h-6 w-6 text-amber-500' />
-              <p className='text-muted-foreground'>Bạn đang ở mức Xuất sắc — không còn hạng nào cao hơn!</p>
-            </div>
-          )}
 
-          {analysis.lowSubjects.length > 0 && (
-            <div>
-              <div className='mb-2 flex items-center justify-between'>
-                <p className='font-medium text-sm'>📚 {analysis.lowSubjects.length} môn đề xuất cải thiện</p>
-                <span className='text-muted-foreground text-xs'>Ưu tiên: tín chỉ cao → điểm thấp</span>
-              </div>
-              <div className='max-h-48 space-y-1.5 overflow-y-auto rounded-lg border bg-muted/20 p-2'>
-                {analysis.lowSubjects.map((sub) => {
-                  const key = `${sub.code}-${sub.name}`;
-                  const isChecked = improvedSubjects.has(key);
-                  return (
-                    <div
+            <div className='flex flex-col justify-between space-y-4 md:col-span-6'>
+              {higherRanks.length > 0 ? (
+                <div className='space-y-2'>
+                  <p className='font-semibold text-[10px] text-muted-foreground text-xs uppercase tracking-wider'>
+                    🎯 Bạn muốn cải thiện lên hạng nào?
+                  </p>
+
+                  <div className='flex w-full rounded-lg border bg-muted p-1'>
+                    <button
                       className={cn(
-                        "flex items-center justify-between rounded-md px-2.5 py-1.5 text-sm transition-colors",
-                        isChecked ? "bg-background shadow-sm" : "opacity-50"
+                        "flex-1 rounded-md py-1.5 text-center font-semibold text-xs transition-all duration-200",
+                        targetRankLabel
+                          ? "text-muted-foreground hover:text-foreground"
+                          : "bg-background text-foreground shadow-sm"
                       )}
-                      key={key}
+                      onClick={() => {
+                        setTargetRankLabel("");
+                        setImprovedSubjects(new Set());
+                      }}
+                      type='button'
                     >
-                      <div className='flex min-w-0 items-center gap-2'>
-                        <Checkbox
-                          checked={isChecked}
-                          className='h-3.5 w-3.5'
-                          onCheckedChange={() => toggleSubject(sub.code, sub.name)}
-                        />
-                        <span className='truncate' title={sub.name}>
-                          {sub.name}
-                        </span>
-                        <span className='shrink-0 text-muted-foreground text-xs'>({sub.credit} TC)</span>
-                      </div>
-                      <div className='flex shrink-0 items-center gap-2'>
-                        <span
-                          className={cn(
-                            "min-w-7 rounded px-1.5 py-0.5 text-center font-mono text-xs",
-                            (sub.point.scale10 ?? 0) < 5
-                              ? "bg-red-500/10 text-red-600"
-                              : "bg-amber-500/10 text-amber-600"
-                          )}
-                        >
-                          {sub.point.character || "—"}
-                        </span>
-                        <span className='font-mono text-emerald-600 text-xs dark:text-emerald-400'>→ A+</span>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
+                      📈 Tốt hơn?
+                    </button>
+                    {higherRanks.map((r) => (
+                      <button
+                        className={cn(
+                          "flex-1 rounded-md py-1.5 text-center font-semibold text-xs transition-all duration-200",
+                          targetRankLabel === r.rank.label
+                            ? "bg-background font-bold text-foreground shadow-sm"
+                            : "text-muted-foreground hover:text-foreground"
+                        )}
+                        key={r.rank.label}
+                        onClick={() => {
+                          setTargetRankLabel(targetRankLabel === r.rank.label ? "" : r.rank.label);
+                          setImprovedSubjects(new Set());
+                        }}
+                        type='button'
+                      >
+                        {r.rank.emoji} {r.rank.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <div className='rounded-lg border bg-muted/10 p-3 text-center text-sm'>
+                  <Star className='mx-auto mb-1 h-5 w-5 text-amber-500' />
+                  <p className='text-muted-foreground text-xs'>Bạn đang ở mức Xuất sắc — không còn hạng nào cao hơn!</p>
+                </div>
+              )}
 
-              {/* ── Target unreachable warning ── */}
+              {analysis.lowSubjects.length > 0 && (
+                <div className='flex min-h-0 flex-1 flex-col space-y-2'>
+                  <div className='flex items-center justify-between'>
+                    <p className='font-semibold text-[10px] text-muted-foreground text-xs uppercase tracking-wider'>
+                      📚 {analysis.lowSubjects.length} môn đề xuất cải thiện
+                    </p>
+                    <span className='text-[10px] text-muted-foreground italic'>Ưu tiên: tín chỉ cao → điểm thấp</span>
+                  </div>
+
+                  <div className='max-h-60 flex-1 divide-y overflow-y-auto rounded-lg border bg-background shadow-inner'>
+                    {analysis.lowSubjects.map((sub) => {
+                      const key = `${sub.code}-${sub.name}`;
+                      const isChecked = improvedSubjects.has(key);
+                      return (
+                        <div
+                          className={cn(
+                            "flex items-center justify-between px-3 py-2 text-sm transition-colors hover:bg-muted/10",
+                            isChecked ? "bg-muted/5" : "opacity-40"
+                          )}
+                          key={key}
+                        >
+                          <div className='flex min-w-0 items-center gap-2'>
+                            <Checkbox
+                              checked={isChecked}
+                              className='h-4 w-4 rounded'
+                              onCheckedChange={() => toggleSubject(sub.code, sub.name)}
+                            />
+                            <span className='truncate font-medium text-foreground text-xs' title={sub.name}>
+                              {sub.name}
+                            </span>
+                            <span className='shrink-0 text-[10px] text-muted-foreground'>({sub.credit} TC)</span>
+                          </div>
+                          <div className='flex shrink-0 items-center gap-2'>
+                            <span
+                              className={cn(
+                                "min-w-6 rounded px-1 py-0.5 text-center font-mono font-semibold text-[10px]",
+                                (sub.point.scale10 ?? 0) < 5
+                                  ? "bg-red-500/10 text-red-600"
+                                  : "bg-amber-500/10 text-amber-600"
+                              )}
+                            >
+                              {sub.point.character || "—"}
+                            </span>
+                            <span className='text-[10px] text-muted-foreground'>→</span>
+                            <span className='font-bold font-mono text-[10px] text-emerald-600 dark:text-emerald-400'>
+                              A+
+                            </span>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
               {analysis.isTargetUnreachable && targetRankLabel && (
-                <div className='mt-3 flex items-start gap-2 rounded-lg border border-amber-300 bg-amber-500/10 p-3 text-sm dark:border-amber-700'>
-                  <TriangleAlert className='mt-0.5 h-4 w-4 shrink-0 text-amber-600 dark:text-amber-400' />
+                <div className='flex items-start gap-2 rounded-lg border border-amber-300 bg-amber-500/10 p-2.5 text-xs leading-relaxed dark:border-amber-700'>
+                  <TriangleAlert className='mt-0.5 h-3.5 w-3.5 shrink-0 text-amber-600 dark:text-amber-400' />
                   <div className='text-muted-foreground'>
-                    <p>
-                      Chỉ có <strong className='text-foreground'>{analysis.improvableCount}</strong> môn khả dụng để cải
-                      thiện. Tốt nhất đạt được:{" "}
-                      <strong className='text-foreground'>{analysis.bestPossibleGpa.toFixed(2)}</strong> (
-                      {getAcademicRank(analysis.bestPossibleGpa).label}).
-                    </p>
-                    <p className='mt-1'>
-                      Không thể đạt <strong className='text-foreground'>{targetRankLabel}</strong> với dữ liệu hiện tại.
-                    </p>
+                    Không thể đạt <strong className='text-foreground'>{targetRankLabel}</strong> với số môn khả dụng.
+                    Tối đa: <strong className='text-foreground'>{analysis.bestPossibleGpa.toFixed(2)}</strong>.
                   </div>
                 </div>
               )}
 
               {improvedSubjects.size > 0 && simulation && (
-                <div className='mt-3 rounded-lg border bg-muted/20 p-3'>
-                  <div className='flex items-baseline gap-2'>
-                    <span className='text-muted-foreground text-sm'>GPA dự kiến: </span>
-                    <span className='text-muted-foreground text-sm line-through'>{currentGpa.toFixed(2)}</span>
-                    <ArrowRightIcon className='h-3 w-3 text-muted-foreground' />
-                    <span className='font-bold text-lg'>{simulation.simulatedGpa.toFixed(2)}</span>
-                    <span className='text-muted-foreground text-xs'>({simulation.simulatedRank.label})</span>
+                <div className='flex items-center justify-between rounded-lg border bg-gradient-to-r from-amber-500/5 to-yellow-500/5 p-3'>
+                  <div>
+                    <p className='font-semibold text-[10px] text-muted-foreground uppercase tracking-wider'>
+                      GPA dự kiến
+                    </p>
+                    <p className='mt-0.5 text-[10px] text-muted-foreground'>
+                      {improvedSubjects.size} môn · {simulation.improvementCredits} TC
+                    </p>
                   </div>
-                  <p className='mt-1 text-muted-foreground text-xs'>
-                    {improvedSubjects.size} môn · {simulation.improvementCredits} TC cần cải thiện
-                  </p>
+                  <div className='flex items-baseline gap-1.5'>
+                    <span className='text-muted-foreground text-xs line-through'>{currentGpa.toFixed(2)}</span>
+                    <ArrowRightIcon className='h-3.5 w-3.5 text-muted-foreground' />
+                    <span className='font-bold font-serif text-2xl text-primary'>
+                      {simulation.simulatedGpa.toFixed(2)}
+                    </span>
+                    <span className='font-semibold text-[10px] text-muted-foreground'>
+                      ({simulation.simulatedRank.label})
+                    </span>
+                  </div>
+                </div>
+              )}
+
+              {analysis.lowSubjects.length > 0 && improvedSubjects.size > 0 && (
+                <div className='pt-2'>
+                  <Button className='w-full shadow-sm' onClick={applyQuickPlan} size='default'>
+                    <Sparkles className='mr-2 h-4 w-4' />
+                    Áp dụng kế hoạch nhanh ({improvedSubjects.size} môn)
+                  </Button>
                 </div>
               )}
             </div>
-          )}
-
-          {analysis.lowSubjects.length > 0 && analysis.remainingCredits > 0 && (
-            <div className='rounded-lg border bg-muted/20 p-3'>
-              <p className='mb-2 font-medium text-sm'>📅 Tiến độ tốt nghiệp</p>
-              <div className='grid grid-cols-2 gap-1 text-sm'>
-                <span className='text-muted-foreground'>Đã qua:</span>
-                <span>
-                  {analysis.passedSemesters} / {trainingSemesters} kỳ
-                </span>
-                <span className='text-muted-foreground'>Cần thêm:</span>
-                <span>{analysis.remainingCredits} TC</span>
-                <span className='text-muted-foreground'>Tối đa/kỳ:</span>
-                <span>{maxCreditsPerSemester} TC</span>
-              </div>
-              <p
-                className={cn(
-                  "mt-2 rounded-md px-2 py-1 text-xs",
-                  analysis.canFinish
-                    ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300"
-                    : "bg-amber-500/10 text-amber-700 dark:text-amber-300"
-                )}
-              >
-                {getGraduationMessage(analysis, trainingSemesters, maxCreditsPerSemester)}
-              </p>
-            </div>
-          )}
-
-          {analysis.lowSubjects.length > 0 && improvedSubjects.size > 0 && (
-            <div className='border-t pt-4'>
-              <Button className='w-full' onClick={applyQuickPlan} size='default'>
-                <Sparkles className='mr-2 h-4 w-4' />
-                Áp dụng kế hoạch nhanh ({improvedSubjects.size} môn)
-              </Button>
-            </div>
-          )}
+          </div>
         </DialogContent>
       </Dialog>
     </>

@@ -35,11 +35,12 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useConfirm } from "@/hooks/use-confirm";
 import { useCalendarStore } from "@/store/use-calendar-store";
+import { useCurrentUserStore } from "@/store/use-current-user-store";
 import type { CalendarEntry, SemesterData } from "@/types";
 import { formatSemesterLabel, normalizeSemesterName, parseSemesterName } from "@/utils/calendar-format";
 import { detectExcelType, mergeCalendarData, parseExamExcel, parseStudyExcel } from "@/utils/calendar-import";
 import { convertToCSV, convertToExcel } from "@/utils/excel-utils";
-import { downloadICS } from "@/utils/ics-utils";
+import { downloadICS, type ICSExportOptions } from "@/utils/ics-utils";
 import { MonthViewCalendar } from "./components/month-view-calendar";
 import { PeriodTimeView } from "./components/period-time-view";
 import { UpcomingEvents } from "./components/upcoming-events";
@@ -64,6 +65,7 @@ export function CalendarPage() {
   const [filterType, setFilterType] = useState<string>("ALL");
   const fileInputRef = useRef<HTMLInputElement>(null);
   const confirm = useConfirm();
+  const effectiveStudentId = useCurrentUserStore((s) => s.effectiveStudentId);
 
   const mergedExportData = useMemo(() => {
     const merged = [...studyCalendarData];
@@ -162,9 +164,9 @@ export function CalendarPage() {
     }
   };
 
-  const handleExport = (selectedSemesters: SemesterData[]) => {
+  const handleExport = (selectedSemesters: SemesterData[], options: ICSExportOptions) => {
     try {
-      downloadICS(selectedSemesters);
+      downloadICS(selectedSemesters, options);
       toast.success(`Đã xuất ${selectedSemesters.length} học kỳ`);
     } catch (error) {
       console.error(error);
@@ -469,6 +471,7 @@ export function CalendarPage() {
         onExport={handleExport}
         onOpenChange={setIsExportModalOpen}
         open={isExportModalOpen}
+        studentId={effectiveStudentId}
       />
 
       <Dialog onOpenChange={setImportSemesterOpen} open={importSemesterOpen}>

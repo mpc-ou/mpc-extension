@@ -55,7 +55,9 @@ const SCRAPER_REGISTRY: Record<string, () => unknown | Promise<unknown>> = {
 };
 
 export default defineBackground(() => {
-  browser.sidePanel.setPanelBehavior({ openPanelOnActionClick: true });
+  if (typeof browser.sidePanel?.setPanelBehavior === "function") {
+    browser.sidePanel.setPanelBehavior({ openPanelOnActionClick: true });
+  }
 
   browser.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
     if (msg.type === _GET_CURRENT_URL) {

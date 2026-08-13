@@ -86,20 +86,64 @@ const updateIgnoreSubject = (data: ScoreGroupType[], ignoreList: string[]) => {
   return newData;
 };
 
-/** Mark improved/superseded subjects across all semesters by matching normalized name + credit. */
-function markImprovedSubjects(data: ScoreGroupType[]): ScoreGroupType[] {
-  const allSubs: { semIdx: number; subIdx: number; sub: ScoreRecordType }[] = [];
-  for (let si = 0; si < data.length; si++) {
-    for (let sbi = 0; sbi < data[si].data.length; sbi++) {
-      const sub = data[si].data[sbi];
+type EligibleEntry = { semIdx: number; subIdx: number; sub: ScoreRecordType };
+
+function resetImprovedFlags(data: ScoreGroupType[]): void {
+  for (const sem of data) {
+    for (const sub of sem.data) {
+      if (sub.isImproved) {
+        sub.isIgnore = false;
+        sub.isImproved = false;
+      }
+    }
+  }
+}
+
+function collectEligibleSubjects(data: ScoreGroupType[]): EligibleEntry[] {
+  const allSubs: EligibleEntry[] = [];
+  for (const [si, sem] of data.entries()) {
+    for (const [sbi, sub] of sem.data.entries()) {
       if ((!sub.isIgnore || sub.isImproved) && sub.point.character !== "M") {
         allSubs.push({ semIdx: si, subIdx: sbi, sub });
       }
     }
   }
+  return allSubs;
+}
 
-  const groups = new Map<string, typeof allSubs>();
+function applyManualImprovementLinkages(allSubs: EligibleEntry[], subMap: Map<string, ScoreRecordType>): Set<string> {
+  const manuallyLinked = new Set<string>();
   for (const entry of allSubs) {
+    const targetId = entry.sub.improvesSubjectId;
+    if (targetId && subMap.has(targetId)) {
+      const oldSub = subMap.get(targetId);
+      if (oldSub) {
+        const oldScore = oldSub.point.scale10 ?? 0;
+        const newScore = entry.sub.point.scale10 ?? 0;
+
+        if (newScore > oldScore) {
+          oldSub.isIgnore = true;
+          oldSub.isImproved = true;
+          entry.sub.isIgnore = false;
+          entry.sub.isImproved = true;
+        } else {
+          entry.sub.isIgnore = true;
+          entry.sub.isImproved = true;
+          oldSub.isIgnore = false;
+          oldSub.isImproved = true;
+        }
+
+        manuallyLinked.add(entry.sub.id || "");
+        manuallyLinked.add(oldSub.id || "");
+      }
+    }
+  }
+  return manuallyLinked;
+}
+
+function applyAutomaticImprovements(remainingSubs: EligibleEntry[]): void {
+  const groups = new Map<string, EligibleEntry[]>();
+  for (const entry of remainingSubs) {
     const key = `${normalizeSubjectName(entry.sub.name)}|${entry.sub.credit}`;
     if (!groups.has(key)) {
       groups.set(key, []);
@@ -120,6 +164,24 @@ function markImprovedSubjects(data: ScoreGroupType[]): ScoreGroupType[] {
       entries[i].sub.isIgnore = true;
     }
   }
+}
+
+function markImprovedSubjects(data: ScoreGroupType[]): ScoreGroupType[] {
+  resetImprovedFlags(data);
+  const allSubs = collectEligibleSubjects(data);
+  const subMap = new Map<string, ScoreRecordType>();
+  for (const entry of allSubs) {
+    if (entry.sub.id) {
+      subMap.set(entry.sub.id, entry.sub);
+    }
+  }
+
+  const manuallyLinked = applyManualImprovementLinkages(allSubs, subMap);
+
+  const remainingSubs = allSubs.filter(
+    (entry) => !manuallyLinked.has(entry.sub.id || "") && entry.sub.point.character !== "M"
+  );
+  applyAutomaticImprovements(remainingSubs);
 
   return data;
 }
@@ -147,7 +209,7 @@ const updateScoreAvg = (data: ScoreGroupType[]) => {
           !Number.isNaN(point.scale4) &&
           !!point.character;
 
-        if (!isValidPoint || curr.isIgnore) {
+        if (!isValidPoint || curr.isIgnore || point.character === "M") {
           return acc;
         }
 

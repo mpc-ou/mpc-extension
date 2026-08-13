@@ -28,6 +28,8 @@ export type PointMappingType = {
 };
 
 export type ScoreRecordType = {
+  id?: string;
+  improvesSubjectId?: string;
   code: string;
   name: string;
   credit: number;
