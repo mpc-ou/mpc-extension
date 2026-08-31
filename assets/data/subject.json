@@ -1093,5 +1093,1215 @@
     "code": "GENG2318",
     "name": "Tiếng Anh nâng cao 4 (Mã 2015)",
     "credit": "3"
+  },
+  {
+    "code": "BADM2311",
+    "name": "Giao tiếp trong kinh doanh",
+    "credit": "3"
+  },
+  {
+    "code": "SOCI1316",
+    "name": "Nhân học đại cương",
+    "credit": "3"
+  },
+  {
+    "code": "COMP1310",
+    "name": "Tin học văn phòng nâng cao",
+    "credit": "3"
+  },
+  {
+    "code": "GLAW1318",
+    "name": "Luật kinh doanh",
+    "credit": "3"
+  },
+  {
+    "code": "ECON2304",
+    "name": "Kinh tế lượng",
+    "credit": "3"
+  },
+  {
+    "code": "ECON1310",
+    "name": "Kinh tế học hành vi",
+    "credit": "3"
+  },
+  {
+    "code": "MATH1322",
+    "name": "Nguyên lý thống kê kinh tế",
+    "credit": "3"
+  },
+  {
+    "code": "ECON1311",
+    "name": "Kinh tế học tài chính",
+    "credit": "3"
+  },
+  {
+    "code": "ECON1312",
+    "name": "Kinh tế Vi mô nâng cao",
+    "credit": "3"
+  },
+  {
+    "code": "ECON1313",
+    "name": "Kinh tế Vĩ mô nâng cao",
+    "credit": "3"
+  },
+  {
+    "code": "ECON1314",
+    "name": "Kinh tế lượng nâng cao",
+    "credit": "3"
+  },
+  {
+    "code": "ECON2303",
+    "name": "Kinh tế quốc tế",
+    "credit": "3"
+  },
+  {
+    "code": "ECON3301",
+    "name": "Kinh tế phát triển",
+    "credit": "3"
+  },
+  {
+    "code": "ECON3303",
+    "name": "Kinh tế công",
+    "credit": "3"
+  },
+  {
+    "code": "ECON3304",
+    "name": "Kinh tế môi trường",
+    "credit": "3"
+  },
+  {
+    "code": "EDUC2303",
+    "name": "Phương pháp nghiên cứu khoa học",
+    "credit": "3"
+  },
+  {
+    "code": "ECON2310",
+    "name": "Dự báo trong kinh doanh và kinh tế",
+    "credit": "3"
+  },
+  {
+    "code": "ECON4310",
+    "name": "Kinh tế đô thị",
+    "credit": "3"
+  },
+  {
+    "code": "ECON3306",
+    "name": "Kinh tế nông nghiệp và phát triển nông thôn",
+    "credit": "3"
+  },
+  {
+    "code": "ECON3307",
+    "name": "Kinh tế học tổ chức ngành",
+    "credit": "3"
+  },
+  {
+    "code": "ECON2311",
+    "name": "Chính sách ngoại thương và công nghiệp",
+    "credit": "3"
+  },
+  {
+    "code": "ECON3308",
+    "name": "Marketing địa phương và phát triển vùng",
+    "credit": "3"
+  },
+  {
+    "code": "ECON3305",
+    "name": "Kinh tế lao động",
+    "credit": "3"
+  },
+  {
+    "code": "FINA3319",
+    "name": "Tài chính doanh nghiệp 1",
+    "credit": "3"
+  },
+  {
+    "code": "FINA3301",
+    "name": "Tài chính quốc tế",
+    "credit": "3"
+  },
+  {
+    "code": "FINA3312",
+    "name": "Phân tích báo cáo tài chính",
+    "credit": "3"
+  },
+  {
+    "code": "FINA4304",
+    "name": "Phân tích chứng khoán vốn",
+    "credit": "3"
+  },
+  {
+    "code": "FINA4305",
+    "name": "Phân tích chứng khoán nợ",
+    "credit": "3"
+  },
+  {
+    "code": "FINA3317",
+    "name": "Thị trường tài chính phái sinh",
+    "credit": "3"
+  },
+  {
+    "code": "ECON4305",
+    "name": "Kinh tế quốc tế nâng cao",
+    "credit": "3"
+  },
+  {
+    "code": "BLAW1307",
+    "name": "Luật kinh doanh quốc tế",
+    "credit": "3"
+  },
+  {
+    "code": "BADM2381",
+    "name": "Quản trị xuất nhập khẩu",
+    "credit": "3"
+  },
+  {
+    "code": "BADM3330",
+    "name": "Đầu tư quốc tế",
+    "credit": "3"
+  },
+  {
+    "code": "BADM2301",
+    "name": "Marketing căn bản",
+    "credit": "3"
+  },
+  {
+    "code": "BADM3315",
+    "name": "Hành vi tổ chức",
+    "credit": "3"
+  },
+  {
+    "code": "BADM3305",
+    "name": "Quan hệ công chúng",
+    "credit": "3"
+  },
+  {
+    "code": "FINA3318",
+    "name": "Thuế và hoạt động kinh doanh",
+    "credit": "3"
+  },
+  {
+    "code": "BLAW1309",
+    "name": "Tư duy phản biện",
+    "credit": "3"
+  },
+  {
+    "code": "ECON4899",
+    "name": "Thực tập tốt nghiệp",
+    "credit": "4"
+  },
+  {
+    "code": "ECON4699",
+    "name": "Khóa luận tốt nghiệp",
+    "credit": "6"
+  },
+  {
+    "code": "ECON2312",
+    "name": "Thiết lập và thẩm định dự án đầu tư",
+    "credit": "3"
+  },
+  {
+    "code": "FINA2312",
+    "name": "Mua bán và sáp nhập Doanh nghiệp",
+    "credit": "3"
+  },
+  {
+    "code": "ECON4311",
+    "name": "Phân tích kinh tế dự án",
+    "credit": "3"
+  },
+  {
+    "code": "FINA3326",
+    "name": "Phân tích và định giá doanh nghiệp",
+    "credit": "3"
+  },
+  {
+    "code": "FINA3316",
+    "name": "Quản lý danh mục đầu tư",
+    "credit": "3"
+  },
+  {
+    "code": "ACCO2318",
+    "name": "Chuẩn mực báo cáo tài chính quốc tế 1",
+    "credit": "3"
+  },
+  {
+    "code": "FINA3302",
+    "name": "Thanh toán quốc tế",
+    "credit": "3"
+  },
+  {
+    "code": "BADM1368",
+    "name": "Giao tiếp trong kinh doanh",
+    "credit": "3"
+  },
+  {
+    "code": "COMP1307",
+    "name": "Tin học đại cương",
+    "credit": "3"
+  },
+  {
+    "code": "COMP2403",
+    "name": "Tin học ứng dụng",
+    "credit": "3"
+  },
+  {
+    "code": "ECON1318",
+    "name": "Nguyên lý thống kê kinh tế",
+    "credit": "3"
+  },
+  {
+    "code": "BLAW1320",
+    "name": "Luật hành chính",
+    "credit": "3"
+  },
+  {
+    "code": "BLAW2210",
+    "name": "Luật Ngân sách nhà nước",
+    "credit": "2"
+  },
+  {
+    "code": "GLAW2305",
+    "name": "Luật Đầu tư công",
+    "credit": "3"
+  },
+  {
+    "code": "PUBM2314",
+    "name": "Quản trị dự án công",
+    "credit": "3"
+  },
+  {
+    "code": "BLAW1317",
+    "name": "Luật lao động",
+    "credit": "3"
+  },
+  {
+    "code": "ECON2324",
+    "name": "Kinh tế phát triển",
+    "credit": "3"
+  },
+  {
+    "code": "ECON2325",
+    "name": "Kinh tế công",
+    "credit": "3"
+  },
+  {
+    "code": "ACCO3320",
+    "name": "Kế toán hành chính sự nghiệp",
+    "credit": "3"
+  },
+  {
+    "code": "PUBM2309",
+    "name": "Quản lý công",
+    "credit": "3"
+  },
+  {
+    "code": "PUBM2312",
+    "name": "Chính phủ điện tử",
+    "credit": "3"
+  },
+  {
+    "code": "PUBM2313",
+    "name": "Mua sắm công",
+    "credit": "3"
+  },
+  {
+    "code": "PUBM2315",
+    "name": "Quản trị chất lượng khu vực công",
+    "credit": "3"
+  },
+  {
+    "code": "BADM1370",
+    "name": "Hành vi tổ chức",
+    "credit": "3"
+  },
+  {
+    "code": "PUBM2310",
+    "name": "Tài chính công",
+    "credit": "3"
+  },
+  {
+    "code": "PUBM2311",
+    "name": "Phân tích chính sách",
+    "credit": "3"
+  },
+  {
+    "code": "PUBM2319",
+    "name": "Doanh nghiệp nhà nước và Xã hội",
+    "credit": "3"
+  },
+  {
+    "code": "PUBM2316",
+    "name": "Cải cách hành chính công",
+    "credit": "3"
+  },
+  {
+    "code": "ECON2332",
+    "name": "Marketing địa phương và phát triển vùng",
+    "credit": "3"
+  },
+  {
+    "code": "BADM2358",
+    "name": "Quản trị quan hệ lao động",
+    "credit": "3"
+  },
+  {
+    "code": "BADM2361",
+    "name": "Hoạch định và tuyển dụng",
+    "credit": "3"
+  },
+  {
+    "code": "BADM2362",
+    "name": "Đào tạo và phát triển nhân viên",
+    "credit": "3"
+  },
+  {
+    "code": "BADM2363",
+    "name": "Quản trị hiệu quả công việc",
+    "credit": "3"
+  },
+  {
+    "code": "BADM2364",
+    "name": "Quản trị tiền lương",
+    "credit": "3"
+  },
+  {
+    "code": "BADM2367",
+    "name": "Tâm lý học trong quản trị",
+    "credit": "3"
+  },
+  {
+    "code": "BADM2325",
+    "name": "Quản trị thay đổi",
+    "credit": "3"
+  },
+  {
+    "code": "BADM1369",
+    "name": "Quan hệ công chúng",
+    "credit": "3"
+  },
+  {
+    "code": "PUBM2317",
+    "name": "Dịch vụ công",
+    "credit": "3"
+  },
+  {
+    "code": "ECON2328",
+    "name": "Kinh tế đô thị",
+    "credit": "3"
+  },
+  {
+    "code": "ECON2329",
+    "name": "Kinh tế nông nghiệp và phát triển nông thôn",
+    "credit": "3"
+  },
+  {
+    "code": "ECON2330",
+    "name": "Kinh tế học tổ chức ngành",
+    "credit": "3"
+  },
+  {
+    "code": "ECON2331",
+    "name": "Chính sách ngoại thương và công nghiệp",
+    "credit": "3"
+  },
+  {
+    "code": "ECON2333",
+    "name": "Kinh tế lao động",
+    "credit": "3"
+  },
+  {
+    "code": "FINA1329",
+    "name": "Tài chính doanh nghiệp 1",
+    "credit": "3"
+  },
+  {
+    "code": "FINA2335",
+    "name": "Tài chính quốc tế",
+    "credit": "3"
+  },
+  {
+    "code": "FINA2336",
+    "name": "Phân tích báo cáo tài chính",
+    "credit": "3"
+  },
+  {
+    "code": "FINA2353",
+    "name": "Phân tích chứng khoán vốn",
+    "credit": "3"
+  },
+  {
+    "code": "FINA2354",
+    "name": "Phân tích chứng khoán nợ",
+    "credit": "3"
+  },
+  {
+    "code": "FINA2337",
+    "name": "Thị trường tài chính phái sinh",
+    "credit": "3"
+  },
+  {
+    "code": "ECON2323",
+    "name": "Kinh tế quốc tế",
+    "credit": "3"
+  },
+  {
+    "code": "BLAW2319",
+    "name": "Luật thương mại quốc tế",
+    "credit": "3"
+  },
+  {
+    "code": "BADM2382",
+    "name": "Đầu tư quốc tế",
+    "credit": "3"
+  },
+  {
+    "code": "BADM1372",
+    "name": "Marketing căn bản",
+    "credit": "3"
+  },
+  {
+    "code": "CENG2319",
+    "name": "Kinh tế xây dựng",
+    "credit": "3"
+  },
+  {
+    "code": "SWOR2320",
+    "name": "Phát triển cộng đồng",
+    "credit": "3"
+  },
+  {
+    "code": "SWOR2336",
+    "name": "Giới và phát triển",
+    "credit": "3"
+  },
+  {
+    "code": "SEAS1338",
+    "name": "Hội nhập kinh tế khu vực Đông Nam Á",
+    "credit": "3"
+  },
+  {
+    "code": "SEAS2333",
+    "name": "Giao tiếp liên văn hóa",
+    "credit": "3"
+  },
+  {
+    "code": "BLAW3311",
+    "name": "Kỹ năng soạn thảo hợp đồng",
+    "credit": "3"
+  },
+  {
+    "code": "FINA1330",
+    "name": "Tài chính cá nhân",
+    "credit": "3"
+  },
+  {
+    "code": "FINA2331",
+    "name": "Thuế và hoạt động kinh doanh",
+    "credit": "3"
+  },
+  {
+    "code": "ENGL1272",
+    "name": "Giao tiếp liên văn hóa",
+    "credit": "2"
+  },
+  {
+    "code": "ENGL2237",
+    "name": "Đàm phán trong kinh doanh",
+    "credit": "2"
+  },
+  {
+    "code": "ENGL2238",
+    "name": "Giao tiếp trong kinh doanh",
+    "credit": "2"
+  },
+  {
+    "code": "PUBM4899",
+    "name": "Thực tập tốt nghiệp",
+    "credit": "4"
+  },
+  {
+    "code": "PUBM4699",
+    "name": "Khóa luận tốt nghiệp",
+    "credit": "6"
+  },
+  {
+    "code": "ECON2314",
+    "name": "Thiết lập và thẩm định dự án đầu tư",
+    "credit": "3"
+  },
+  {
+    "code": "PUBM4314",
+    "name": "Marketing trong khu vực công",
+    "credit": "3"
+  },
+  {
+    "code": "PUBM4315",
+    "name": "Quản trị nhân sự trong khu vực công",
+    "credit": "3"
+  },
+  {
+    "code": "POLI11304",
+    "name": "Triết học Mác - Lênin",
+    "credit": "3"
+  },
+  {
+    "code": "VIET1306",
+    "name": "Cơ sở ngôn ngữ học",
+    "credit": "3"
+  },
+  {
+    "code": "VIET1201",
+    "name": "Tiếng Việt thực hành",
+    "credit": "2"
+  },
+  {
+    "code": "SEAS2303",
+    "name": "Lịch sử văn minh thế giới",
+    "credit": "3"
+  },
+  {
+    "code": "VIET1307",
+    "name": "Ngôn ngữ học so sánh đối chiếu",
+    "credit": "3"
+  },
+  {
+    "code": "ACCO1328",
+    "name": "Logic học",
+    "credit": "3"
+  },
+  {
+    "code": "GENG1350",
+    "name": "Tư duy phản biện (TA)",
+    "credit": "3"
+  },
+  {
+    "code": "GENG1352",
+    "name": "Logic học (TA)",
+    "credit": "3"
+  },
+  {
+    "code": "BIOT1347",
+    "name": "Con người và môi trường",
+    "credit": "3"
+  },
+  {
+    "code": "GENG1353",
+    "name": "Con người và môi trường (TA)",
+    "credit": "3"
+  },
+  {
+    "code": "ENGL1319",
+    "name": "Luyện phát âm",
+    "credit": "3"
+  },
+  {
+    "code": "ENGL1301",
+    "name": "Ngữ pháp",
+    "credit": "3"
+  },
+  {
+    "code": "ENGL1304",
+    "name": "Nghe - Nói 1",
+    "credit": "3"
+  },
+  {
+    "code": "ENGL1305",
+    "name": "Nghe - Nói 2",
+    "credit": "3"
+  },
+  {
+    "code": "ENGL2301",
+    "name": "Nghe - Nói 3",
+    "credit": "3"
+  },
+  {
+    "code": "ENGL2305",
+    "name": "Nghe - Nói 4",
+    "credit": "3"
+  },
+  {
+    "code": "ENGL3301",
+    "name": "Nghe - Nói 5",
+    "credit": "3"
+  },
+  {
+    "code": "ENGL3304",
+    "name": "Nghe - Nói 6",
+    "credit": "3"
+  },
+  {
+    "code": "ENGL1315",
+    "name": "Đọc - Viết 1",
+    "credit": "3"
+  },
+  {
+    "code": "ENGL1316",
+    "name": "Đọc - Viết 2",
+    "credit": "3"
+  },
+  {
+    "code": "ENGL1317",
+    "name": "Đọc - Viết 3",
+    "credit": "3"
+  },
+  {
+    "code": "ENGL1318",
+    "name": "Đọc - Viết 4",
+    "credit": "3"
+  },
+  {
+    "code": "ENGL1320",
+    "name": "Đọc hiểu nâng cao",
+    "credit": "3"
+  },
+  {
+    "code": "ENGL1321",
+    "name": "Viết học thuật",
+    "credit": "3"
+  },
+  {
+    "code": "ENGL1322",
+    "name": "Luyện dịch căn bản",
+    "credit": "3"
+  },
+  {
+    "code": "ENGL1323",
+    "name": "Luyện dịch nâng cao",
+    "credit": "3"
+  },
+  {
+    "code": "ENGL3202",
+    "name": "Kỹ năng thuyết trình",
+    "credit": "2"
+  },
+  {
+    "code": "ENGL3201",
+    "name": "Ngữ âm — Âm vị học",
+    "credit": "2"
+  },
+  {
+    "code": "ENGL3206",
+    "name": "Cú pháp — Hình thái học",
+    "credit": "2"
+  },
+  {
+    "code": "ENGL4201",
+    "name": "Ngữ nghĩa — Ngữ dụng học",
+    "credit": "2"
+  },
+  {
+    "code": "ENGL2309",
+    "name": "Văn hóa Anh - Mỹ",
+    "credit": "3"
+  },
+  {
+    "code": "ENGL3205",
+    "name": "Văn học Anh",
+    "credit": "2"
+  },
+  {
+    "code": "ENGL3204",
+    "name": "Văn học Mỹ",
+    "credit": "2"
+  },
+  {
+    "code": "EDUC1315",
+    "name": "Giáo dục học",
+    "credit": "3"
+  },
+  {
+    "code": "ENGL3307",
+    "name": "Lịch sử các phương pháp giảng dạy",
+    "credit": "3"
+  },
+  {
+    "code": "ENGL3308",
+    "name": "Phương pháp giảng dạy tiếng Anh",
+    "credit": "3"
+  },
+  {
+    "code": "ENGL2320",
+    "name": "Thực hành giảng dạy tiếng Anh",
+    "credit": "3"
+  },
+  {
+    "code": "ENGL4304",
+    "name": "Phương pháp kiểm tra đánh giá",
+    "credit": "3"
+  },
+  {
+    "code": "ENGL3306",
+    "name": "Tâm lý giáo dục",
+    "credit": "3"
+  },
+  {
+    "code": "ENGL4499",
+    "name": "Kiến tập (Giảng dạy)",
+    "credit": "2"
+  },
+  {
+    "code": "ENGL4303",
+    "name": "Lý thuyết dịch",
+    "credit": "3"
+  },
+  {
+    "code": "ENGL3305",
+    "name": "Biên dịch 1",
+    "credit": "3"
+  },
+  {
+    "code": "ENGL3303",
+    "name": "Phiên dịch 1",
+    "credit": "3"
+  },
+  {
+    "code": "ENGL4301",
+    "name": "Biên dịch 2",
+    "credit": "3"
+  },
+  {
+    "code": "ENGL4302",
+    "name": "Phiên dịch 2",
+    "credit": "3"
+  },
+  {
+    "code": "ENGL1101",
+    "name": "Kiến tập (Biên phiên dịch)",
+    "credit": "1"
+  },
+  {
+    "code": "ENGL1102",
+    "name": "Báo cáo chuyên đề Biên-Phiên dịch",
+    "credit": "1"
+  },
+  {
+    "code": "ENGL1308",
+    "name": "Quản trị học",
+    "credit": "3"
+  },
+  {
+    "code": "ENGL2312",
+    "name": "Marketing căn bản",
+    "credit": "3"
+  },
+  {
+    "code": "ENGL2313",
+    "name": "Nguyên lý kế toán",
+    "credit": "3"
+  },
+  {
+    "code": "ENGL1309",
+    "name": "Kinh tế Vi mô",
+    "credit": "3"
+  },
+  {
+    "code": "ENGL1103",
+    "name": "Kiến tập (TATM)",
+    "credit": "1"
+  },
+  {
+    "code": "ENGL1104",
+    "name": "Báo cáo chuyên đề kinh doanh",
+    "credit": "1"
+  },
+  {
+    "code": "ENGL4310",
+    "name": "Quan hệ công chúng",
+    "credit": "3"
+  },
+  {
+    "code": "ENGL2310",
+    "name": "Nghiệp vụ văn phòng",
+    "credit": "3"
+  },
+  {
+    "code": "ENGL4312",
+    "name": "Tiền tệ ngân hàng",
+    "credit": "3"
+  },
+  {
+    "code": "ENGL1109",
+    "name": "Kiến tập (NNA)",
+    "credit": "1"
+  },
+  {
+    "code": "ENGL1110",
+    "name": "Báo cáo chuyên đề Ngôn ngữ Anh",
+    "credit": "1"
+  },
+  {
+    "code": "ENGL2325",
+    "name": "Tiếng Anh Công tác xã hội 1",
+    "credit": "3"
+  },
+  {
+    "code": "ENGL2326",
+    "name": "Tiếng Anh Công tác xã hội 2",
+    "credit": "3"
+  },
+  {
+    "code": "EDUC1212",
+    "name": "Phương pháp NCKH",
+    "credit": "2"
+  },
+  {
+    "code": "ENGL4215",
+    "name": "Quản lý lớp học",
+    "credit": "2"
+  },
+  {
+    "code": "ENGL2201",
+    "name": "Kỹ thuật hỗ trợ giảng dạy",
+    "credit": "2"
+  },
+  {
+    "code": "ENGL2202",
+    "name": "Giảng dạy tích hợp",
+    "credit": "2"
+  },
+  {
+    "code": "ENGL4214",
+    "name": "Giảng dạy qua chuyện kể, kịch",
+    "credit": "2"
+  },
+  {
+    "code": "ENGL2209",
+    "name": "Thiết kế môn học",
+    "credit": "2"
+  },
+  {
+    "code": "ENGL4216",
+    "name": "Giảng dạy qua nhạc, họa",
+    "credit": "2"
+  },
+  {
+    "code": "ENGL4217",
+    "name": "Giao tiếp liên văn hóa",
+    "credit": "2"
+  },
+  {
+    "code": "ENGL2203",
+    "name": "Kỹ năng làm bài thi TKT",
+    "credit": "2"
+  },
+  {
+    "code": "ENGL2204",
+    "name": "Kỹ năng làm bài thi TOEFL",
+    "credit": "2"
+  },
+  {
+    "code": "ENGL2205",
+    "name": "Học tiếng Anh qua dự án",
+    "credit": "2"
+  },
+  {
+    "code": "BADM2315",
+    "name": "Khởi nghiệp",
+    "credit": "3"
+  },
+  {
+    "code": "ENGL2210",
+    "name": "Trải nghiệm quốc tế",
+    "credit": "2"
+  },
+  {
+    "code": "ENGL2211",
+    "name": "Nghiệp vụ Biên phiên dịch",
+    "credit": "2"
+  },
+  {
+    "code": "ENGL2212",
+    "name": "Công nghệ trong dịch thuật",
+    "credit": "2"
+  },
+  {
+    "code": "ENGL4218",
+    "name": "Anh ngữ du lịch",
+    "credit": "2"
+  },
+  {
+    "code": "ENGL4219",
+    "name": "Anh ngữ kinh doanh",
+    "credit": "2"
+  },
+  {
+    "code": "ENGL4220",
+    "name": "Anh ngữ nhận dạng",
+    "credit": "2"
+  },
+  {
+    "code": "ENGL2206",
+    "name": "Nhập môn kinh doanh",
+    "credit": "2"
+  },
+  {
+    "code": "ENGL2207",
+    "name": "Đạo đức trong kinh doanh",
+    "credit": "2"
+  },
+  {
+    "code": "ENGL2208",
+    "name": "Nghiệp vụ giao dịch ngân hàng",
+    "credit": "2"
+  },
+  {
+    "code": "ENGL4206",
+    "name": "Thanh toán quốc tế",
+    "credit": "2"
+  },
+  {
+    "code": "ENGL4203",
+    "name": "Nghiệp vụ ngoại thương",
+    "credit": "2"
+  },
+  {
+    "code": "ENGL4208",
+    "name": "Đàm phán trong kinh doanh",
+    "credit": "2"
+  },
+  {
+    "code": "ENGL4210",
+    "name": "Giao tiếp trong kinh doanh",
+    "credit": "2"
+  },
+  {
+    "code": "ENGL4899",
+    "name": "Thực tập tốt nghiệp",
+    "credit": "4"
+  },
+  {
+    "code": "ENGL4699",
+    "name": "Khóa luận tốt nghiệp",
+    "credit": "6"
+  },
+  {
+    "code": "ENGL2321",
+    "name": "Tâm lý lứa tuổi",
+    "credit": "3"
+  },
+  {
+    "code": "SWOR5301_CLC_TA",
+    "name": "An sinh xã hội",
+    "credit": "0"
+  },
+  {
+    "code": "VIET5301",
+    "name": "Đề cương văn hóa VN",
+    "credit": "3"
+  },
+  {
+    "code": "GLAW5301",
+    "name": "Pháp luật đại cương",
+    "credit": "3"
+  },
+  {
+    "code": "BADM5345",
+    "name": "Quan hệ công chúng",
+    "credit": "3"
+  },
+  {
+    "code": "BADM5343",
+    "name": "Hệ thống quản lý DN",
+    "credit": "3"
+  },
+  {
+    "code": "BADM1306",
+    "name": "Hệ thống quản lý DN",
+    "credit": "3"
+  },
+  {
+    "code": "BADM5348",
+    "name": "Quản trị quan hệ KH",
+    "credit": "3"
+  },
+  {
+    "code": "BADM3325",
+    "name": "Quản trị quan hệ KH",
+    "credit": "3"
+  },
+  {
+    "code": "BADM5349",
+    "name": "Thương mại điện tử",
+    "credit": "3"
+  },
+  {
+    "code": "BADM5350",
+    "name": "Khởi nghiệp",
+    "credit": "3"
+  },
+  {
+    "code": "BADM5347",
+    "name": "Quản trị nhân lực",
+    "credit": "3"
+  },
+  {
+    "code": "FINA5338",
+    "name": "Tài chính doanh nghiệp 1",
+    "credit": "3"
+  },
+  {
+    "code": "FINA5341",
+    "name": "Thị trường tài chính phái sinh",
+    "credit": "3"
+  },
+  {
+    "code": "FINA5342",
+    "name": "Phân tích báo cáo tài chính",
+    "credit": "3"
+  },
+  {
+    "code": "FINA5343",
+    "name": "Ngân hàng thương mại",
+    "credit": "3"
+  },
+  {
+    "code": "FINA2306",
+    "name": "Ngân hàng thương mại",
+    "credit": "3"
+  },
+  {
+    "code": "FINA5334",
+    "name": "Thanh toán quốc tế",
+    "credit": "3"
+  },
+  {
+    "code": "FINA5348",
+    "name": "Marketing ngân hàng",
+    "credit": "3"
+  },
+  {
+    "code": "FINA5349",
+    "name": "Thẩm định tín dụng",
+    "credit": "3"
+  },
+  {
+    "code": "FINA5350",
+    "name": "Kinh doanh ngoại hối",
+    "credit": "3"
+  },
+  {
+    "code": "FINA5337",
+    "name": "Tiền tệ và Ngân hàng",
+    "credit": "3"
+  },
+  {
+    "code": "FINA1301",
+    "name": "Tiền tệ và Ngân hàng",
+    "credit": "3"
+  },
+  {
+    "code": "FINA5330",
+    "name": "Thị trường tài chính",
+    "credit": "3"
+  },
+  {
+    "code": "FINA3320",
+    "name": "Thị trường tài chính",
+    "credit": "3"
+  },
+  {
+    "code": "FINA5357",
+    "name": "Ngân hàng trung ương",
+    "credit": "3"
+  },
+  {
+    "code": "FINA5356",
+    "name": "Quản trị rủi ro NH",
+    "credit": "3"
+  },
+  {
+    "code": "FINA5335",
+    "name": "Thuế và hoạt động KD",
+    "credit": "3"
+  },
+  {
+    "code": "FINA5351",
+    "name": "Quản trị ngân hàng TM",
+    "credit": "3"
+  },
+  {
+    "code": "FINA5354",
+    "name": "M&A",
+    "credit": "3"
+  },
+  {
+    "code": "FINA2310",
+    "name": "Kinh tế lượng trong TC",
+    "credit": "3"
+  },
+  {
+    "code": "FINA5346",
+    "name": "Hoạch định TC cá nhân",
+    "credit": "3"
+  },
+  {
+    "code": "MATH5302",
+    "name": "Đại số tuyến tính",
+    "credit": "3"
+  },
+  {
+    "code": "FINT2301",
+    "name": "Nhập môn Fintech",
+    "credit": "3"
+  },
+  {
+    "code": "FINT2302",
+    "name": "Python và R trong TC",
+    "credit": "3"
+  },
+  {
+    "code": "FINT2303",
+    "name": "Công nghệ chuỗi khối",
+    "credit": "3"
+  },
+  {
+    "code": "FINT3305",
+    "name": "Giao dịch thuật toán",
+    "credit": "3"
+  },
+  {
+    "code": "BLAW5301",
+    "name": "Lý luận nhà nước & PL",
+    "credit": "3"
+  },
+  {
+    "code": "BLAW5203",
+    "name": "Luật công ty",
+    "credit": "2"
+  },
+  {
+    "code": "INSR2308",
+    "name": "Quản trị rủi ro",
+    "credit": "3"
+  },
+  {
+    "code": "ECON5302",
+    "name": "Kinh tế vi mô",
+    "credit": "3"
+  },
+  {
+    "code": "ECON5303",
+    "name": "Kinh tế vĩ mô",
+    "credit": "3"
+  },
+  {
+    "code": "ACCO5336",
+    "name": "Nguyên lý kế toán",
+    "credit": "3"
+  },
+  {
+    "code": "ACC2301",
+    "name": "Nguyên lý kế toán",
+    "credit": "3"
+  },
+  {
+    "code": "EDUC5315_CLC_TA",
+    "name": "Định hướng nghề nghiệp",
+    "credit": "3"
+  },
+  {
+    "code": "CHEM1303",
+    "name": "Hóa đại cương",
+    "credit": "3"
   }
 ]
