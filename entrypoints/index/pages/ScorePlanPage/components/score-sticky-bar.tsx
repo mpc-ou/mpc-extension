@@ -32,7 +32,7 @@ export function ScoreStickyBar({
   }
 
   return (
-    <div className='sticky bottom-0 z-50'>
+    <div className='sticky bottom-0 z-50 mx-auto max-w-[750px] px-4 py-2'>
       <div className='mx-auto flex max-w-5xl items-center justify-between rounded-2xl border bg-background/90 p-4 shadow-[0_-10px_40px_rgba(0,0,0,0.1)] backdrop-blur-md'>
         <div className='flex gap-6'>
           <div>

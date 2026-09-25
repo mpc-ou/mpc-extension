@@ -384,7 +384,7 @@ export function MascotAdvisor() {
     <>
       <button
         aria-label='Mở góc cố vấn học tập'
-        className='fixed right-4 bottom-4 z-50 cursor-pointer border-none bg-transparent p-0 transition-all duration-300'
+        className='fixed right-4 bottom-4 z-10 cursor-pointer border-none bg-transparent p-0 transition-all duration-300'
         onClick={() => setOpen(true)}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}

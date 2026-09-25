@@ -141,17 +141,58 @@ function applyManualImprovementLinkages(allSubs: EligibleEntry[], subMap: Map<st
   return manuallyLinked;
 }
 
-function applyAutomaticImprovements(remainingSubs: EligibleEntry[]): void {
-  const groups = new Map<string, EligibleEntry[]>();
-  for (const entry of remainingSubs) {
-    const key = `${normalizeSubjectName(entry.sub.name)}|${entry.sub.credit}`;
-    if (!groups.has(key)) {
-      groups.set(key, []);
+function groupRetakeAttempts(remainingSubs: EligibleEntry[], matchByName: boolean): EligibleEntry[][] {
+  const parent = remainingSubs.map((_, i) => i);
+  const find = (x: number): number => {
+    let root = x;
+    while (parent[root] !== root) {
+      root = parent[root];
     }
-    groups.get(key)?.push(entry);
+    let node = x;
+    while (parent[node] !== root) {
+      const next = parent[node];
+      parent[node] = root;
+      node = next;
+    }
+    return root;
+  };
+  const union = (a: number, b: number) => {
+    const ra = find(a);
+    const rb = find(b);
+    if (ra !== rb) {
+      parent[ra] = rb;
+    }
+  };
+
+  for (let i = 0; i < remainingSubs.length; i++) {
+    for (let j = i + 1; j < remainingSubs.length; j++) {
+      const a = remainingSubs[i].sub;
+      const b = remainingSubs[j].sub;
+      const sameByCode = !!a.code && a.code === b.code;
+      const sameByName =
+        matchByName && normalizeSubjectName(a.name) === normalizeSubjectName(b.name) && a.credit === b.credit;
+      if (sameByCode || sameByName) {
+        union(i, j);
+      }
+    }
   }
 
-  for (const entries of groups.values()) {
+  const groups = new Map<number, EligibleEntry[]>();
+  for (let i = 0; i < remainingSubs.length; i++) {
+    const root = find(i);
+    if (!groups.has(root)) {
+      groups.set(root, []);
+    }
+    groups.get(root)?.push(remainingSubs[i]);
+  }
+
+  return [...groups.values()];
+}
+
+function applyAutomaticImprovements(remainingSubs: EligibleEntry[], matchByName: boolean): void {
+  const groups = groupRetakeAttempts(remainingSubs, matchByName);
+
+  for (const entries of groups) {
     if (entries.length < 2) {
       continue;
     }
@@ -166,7 +207,7 @@ function applyAutomaticImprovements(remainingSubs: EligibleEntry[]): void {
   }
 }
 
-function markImprovedSubjects(data: ScoreGroupType[]): ScoreGroupType[] {
+function markImprovedSubjects(data: ScoreGroupType[], matchByName = false): ScoreGroupType[] {
   resetImprovedFlags(data);
   const allSubs = collectEligibleSubjects(data);
   const subMap = new Map<string, ScoreRecordType>();
@@ -181,7 +222,7 @@ function markImprovedSubjects(data: ScoreGroupType[]): ScoreGroupType[] {
   const remainingSubs = allSubs.filter(
     (entry) => !manuallyLinked.has(entry.sub.id || "") && entry.sub.point.character !== "M"
   );
-  applyAutomaticImprovements(remainingSubs);
+  applyAutomaticImprovements(remainingSubs, matchByName);
 
   return data;
 }

@@ -108,7 +108,7 @@ export function useImportActions() {
       if (data?.status === "success") {
         const updated = updateIgnoreSubject(data.data, ignoreList);
         const withAvg = updateScoreAvg(updated);
-        useScoreStore.getState().setOriginalScores(withAvg);
+        useScoreStore.getState().setOriginalScores(structuredClone(withAvg));
         useScoreStore.getState().setScores(withAvg);
         useScoreStore.getState().setLastUpdate(new Date());
         await useScoreStore.getState().saveData(studentId);

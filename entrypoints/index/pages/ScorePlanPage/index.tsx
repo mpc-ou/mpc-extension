@@ -89,34 +89,28 @@ function ScorePlanPage() {
   const [showNonStandard, setShowNonStandard] = useState(true);
   const [estimatedTuition, setEstimatedTuition] = useState<number | null>(null);
 
-  const loadEstimatedTuition = useCallback(async () => {
-    const sid = useCurrentUserStore.getState().effectiveStudentId;
+  const loadEstimatedTuition = useCallback(async (sid: string) => {
     if (!sid) {
+      setEstimatedTuition(null);
       return;
     }
     const raw = await storage.getItem<number>(`local:${sid}:latestAvgCreditCost`);
-    if (typeof raw === "number" && raw > 0) {
-      setEstimatedTuition(raw);
-    }
+    setEstimatedTuition(typeof raw === "number" && raw > 0 ? raw : null);
   }, []);
 
   useEffect(() => {
-    loadEstimatedTuition();
-  }, [loadEstimatedTuition]);
-
-  useEffect(() => {
-    loadEstimatedTuition();
-  }, [loadEstimatedTuition]);
+    loadEstimatedTuition(effectiveStudentId);
+  }, [loadEstimatedTuition, effectiveStudentId]);
 
   useEffect(() => {
     const onVisible = () => {
       if (document.visibilityState === "visible") {
-        loadEstimatedTuition();
+        loadEstimatedTuition(effectiveStudentId);
       }
     };
     document.addEventListener("visibilitychange", onVisible);
     return () => document.removeEventListener("visibilitychange", onVisible);
-  }, [loadEstimatedTuition]);
+  }, [loadEstimatedTuition, effectiveStudentId]);
 
   const displayScores = useMemo(() => {
     if (!hideNonGPA) {
@@ -153,7 +147,7 @@ function ScorePlanPage() {
     );
     setSummary(getScoreSummary(normalized, trainingSemesters));
     useScoreStore.getState().setScores(normalized);
-    useScoreStore.getState().setOriginalScores(normalized);
+    useScoreStore.getState().setOriginalScores(structuredClone(normalized));
     useScoreStore.getState().setLastUpdate(new Date());
     await useScoreStore.getState().saveData(effectiveStudentId);
     toast.success("Đã nhập dữ liệu điểm thành công!");
@@ -240,9 +234,9 @@ function ScorePlanPage() {
   const updateIgnoreAndAvg = useCallback(
     (data: ScoreGroupType[]) => {
       const updated = updateIgnoreSubject(data, ignoreList);
-      return updateScoreAvg(markImprovedSubjects(updated));
+      return updateScoreAvg(markImprovedSubjects(updated, matchSubjectByName));
     },
-    [ignoreList]
+    [ignoreList, matchSubjectByName]
   );
 
   const saveCurrentData = (data: ScoreGroupType[]) => {

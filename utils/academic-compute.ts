@@ -1,14 +1,15 @@
-import { _DEFAULT_ACADEMIC_RANKS, _DEFAULT_TRAINING_RANKS } from "@/constants/default";
+import { _DEFAULT_ACADEMIC_RANKS, _DEFAULT_IGNORE_SEMESTER_TITLE, _DEFAULT_TRAINING_RANKS } from "@/constants/default";
 import type { ScoreGroupType, ScoreSummaryType } from "@/types";
 
 export function computeSummary(data: ScoreGroupType[], trainingSemesters = 0): ScoreSummaryType {
-  const totalCredit = data.reduce((acc, s) => acc + s.totalCredit, 0);
+  const countedSemesters = data.filter((s) => s.title !== _DEFAULT_IGNORE_SEMESTER_TITLE);
+  const totalCredit = countedSemesters.reduce((acc, s) => acc + s.totalCredit, 0);
 
   let sum10 = 0;
   let sum4 = 0;
   let sumCr = 0;
 
-  for (const sem of data) {
+  for (const sem of countedSemesters) {
     for (const sub of sem.data) {
       const { credit, point } = sub;
       if (sub.isIgnore || !point.character || point.character === "M") {
@@ -26,16 +27,16 @@ export function computeSummary(data: ScoreGroupType[], trainingSemesters = 0): S
     }
   }
 
-  const validSemesters = data.filter((s) => s.trainingPoint !== null && s.trainingPoint !== undefined);
+  const validSemesters = countedSemesters.filter((s) => s.trainingPoint !== null && s.trainingPoint !== undefined);
   const limit = trainingSemesters > 0 ? Math.min(trainingSemesters, validSemesters.length) : validSemesters.length;
   const selected = validSemesters.slice(0, limit);
   const avgTraining =
     selected.length > 0 ? selected.reduce((acc, s) => acc + (s.trainingPoint ?? 0), 0) / selected.length : 0;
 
   return {
-    semesterCount: data.length,
+    semesterCount: countedSemesters.length,
     totalCredit,
-    totalSubject: data.reduce((acc, s) => acc + s.data.length, 0),
+    totalSubject: countedSemesters.reduce((acc, s) => acc + s.data.length, 0),
     gpa10: sumCr > 0 ? +(sum10 / sumCr) : 0,
     gpa4: sumCr > 0 ? +(sum4 / sumCr) : 0,
     avgTrainingPoint: avgTraining
