@@ -1,3 +1,11 @@
+## [2.1.1](https://github.com/mpc-ou/mpc-extension/compare/v2.1.0...v2.1.1) (2026-09-25)
+
+
+### Bug Fixes
+
+* improve tuition loading and score handling, optimize semester calculations ([1fff9c7](https://github.com/mpc-ou/mpc-extension/commit/1fff9c775e213cfa462e4befd09bdb4a2502735d))
+* **ui:** compact score sticky ui, avoid overlapping other elements ([53b1a81](https://github.com/mpc-ou/mpc-extension/commit/53b1a815ac71ffac5931d241c437c5847ec7f95b))
+
 # [2.1.0](https://github.com/mpc-ou/mpc-extension/compare/v2.0.0...v2.1.0) (2026-08-13)
 
 
